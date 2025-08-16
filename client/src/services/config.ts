@@ -3,6 +3,7 @@ export interface ClientConfig {
   configType: "assignment" | "competition" | null
   variableAgentAmount: boolean
   defaultAgentAmount: number
+  allowAgentTypes: boolean
 }
 
 function getNestedValue(obj: any, path: string): any {
@@ -12,16 +13,35 @@ function getNestedValue(obj: any, path: string): any {
 }
 
 export function parseClientConfig(configData: any): ClientConfig {
-  const defaults: ClientConfig = {
-    configType: null,
+  // Validate that we actually have config data
+  if (!configData || typeof configData !== "object") {
+    throw new Error("Config data is missing or invalid")
+  }
+
+  // Be much stricter - we need BOTH client AND features sections
+  if (!configData.client || !configData.features) {
+    throw new Error("Config file must have both 'client' and 'features' sections")
+  }
+
+  // Additional validation - make sure it's not just empty sections
+  if (
+    typeof configData.client !== "object" ||
+    typeof configData.features !== "object"
+  ) {
+    throw new Error("Config 'client' and 'features' must be objects")
+  }
+
+  const config: ClientConfig = {
+    configType: "assignment",
     variableAgentAmount: false,
     defaultAgentAmount: 1,
+    allowAgentTypes: false,
   }
 
   try {
     const configType = getNestedValue(configData, "client.CONFIG_TYPE")
     if (configType === "assignment" || configType === "competition") {
-      defaults.configType = configType
+      config.configType = configType
     }
 
     const variableAgentAmount = getNestedValue(
@@ -29,7 +49,7 @@ export function parseClientConfig(configData: any): ClientConfig {
       "features.ALLOW_CUSTOM_AGENT_COUNT"
     )
     if (typeof variableAgentAmount === "boolean") {
-      defaults.variableAgentAmount = variableAgentAmount
+      config.variableAgentAmount = variableAgentAmount
     }
 
     const defaultAgentAmount = getNestedValue(
@@ -37,13 +57,17 @@ export function parseClientConfig(configData: any): ClientConfig {
       "features.DEFAULT_AGENT_AMOUNT"
     )
     if (typeof defaultAgentAmount === "number" && defaultAgentAmount > 0) {
-      defaults.defaultAgentAmount = defaultAgentAmount
+      config.defaultAgentAmount = defaultAgentAmount
     }
 
-    return defaults
+    const allowAgentTypes = getNestedValue(configData, "features.ALLOW_AGENT_TYPES")
+    if (typeof allowAgentTypes === "boolean") {
+      config.allowAgentTypes = allowAgentTypes
+    }
+
+    return config
   } catch (error) {
-    console.warn("Error parsing config, using defaults:", error)
-    return defaults
+    throw new Error(`Failed to parse config.yaml: ${error}`)
   }
 }
 

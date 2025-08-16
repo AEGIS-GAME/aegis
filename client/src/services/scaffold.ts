@@ -8,11 +8,7 @@ import RingBuffer from "@/utils/ringBuffer"
 import { useForceUpdate } from "@/utils/util"
 import { useEffect, useRef, useState } from "react"
 import invariant from "tiny-invariant"
-import {
-  ClientConfig,
-  getConfigValue as getDynamicConfigValue,
-  parseClientConfig,
-} from "./config"
+import { ClientConfig, parseClientConfig } from "./config"
 
 export function createScaffold(): Scaffold {
   const [aegisPath, setAegisPath] = useState<string | undefined>(undefined)
@@ -20,8 +16,6 @@ export function createScaffold(): Scaffold {
   const [worlds, setWorlds] = useState<string[]>([])
   const [agents, setAgents] = useState<string[]>([])
   const [config, setConfig] = useState<ClientConfig | null>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [rawConfigData, setRawConfigData] = useState<any>(null)
   const aegisPid = useRef<string | undefined>(undefined)
   const currentGameIdx = useRef(0)
   const output = useRef<RingBuffer<ConsoleLine>>(new RingBuffer(20000))
@@ -79,46 +73,22 @@ export function createScaffold(): Scaffold {
     forceUpdate()
   }
 
-  const readAegisConfig = async (): Promise<ClientConfig> => {
+  const readAegisConfig = async (): Promise<boolean> => {
     invariant(aegisPath, "Can't find AEGIS path!")
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rawConfig = (await aegisAPI!.read_config(aegisPath)) as any
-      setRawConfigData(rawConfig)
-
       const parsedConfig = parseClientConfig(rawConfig)
       setConfig(parsedConfig)
-      return parsedConfig
+      return true
     } catch (error) {
-      console.error("Error reading config:", error)
+      if (process.env.NODE_ENV === "development") {
+        console.debug("Config loading failed:", error)
+      }
       setConfig(null)
-      setRawConfigData(null)
-      throw new Error(`Failed to load config.yaml: ${error}`)
+      return false
     }
-  }
-
-  const getConfigValue = (path: string): unknown => {
-    if (!rawConfigData) {
-      return null
-    }
-    return getDynamicConfigValue(rawConfigData, path)
-  }
-
-  const getConfig = (): ClientConfig | null => {
-    return config
-  }
-
-  const isAssignmentConfig = (): boolean => {
-    return config?.configType === "assignment"
-  }
-
-  const getDefaultAgentAmount = (): number => {
-    return config?.defaultAgentAmount || 1
-  }
-
-  const isMultiAgentEnabled = (): boolean => {
-    return config?.variableAgentAmount || false
   }
 
   const refreshWorldsAndAgents = async (): Promise<void> => {
@@ -188,8 +158,6 @@ export function createScaffold(): Scaffold {
 
       setWorlds(worldsData)
       setAgents(agentsData)
-
-      await readAegisConfig()
     }
 
     loadData()
@@ -206,11 +174,7 @@ export function createScaffold(): Scaffold {
     killSim: aegisPid.current ? killSimulation : undefined,
     readAegisConfig,
     refreshWorldsAndAgents,
-    getConfigValue,
-    getConfig,
-    isAssignmentConfig,
-    getDefaultAgentAmount,
-    isMultiAgentEnabled,
+    config,
     spawnError,
   }
 }

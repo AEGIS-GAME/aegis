@@ -11,9 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
-import { ClientConfig } from "@/services"
 import { Scaffold } from "@/types"
-import { ASSIGNMENT_A1, getCurrentAssignment } from "@/utils/util"
 import GameCycler from "../GameCycler"
 import NumberInput from "../NumberInput"
 import { MultiSelect } from "../ui/multiselect"
@@ -30,23 +28,21 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
     killSim,
     refreshWorldsAndAgents,
     readAegisConfig,
-    getDefaultAgentAmount,
-    isMultiAgentEnabled,
+    config,
   } = scaffold
   const [selectedWorlds, setSelectedWorlds] = useState<string[]>([])
   const [rounds, setRounds] = useLocalStorage<number>("aegis_rounds", 0)
   const [agent, setAgent] = useLocalStorage<string>("aegis_agent", "")
-  // Initialize with a function to get the config default if no localStorage exists
   const getInitialAgentAmount = (): number => {
     const stored = localStorage.getItem("aegis_agent_amount")
     if (stored !== null) {
       try {
         return JSON.parse(stored)
       } catch {
-        return getDefaultAgentAmount()
+        return config?.defaultAgentAmount ?? 1
       }
     }
-    return getDefaultAgentAmount()
+    return config?.defaultAgentAmount ?? 1
   }
 
   const [agentAmount, setAgentAmount] = useLocalStorage<number>(
@@ -54,53 +50,22 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
     getInitialAgentAmount()
   )
   const [debug] = useLocalStorage<boolean>("aegis_debug_mode", false)
-  const [configError, setConfigError] = useState<string | null>(null)
 
-  // Refresh worlds and agents when component mounts (when switching to this tab)
   useEffect(() => {
-    refreshWorldsAndAgents()
-    loadConfig()
+    const loadConfigForTab = async (): Promise<void> => {
+      await refreshWorldsAndAgents()
+      await readAegisConfig()
+    }
+
+    loadConfigForTab()
   }, [])
 
-  const loadConfig = async (): Promise<ClientConfig | undefined> => {
-    try {
-      setConfigError(null)
-      const config = await readAegisConfig()
-      return config
-    } catch (error) {
-      setConfigError(
-        error instanceof Error
-          ? error.message
-          : "Failed to load config. Please check your config.yaml file, and make sure it is in the correct path."
-      )
-      return undefined
-    }
-  }
-
-  // useEffect(() => {
-  //   const storedWorld = localStorage.getItem('aegis_world')
-  //   if (storedWorld) {
-  //     const worldName = JSON.parse(storedWorld)
-  //     if (worldName && !worlds.includes(worldName)) {
-  //       setWorld('')
-  //     }
-  //   }
-  //
-  //   const storedAgent = localStorage.getItem('aegis_agent')
-  //   if (storedAgent) {
-  //     const agentName = JSON.parse(storedAgent)
-  //     if (agentName && !agents.includes(agentName)) {
-  //       setAgent('')
-  //     }
-  //   }
-  // }, [worlds, agents, setWorld, setAgent])
-
   const isButtonDisabled = useMemo(
-    () => !selectedWorlds.length || !rounds || !agent || configError !== null,
-    [selectedWorlds, rounds, agent, configError]
+    () => !selectedWorlds.length || !rounds || !agent || config === null,
+    [selectedWorlds, rounds, agent, config]
   )
 
-  const showMultiAgentOptions = isMultiAgentEnabled()
+  const showMultiAgentOptions = config?.variableAgentAmount ?? false
 
   return (
     <motion.div
@@ -109,16 +74,26 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
       exit={{ opacity: 0, x: -20 }}
       className="w-full space-y-4"
     >
-      {configError && (
+      {config === null && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-md">
           <div className="flex">
             <div className="ml-3">
               <h3 className="text-sm font-medium text-red-800">Config Error</h3>
               <div className="mt-2 text-sm text-red-700">
-                <p>{configError}</p>
+                <p>
+                  Failed to load config.yaml. Please check your config file and ensure
+                  it&apos;s valid.
+                </p>
               </div>
               <div className="mt-4">
-                <Button type="button" variant="outline" size="sm" onClick={loadConfig}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    readAegisConfig()
+                  }}
+                >
                   Retry Load Config
                 </Button>
               </div>
@@ -186,11 +161,15 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
           </Button>
         ) : (
           <Button
-            onClick={() => {
-              const amount = getCurrentAssignment() === ASSIGNMENT_A1 ? 1 : agentAmount
+            onClick={async () => {
+              const configLoaded = await readAegisConfig()
+              if (!configLoaded) {
+                return
+              }
+
               startSimulation(
                 rounds.toString(),
-                amount.toString(),
+                agentAmount.toString(),
                 selectedWorlds,
                 agent,
                 debug

@@ -53,13 +53,8 @@ export interface Scaffold {
     debug: boolean
   ) => void
   killSim: (() => void) | undefined
-  readAegisConfig: () => Promise<ClientConfig>
+  readAegisConfig: () => Promise<boolean>
   refreshWorldsAndAgents: () => Promise<void>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getConfigValue: (path: string) => any
-  getConfig: () => ClientConfig | null
-  isAssignmentConfig: () => boolean
-  getDefaultAgentAmount: () => number
-  isMultiAgentEnabled: () => boolean
+  config: ClientConfig | null
   spawnError: string
 }

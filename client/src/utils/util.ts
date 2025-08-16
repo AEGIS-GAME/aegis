@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react"
 import { Size, Vector } from "@/types"
+import { useCallback, useState } from "react"
 
 // Forces a re-render
 export function useForceUpdate(): () => void {
@@ -48,15 +48,6 @@ export function formatDisplayText(text: string): string {
     (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
   )
   return formattedWords.join(" ")
-}
-
-// Assignment stuff
-export const ASSIGNMENT_A1 = "a1"
-export const ASSIGNMENT_A3 = "a3"
-
-export const getCurrentAssignment = (): string => {
-  // @ts-ignore: module
-  return import.meta.env.VITE_CURRENT_ASSIGNMENT || ASSIGNMENT_A3 // Default to 'a3' if not set
 }
 
 // Canvas 0, 0 is the top-left so we need to flip the y coord

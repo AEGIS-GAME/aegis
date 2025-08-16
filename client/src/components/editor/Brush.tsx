@@ -10,7 +10,7 @@ export default function Brush({
   brush: EditorBrush
   scaffold: Scaffold
 }): JSX.Element {
-  const { getConfigValue } = scaffold
+  const { config } = scaffold
   const forceUpdate = useForceUpdate()
 
   let combinedFields = { ...brush.fields }
@@ -27,7 +27,7 @@ export default function Brush({
     }
   }
 
-  if (getConfigValue("features.ALLOW_AGENT_TYPES")) {
+  if (config?.allowAgentTypes) {
     delete combinedFields.amount
   }
 

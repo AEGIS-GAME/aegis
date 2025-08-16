@@ -6,34 +6,22 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { Scaffold } from "@/types"
+import { useEffect } from "react"
 
 type Props = {
   scaffold: Scaffold
 }
 
 const Settings = ({ scaffold }: Props): JSX.Element => {
-  const { aegisPath, setupAegisPath } = scaffold
+  const { aegisPath, setupAegisPath, readAegisConfig, config } = scaffold
   const [debugMode, setDebugMode] = useLocalStorage<boolean>("aegis_debug_mode", false)
-
-  const rawConfigData = ((): Record<string, unknown> | null => {
-    try {
-      const configType = scaffold.getConfigValue("client.CONFIG_TYPE")
-      if (configType) {
-        return {
-          "client.CONFIG_TYPE": scaffold.getConfigValue("client.CONFIG_TYPE"),
-          "features.ALLOW_CUSTOM_AGENT_COUNT": scaffold.getConfigValue(
-            "features.ALLOW_CUSTOM_AGENT_COUNT"
-          ),
-          "features.DEFAULT_AGENT_AMOUNT": scaffold.getConfigValue(
-            "features.DEFAULT_AGENT_AMOUNT"
-          ),
-        }
-      }
-      return null
-    } catch {
-      return null
+  useEffect(() => {
+    const loadConfigForTab = async (): Promise<void> => {
+      await readAegisConfig()
     }
-  })()
+
+    loadConfigForTab()
+  }, [])
 
   const renderConfigValue = (value: unknown): JSX.Element => {
     if (typeof value === "boolean") {
@@ -94,7 +82,7 @@ const Settings = ({ scaffold }: Props): JSX.Element => {
             <SettingsIcon className="w-6 h-6" />
             <h2 className="text-lg font-semibold">Configuration</h2>
           </div>
-          {rawConfigData ? (
+          {config ? (
             <>
               <div className="text-xs text-muted-foreground">Read from config.yaml</div>
               <div className="space-y-3 p-3 bg-gray-50 rounded-lg border">
@@ -103,30 +91,54 @@ const Settings = ({ scaffold }: Props): JSX.Element => {
                     <span className="text-sm font-medium text-gray-700">
                       Config Type
                     </span>
-                    {renderConfigValue(rawConfigData["client.CONFIG_TYPE"])}
+                    {renderConfigValue(config.configType)}
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-700">
                       Variable Agent Amount
                     </span>
-                    {renderConfigValue(
-                      rawConfigData["features.ALLOW_CUSTOM_AGENT_COUNT"]
-                    )}
+                    {renderConfigValue(config.variableAgentAmount)}
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-700">
-                      Default Agent Amount
+                      {config.variableAgentAmount ? "Max" : ""} Agent Amount
                     </span>
-                    {renderConfigValue(rawConfigData["features.DEFAULT_AGENT_AMOUNT"])}
+                    {renderConfigValue(config.defaultAgentAmount)}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">
+                      Agent Types
+                    </span>
+                    {renderConfigValue(config.allowAgentTypes)}
                   </div>
                 </div>
               </div>
             </>
           ) : (
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-sm text-yellow-800">
-                No config found. Please ensure config.yaml is properly loaded.
-              </p>
+            <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+              <div className="flex">
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">Config Error</h3>
+                  <div className="mt-2 text-sm text-red-700">
+                    <p>
+                      Failed to load config.yaml. Please check your config file and
+                      ensure it&apos;s valid.
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        readAegisConfig()
+                      }}
+                    >
+                      Retry Load Config
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>

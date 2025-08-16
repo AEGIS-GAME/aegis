@@ -156,25 +156,8 @@ class ElectronApp {
       return config
     } catch (error) {
       console.error(`Error reading the config file: ${error}`)
-      // Return default config if file can't be read
-      return {
-        features: {
-          ENABLE_PREDICTIONS: false,
-          ALLOW_CUSTOM_AGENT_COUNT: false,
-          DEFAULT_AGENT_AMOUNT: 1,
-        },
-        assignment_specific: {
-          ENABLE_MOVE_COST: false,
-        },
-        competition_specific: {
-          VERSUS_MODE: false,
-        },
-        client: {
-          CONFIG_TYPE: "assignment",
-          SHOW_DEBUG_MODE: true,
-          SHOW_MULTI_AGENT_OPTIONS: false,
-        },
-      }
+      // Return null if the config file is not found
+      return null
     }
   }
 
