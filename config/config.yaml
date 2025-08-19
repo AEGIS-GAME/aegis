@@ -9,6 +9,7 @@ features:
   HIDDEN_MOVE_COSTS: true
   ALLOW_CUSTOM_AGENT_COUNT: true
   DEFAULT_AGENT_AMOUNT: 4
+  SURV_HEALTH_DECAY_RATE: 2 # How much health a survivor loses per round
 
 # Settings more specific to competitions, usually only competitions will decide to enable these
 competition_specific:
