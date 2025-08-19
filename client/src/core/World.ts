@@ -36,8 +36,13 @@ export default class World {
     this.droneScans = []
 
     if (!round) {
+      console.log("No round data provided - skipping round application")
       return
     }
+
+    console.log(
+      `Applying round ${round.round} with ${round.survivorHealthUpdates?.length || 0} health updates`
+    )
 
     for (const loc of round.layersRemoved) {
       const cell = this.cellAt(loc.x, loc.y)!
@@ -46,6 +51,39 @@ export default class World {
     }
 
     this.droneScans = round.droneScans
+
+    // Apply survivor health updates
+    if (round.survivorHealthUpdates) {
+      console.log(
+        `Applying ${round.survivorHealthUpdates.length} survivor health updates`
+      )
+      for (const update of round.survivorHealthUpdates) {
+        const cell = this.cellAt(update.location!.x, update.location!.y)
+        if (cell) {
+          // Find the survivor in the cell and update its health
+          for (const layer of cell.layers) {
+            if (
+              layer.object.oneofKind === "survivor" &&
+              layer.object.survivor.id === update.survivorId
+            ) {
+              const oldHealth = layer.object.survivor.health
+              layer.object.survivor.health = update.newHealth
+              layer.object.survivor.state = update.newState
+              console.log(
+                `Updated survivor ${update.survivorId} health: ${oldHealth} -> ${update.newHealth}, state: ${update.newState}`
+              )
+              break
+            }
+          }
+        } else {
+          console.log(
+            `Cell not found at location (${update.location!.x}, ${update.location!.y})`
+          )
+        }
+      }
+    } else {
+      console.log("No survivor health updates in this round")
+    }
   }
 
   /**

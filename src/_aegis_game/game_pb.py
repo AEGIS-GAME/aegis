@@ -9,12 +9,14 @@ from .schemas.game_pb2 import (
     GamesFooter,
     GamesHeader,
     Round,
+    SurvivorHealthUpdate,
 )
 from .schemas.location_pb2 import Location as PbLocation
 from .schemas.spawn_pb2 import Spawn
 from .schemas.team_pb2 import Team as PbTeam
 from .schemas.team_pb2 import TeamInfo as PbTeamInfo
 from .schemas.turn_pb2 import Turn
+from .schemas.world_object_pb2 import SurvivorState
 from .server_websocket import WebSocketServer
 from .team import Team
 from .team_info import TeamInfo
@@ -31,6 +33,7 @@ class GamePb:
         self.removed_layers: list[PbLocation] = []
         self.dead_ids: list[int] = []
         self.drone_scans: list[DroneScan] = []
+        self.survivor_health_updates: list[SurvivorHealthUpdate] = []
         self.ws_server: WebSocketServer | None = None
 
     def make_games_header(self, ws_server: WebSocketServer) -> None:
@@ -105,6 +108,7 @@ class GamePb:
         pb_round.layers_removed.extend(self.removed_layers)
         pb_round.dead_ids.extend(self.dead_ids)
         pb_round.drone_scans.extend(self.drone_scans)
+        pb_round.survivor_health_updates.extend(self.survivor_health_updates)
 
         event = Event()
         event.round.CopyFrom(pb_round)
@@ -197,16 +201,31 @@ class GamePb:
         pb_drone_scan.duration = duration
         self.drone_scans.append(pb_drone_scan)
 
+    def add_survivor_health_update(
+        self, location: Location, survivor_id: int, new_health: int, new_state: int
+    ) -> None:
+        """Add a survivor health update to be sent to the client."""
+        pb_update = SurvivorHealthUpdate()
+        pb_update.location.x = location.x
+        pb_update.location.y = location.y
+        pb_update.survivor_id = survivor_id
+        pb_update.new_health = new_health
+        pb_update.new_state = (
+            SurvivorState.ALIVE if new_state == 0 else SurvivorState.DEAD
+        )
+        self.survivor_health_updates.append(pb_update)
+
     def team_to_schema(self, team: Team) -> PbTeam:
         return PbTeam.GOOBS if team == Team.GOOBS else PbTeam.VOIDSEERS
 
     def clear_round(self) -> None:
-        self.team_info.clear()
-        self.spawns.clear()
+        """Clear all round data."""
         self.turns.clear()
+        self.team_info.clear()
         self.removed_layers.clear()
         self.dead_ids.clear()
         self.drone_scans.clear()
+        self.survivor_health_updates.clear()
 
     def clear_turn(self) -> None:
         self.spawns.clear()

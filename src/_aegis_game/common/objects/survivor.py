@@ -16,9 +16,11 @@ class Survivor(WorldObject):
 
     """
 
-    def __init__(self, survivor_id: int = -1, health: int = 1) -> None:
+    def __init__(
+        self, survivor_id: int = -1, health: int = 1, state: State | None = None
+    ) -> None:
         super().__init__()
-        self._state: Survivor.State = self.State.ALIVE
+        self._state: Survivor.State = state if state is not None else self.State.ALIVE
         self.id: int = survivor_id
         self.health: int = health
 
@@ -31,6 +33,26 @@ class Survivor(WorldObject):
 
         """
         return self._state == self.State.ALIVE
+
+    def set_state(self, state: State) -> None:
+        """
+        Set the survivor's state.
+
+        Args:
+            state: The new state for the survivor.
+
+        """
+        self._state = state
+
+    def get_state(self) -> State:
+        """
+        Get the survivor's current state.
+
+        Returns:
+            The current state of the survivor.
+
+        """
+        return self._state
 
     @override
     def __str__(self) -> str:

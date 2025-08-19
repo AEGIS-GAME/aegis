@@ -61,19 +61,32 @@ export default class Game {
       return
     }
 
-    const clampedRound = Math.max(1, Math.min(round, this.maxRound))
+    const clampedRound = Math.max(0, Math.min(round, this.maxRound))
     if (clampedRound === this.currentRound.round) {
       return
     }
 
-    const snapshot = this.getClosestSnapshot(round)
+    // Special handling for round 0 - restore original world state
+    if (clampedRound === 0) {
+      console.log("Jumping to round 0 - restoring original world state")
+      this.currentRound = new Round(
+        this,
+        this.world.copy(),
+        0,
+        this.initialAgents.copy()
+      )
+      return
+    }
+
+    const snapshot = this.getClosestSnapshot(clampedRound)
 
     const updatingRound =
-      this.currentRound.round >= snapshot.round && this.currentRound.round <= round
+      this.currentRound.round >= snapshot.round &&
+      this.currentRound.round <= clampedRound
         ? this.currentRound
         : snapshot.copy()
 
-    while (updatingRound.round < round) {
+    while (updatingRound.round < clampedRound) {
       updatingRound.jumpToTurn(updatingRound.turnsLength)
       const nextDelta =
         updatingRound.round < this.rounds.length
