@@ -3,6 +3,7 @@ import { useAppStore } from "@/store/useAppStore"
 import { Scaffold } from "@/types"
 import { schema } from "aegis-schema"
 import { AlertTriangle, ChevronDown, ChevronUp, Trophy } from "lucide-react"
+import AgentView from "../AgentView"
 import CellView from "../CellView"
 import { AnimatedContainer } from "../ui/animated-container"
 import { Button } from "../ui/button"
@@ -35,7 +36,13 @@ export default function Game({ scaffold }: Props): JSX.Element {
 
   return (
     <AnimatedContainer className="mt-2 space-y-6">
-      <div className="flex items-center justify-between">
+      <CellView scaffold={scaffold} />
+
+      <AgentView scaffold={scaffold} />
+
+      <div
+        className={`flex items-center justify-between ${isStatsCollapsed ? "pb-4" : ""}`}
+      >
         <div className="flex items-center gap-2">
           <Trophy className="w-4 h-4 text-yellow-600" />
           <h3 className="font-semibold text-sm">Match Statistics</h3>
@@ -99,8 +106,6 @@ export default function Game({ scaffold }: Props): JSX.Element {
           </table>
         </div>
       )}
-
-      <CellView scaffold={scaffold} />
     </AnimatedContainer>
   )
 }

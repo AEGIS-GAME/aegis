@@ -142,8 +142,8 @@ class Game:
         self.activate_pending_drone_scans()
         self.game_pb.send_drone_scan_update(self._drone_scans)
         self.apply_survivor_health_decay()
-        self.serialize_team_info()
         self.grim_reaper()
+        self.serialize_team_info()
         self.serialize_drone_scans()
         self.game_pb.end_round()
         self.check_game_over()
@@ -304,7 +304,6 @@ class Game:
 
             self.team_info.add_saved(team, 1, is_alive=top_layer.is_alive())
             self.team_info.add_score(team, points)
-            self.team_info.add_score(team, Constants.LUMENS_PER_SAVE)
 
     def remove_layer(self, loc: Location) -> None:
         cell = self.get_cell_at(loc)
@@ -382,8 +381,6 @@ class Game:
             for layer in cell.layers:
                 if isinstance(layer, Survivor) and layer.is_alive():
                     layer.health = max(0, layer.health - decay_rate)
-
-                    LOGGER.info(f"Survivor {layer.id} new health: {layer.health}")
 
                     if layer.health <= 0:
                         layer.set_state(Survivor.State.DEAD)

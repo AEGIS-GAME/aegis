@@ -7,7 +7,7 @@ import {
   Pencil,
   Settings as SettingsIcon,
 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 
 import { ListenerKey, subscribe } from "@/core/Listeners"
 import { Renderer } from "@/core/Renderer"
@@ -19,7 +19,6 @@ import { ErrorMessage } from "../ui/error-message"
 import Aegis from "./Aegis"
 import Game from "./Game"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
-import { motion } from "framer-motion"
 import SettingsModal from "./SettingsModal"
 
 const sidebarItems = [
@@ -37,6 +36,52 @@ export default function Sidebar(): JSX.Element {
     SidebarView.Aegis
   )
   const [settingsModalOpen, setSettingsModalOpen] = useState(false)
+  const [width, setWidth] = useState(320)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragRef = useRef({ startX: 0, startWidth: 0 })
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault()
+      setIsDragging(true)
+      document.body.style.userSelect = "none"
+      dragRef.current = { startX: e.clientX, startWidth: width }
+    },
+    [width]
+  )
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDragging) {
+        return
+      }
+      const { startX, startWidth } = dragRef.current
+      const newWidth = Math.max(192, Math.min(480, startWidth + e.clientX - startX))
+      setWidth(newWidth)
+    },
+    [isDragging]
+  )
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false)
+    document.body.style.userSelect = ""
+  }, [])
+
+  // Global mouse events
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove)
+      document.addEventListener("mouseup", handleMouseUp)
+    } else {
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp])
 
   useEffect(() => {
     const unsubscribe = subscribe(ListenerKey.LayerViewer, () => {
@@ -100,11 +145,11 @@ export default function Sidebar(): JSX.Element {
         </TooltipProvider>
       </div>
 
-      <motion.div
-        initial={false}
-        animate={{ width: selectedView ? "20rem" : "0rem" }}
-        transition={{ duration: 0.3 }}
-        className="h-full overflow-hidden bg-background border-r"
+      <div
+        className={`h-full overflow-hidden bg-background border-r relative ${
+          isDragging ? "" : "transition-all duration-300"
+        }`}
+        style={{ width: selectedView ? `${width}px` : "0rem" }}
       >
         {selectedView && (
           <div className="flex flex-col h-full overflow-auto p-3 scrollbar">
@@ -132,7 +177,15 @@ export default function Sidebar(): JSX.Element {
             )}
           </div>
         )}
-      </motion.div>
+      </div>
+
+      {selectedView && (
+        <div
+          className="absolute top-0 right-0 w-1 h-full cursor-col-resize select-none"
+          onMouseDown={handleMouseDown}
+        />
+      )}
+
       <SettingsModal
         isOpen={settingsModalOpen}
         scaffold={scaffold}
