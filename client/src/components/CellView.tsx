@@ -73,7 +73,7 @@ function getAgentsByTeam(
 }
 
 export default function CellView({ scaffold }: Props): JSX.Element {
-  const { collapsedPanels, togglePanel } = useAppStore()
+  const { collapsedPanels, togglePanel, setSelectedAgentId } = useAppStore()
   const isCollapsed = collapsedPanels["cellView"] ?? false
   const { round, version } = useRoundWithVersion()
   const selectedTile = useSelectedTile()
@@ -100,6 +100,10 @@ export default function CellView({ scaffold }: Props): JSX.Element {
     }
     return ids
   }, [round, selectedTile, version])
+
+  const handleAgentClick = (agentId: number): void => {
+    setSelectedAgentId(agentId)
+  }
 
   const renderAgents = (): JSX.Element => {
     if (!round || !selectedTile || agentIds.length === 0) {
@@ -138,10 +142,15 @@ export default function CellView({ scaffold }: Props): JSX.Element {
             {teamConfig.agents.map((agentId) => (
               <AnimatedContainer
                 key={agentId}
-                className="flex items-center gap-2 rounded text-sm"
+                className="flex items-center gap-2 rounded text-sm p-2 cursor-pointer hover:bg-accent/50 transition-colors group"
                 delay={teamConfig.delay}
+                onClick={() => handleAgentClick(agentId)}
               >
-                <img src={teamConfig.icon} alt={teamConfig.label} className="w-6 h-6" />
+                <img
+                  src={teamConfig.icon}
+                  alt={teamConfig.label}
+                  className="w-6 h-6 transition-transform group-hover:scale-110"
+                />
                 <Badge
                   variant="outline"
                   className={`${teamConfig.badgeClass} font-medium pointer-events-none`}

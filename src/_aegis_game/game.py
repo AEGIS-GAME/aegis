@@ -381,8 +381,6 @@ class Game:
                 if isinstance(layer, Survivor) and layer.is_alive():
                     layer.health = max(0, layer.health - decay_rate)
 
-                    LOGGER.info(f"Survivor {layer.id} new health: {layer.health}")
-
                     if layer.health <= 0:
                         layer.set_state(Survivor.State.DEAD)
                         LOGGER.info(f"Survivor {layer.id} died from health decay")
