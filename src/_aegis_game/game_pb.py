@@ -1,6 +1,5 @@
 from .agent import Agent
 from .common import Location
-from .logger import LOGGER
 from .schemas.event_pb2 import Event
 from .schemas.game_pb2 import (
     DroneScan,
