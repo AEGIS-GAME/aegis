@@ -302,7 +302,6 @@ class Game:
 
             self.team_info.add_saved(team, 1, is_alive=top_layer.is_alive())
             self.team_info.add_score(team, points)
-            self.team_info.add_score(team, Constants.LUMENS_PER_SAVE)
 
     def remove_layer(self, loc: Location) -> None:
         cell = self.get_cell_at(loc)
