@@ -6,10 +6,11 @@ features:
   ALLOW_AGENT_PREDICTIONS: true
   ALLOW_AGENT_MESSAGES: true
   ALLOW_DRONE_SCAN: true
-  ALLOW_AGENT_TYPES: false
+  ALLOW_AGENT_TYPES: true
   HIDDEN_MOVE_COSTS: false
   ALLOW_CUSTOM_AGENT_COUNT: true
   DEFAULT_AGENT_AMOUNT: 7
+  SURV_HEALTH_DECAY_RATE: 2 # How much health a survivor loses per round
 
 # Settings more specific to competitions, usually only competitions will decide to enable these
 competition_specific:

@@ -41,7 +41,9 @@ def cell_from_proto(proto_cell: PbCell) -> Cell:
     for layer_proto in proto_cell.layers:
         if layer_proto.HasField("survivor"):
             s = layer_proto.survivor
-            survivor = Survivor(s.id, s.health)
+            # Convert protobuf state to Survivor.State enum
+            state = Survivor.State.ALIVE if s.state == 0 else Survivor.State.DEAD
+            survivor = Survivor(s.id, s.health, state)
             cell.add_layer(survivor)
         elif layer_proto.HasField("rubble"):
             r = layer_proto.rubble
@@ -77,8 +79,9 @@ def serialize_world(world: World) -> world_pb2.World:
                 survivor_proto = layer_proto.survivor
                 survivor_proto.id = layer.id
                 survivor_proto.health = layer.health
+                # Use the actual survivor state instead of inferring from health
                 survivor_proto.state = (
-                    SurvivorState.ALIVE if layer.health > 0 else SurvivorState.DEAD
+                    SurvivorState.ALIVE if layer.is_alive() else SurvivorState.DEAD
                 )
             elif isinstance(layer, Rubble):
                 rubble_proto = layer_proto.rubble

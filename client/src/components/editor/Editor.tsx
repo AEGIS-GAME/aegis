@@ -4,6 +4,7 @@ import Agents from "@/core/Agents"
 import { EditorBrush } from "@/core/Brushes"
 import Game from "@/core/Game"
 import Games from "@/core/Games"
+import { ListenerKey, notify } from "@/core/Listeners"
 import { Renderer } from "@/core/Renderer"
 import { Runner } from "@/core/Runner"
 import World from "@/core/World"
@@ -159,6 +160,8 @@ export default function Editor({
     Renderer.doFullRedraw()
     Renderer.fullRender()
     setIsWorldEmpty(worldEmpty())
+
+    notify(ListenerKey.Round)
   }
 
   useEffect(() => {

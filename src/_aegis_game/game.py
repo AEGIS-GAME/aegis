@@ -8,7 +8,7 @@ from numpy.typing import NDArray
 
 from _aegis_game.decorator import requires
 
-from .aegis_config import has_feature
+from .aegis_config import get_feature_value, has_feature
 from .agent import Agent
 from .agent_controller import AgentController
 from .agent_predictions.prediction_handler import PredictionHandler
@@ -141,6 +141,7 @@ class Game:
         self.rotate_message_buffers()
         self.activate_pending_drone_scans()
         self.game_pb.send_drone_scan_update(self._drone_scans)
+        self.apply_survivor_health_decay()
         self.serialize_team_info()
         self.grim_reaper()
         self.serialize_drone_scans()
@@ -288,12 +289,18 @@ class Game:
         top_layer = self.get_cell_info_at(loc).top_layer
 
         if isinstance(top_layer, Survivor):
-            points = (
-                Constants.SURVIVOR_SAVE_ALIVE_SCORE
-                if top_layer.health > 0
-                else Constants.SURVIVOR_SAVE_DEAD_SCORE
-            )
-            self.team_info.add_saved(team, 1, is_alive=top_layer.health > 0)
+            points = 0
+            decay_rate = get_feature_value("SURV_HEALTH_DECAY_RATE")
+            if decay_rate is not None and decay_rate > 0:
+                points = top_layer.health
+            else:
+                points = (
+                    Constants.SURVIVOR_SAVE_ALIVE_SCORE
+                    if top_layer.is_alive()
+                    else Constants.SURVIVOR_SAVE_DEAD_SCORE
+                )
+
+            self.team_info.add_saved(team, 1, is_alive=top_layer.is_alive())
             self.team_info.add_score(team, points)
             self.team_info.add_score(team, Constants.LUMENS_PER_SAVE)
 
@@ -363,6 +370,28 @@ class Game:
             for team, duration in teams.items():
                 self.game_pb.add_drone_scan(loc, team, duration)
 
+    def apply_survivor_health_decay(self) -> None:
+        """Apply health decay to all survivors based on config setting."""
+        decay_rate = get_feature_value("SURV_HEALTH_DECAY_RATE")
+        if decay_rate is None or decay_rate <= 0:
+            return  # Decay rate of 0 turns off health decay
+
+        for cell in self.world.cells:
+            for layer in cell.layers:
+                if isinstance(layer, Survivor) and layer.is_alive():
+                    layer.health = max(0, layer.health - decay_rate)
+
+                    LOGGER.info(f"Survivor {layer.id} new health: {layer.health}")
+
+                    if layer.health <= 0:
+                        layer.set_state(Survivor.State.DEAD)
+                        LOGGER.info(f"Survivor {layer.id} died from health decay")
+
+                    # Track health change for client (only once per survivor per round)
+                    self.game_pb.add_survivor_health_update(
+                        cell.location, layer.id, layer.health, layer.get_state().value
+                    )
+
     def save(self, survivor: Survivor, agent: Agent) -> None:
         if (
             agent.location in self._queued_layers_to_remove
@@ -373,6 +402,7 @@ class Game:
             )
             return
 
+        agent.add_energy(-Constants.SAVE_ENERGY_COST)
         self.queue_layer_to_remove(agent.location, agent.team)
 
         LOGGER.info(

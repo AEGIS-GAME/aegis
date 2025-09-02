@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { ListenerKey, subscribe } from "@/core/Listeners"
 import { Renderer } from "@/core/Renderer"
-import { subscribe, ListenerKey } from "@/core/Listeners"
 import type { Vector } from "@/types"
+import { useEffect, useState } from "react"
 
 export default function useHover(): Vector | undefined {
   const [hovered, setHovered] = useState(Renderer.getHoveredTile())

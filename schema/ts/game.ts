@@ -14,6 +14,7 @@ import { TeamInfo } from "./team";
 import { Turn } from "./turn";
 import { Spawn } from "./spawn";
 import { World } from "./world";
+import { SurvivorState } from "./world_object";
 import { Team } from "./team";
 import { Location } from "./location";
 /**
@@ -41,6 +42,27 @@ export interface DroneScanUpdate {
      * @generated from protobuf field: repeated aegis.DroneScan drone_scans = 1
      */
     droneScans: DroneScan[];
+}
+/**
+ * @generated from protobuf message aegis.SurvivorHealthUpdate
+ */
+export interface SurvivorHealthUpdate {
+    /**
+     * @generated from protobuf field: aegis.Location location = 1
+     */
+    location?: Location;
+    /**
+     * @generated from protobuf field: int32 survivor_id = 2
+     */
+    survivorId: number;
+    /**
+     * @generated from protobuf field: int32 new_health = 3
+     */
+    newHealth: number;
+    /**
+     * @generated from protobuf field: aegis.SurvivorState new_state = 4
+     */
+    newState: SurvivorState;
 }
 /**
  * @generated from protobuf message aegis.GamesHeader
@@ -92,6 +114,10 @@ export interface Round {
      * @generated from protobuf field: repeated aegis.DroneScan drone_scans = 6
      */
     droneScans: DroneScan[];
+    /**
+     * @generated from protobuf field: repeated aegis.SurvivorHealthUpdate survivor_health_updates = 7
+     */
+    survivorHealthUpdates: SurvivorHealthUpdate[];
 }
 /**
  * @generated from protobuf message aegis.GameFooter
@@ -213,6 +239,76 @@ class DroneScanUpdate$Type extends MessageType<DroneScanUpdate> {
  */
 export const DroneScanUpdate = new DroneScanUpdate$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class SurvivorHealthUpdate$Type extends MessageType<SurvivorHealthUpdate> {
+    constructor() {
+        super("aegis.SurvivorHealthUpdate", [
+            { no: 1, name: "location", kind: "message", T: () => Location },
+            { no: 2, name: "survivor_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "new_health", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "new_state", kind: "enum", T: () => ["aegis.SurvivorState", SurvivorState] }
+        ]);
+    }
+    create(value?: PartialMessage<SurvivorHealthUpdate>): SurvivorHealthUpdate {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.survivorId = 0;
+        message.newHealth = 0;
+        message.newState = 0;
+        if (value !== undefined)
+            reflectionMergePartial<SurvivorHealthUpdate>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SurvivorHealthUpdate): SurvivorHealthUpdate {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* aegis.Location location */ 1:
+                    message.location = Location.internalBinaryRead(reader, reader.uint32(), options, message.location);
+                    break;
+                case /* int32 survivor_id */ 2:
+                    message.survivorId = reader.int32();
+                    break;
+                case /* int32 new_health */ 3:
+                    message.newHealth = reader.int32();
+                    break;
+                case /* aegis.SurvivorState new_state */ 4:
+                    message.newState = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SurvivorHealthUpdate, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* aegis.Location location = 1; */
+        if (message.location)
+            Location.internalBinaryWrite(message.location, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* int32 survivor_id = 2; */
+        if (message.survivorId !== 0)
+            writer.tag(2, WireType.Varint).int32(message.survivorId);
+        /* int32 new_health = 3; */
+        if (message.newHealth !== 0)
+            writer.tag(3, WireType.Varint).int32(message.newHealth);
+        /* aegis.SurvivorState new_state = 4; */
+        if (message.newState !== 0)
+            writer.tag(4, WireType.Varint).int32(message.newState);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message aegis.SurvivorHealthUpdate
+ */
+export const SurvivorHealthUpdate = new SurvivorHealthUpdate$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class GamesHeader$Type extends MessageType<GamesHeader> {
     constructor() {
         super("aegis.GamesHeader", []);
@@ -321,7 +417,8 @@ class Round$Type extends MessageType<Round> {
             { no: 3, name: "dead_ids", kind: "scalar", repeat: 1 /*RepeatType.PACKED*/, T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "turns", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => Turn },
             { no: 5, name: "team_info", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TeamInfo },
-            { no: 6, name: "drone_scans", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => DroneScan }
+            { no: 6, name: "drone_scans", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => DroneScan },
+            { no: 7, name: "survivor_health_updates", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => SurvivorHealthUpdate }
         ]);
     }
     create(value?: PartialMessage<Round>): Round {
@@ -332,6 +429,7 @@ class Round$Type extends MessageType<Round> {
         message.turns = [];
         message.teamInfo = [];
         message.droneScans = [];
+        message.survivorHealthUpdates = [];
         if (value !== undefined)
             reflectionMergePartial<Round>(this, message, value);
         return message;
@@ -362,6 +460,9 @@ class Round$Type extends MessageType<Round> {
                     break;
                 case /* repeated aegis.DroneScan drone_scans */ 6:
                     message.droneScans.push(DroneScan.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated aegis.SurvivorHealthUpdate survivor_health_updates */ 7:
+                    message.survivorHealthUpdates.push(SurvivorHealthUpdate.internalBinaryRead(reader, reader.uint32(), options));
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -397,6 +498,9 @@ class Round$Type extends MessageType<Round> {
         /* repeated aegis.DroneScan drone_scans = 6; */
         for (let i = 0; i < message.droneScans.length; i++)
             DroneScan.internalBinaryWrite(message.droneScans[i], writer.tag(6, WireType.LengthDelimited).fork(), options).join();
+        /* repeated aegis.SurvivorHealthUpdate survivor_health_updates = 7; */
+        for (let i = 0; i < message.survivorHealthUpdates.length; i++)
+            SurvivorHealthUpdate.internalBinaryWrite(message.survivorHealthUpdates[i], writer.tag(7, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

@@ -1,0 +1,25 @@
+# Ensure all text files use LF line endings
+* text=auto eol=lf
+
+# Specific file types
+*.py text eol=lf
+*.pyi text eol=lf
+*.ts text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.proto text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary files
+*.pyc binary
+*.pyo binary
+*.pyd binary
+*.so binary
+*.dll binary
+*.exe binary
+*.dylib binary
+*.a binary
+*.o binary

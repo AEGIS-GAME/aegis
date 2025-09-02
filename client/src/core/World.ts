@@ -32,6 +32,7 @@ export default class World {
   ) {}
 
   public applyRound(round: schema.Round | null): void {
+    console.log("applyRound", round)
     this.layerRemovals = []
     this.droneScans = []
 
@@ -43,6 +44,20 @@ export default class World {
       const cell = this.cellAt(loc.x, loc.y)!
       cell.layers.shift()
       this.layerRemovals.push(loc)
+    }
+
+    for (const survHealth of round.survivorHealthUpdates) {
+      const cell = this.cellAt(survHealth.location!.x, survHealth.location!.y)!
+      for (const layer of cell.layers) {
+        if (
+          layer.object.oneofKind === "survivor" &&
+          layer.object.survivor.id === survHealth.survivorId
+        ) {
+          layer.object.survivor.health = survHealth.newHealth
+          layer.object.survivor.state = survHealth.newState
+          break
+        }
+      }
     }
 
     this.droneScans = round.droneScans
