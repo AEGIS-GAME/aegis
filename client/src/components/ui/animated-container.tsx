@@ -5,12 +5,14 @@ interface AnimatedContainerProps {
   children: ReactNode
   className?: string
   delay?: number
+  onClick?: () => void
 }
 
 export function AnimatedContainer({
   children,
   className = "",
   delay = 0,
+  onClick,
 }: AnimatedContainerProps): JSX.Element {
   return (
     <motion.div
@@ -19,6 +21,7 @@ export function AnimatedContainer({
       exit={{ opacity: 0, x: -20 }}
       transition={{ delay }}
       className={className}
+      onClick={onClick}
     >
       {children}
     </motion.div>

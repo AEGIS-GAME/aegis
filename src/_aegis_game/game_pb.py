@@ -114,8 +114,6 @@ class GamePb:
         event = Event()
         event.round.CopyFrom(pb_round)
 
-        print(f"Sending round {event.round}")
-
         binary_string = event.SerializeToString()
         self.ws_server.add_event(binary_string)
         self.clear_round()
@@ -217,10 +215,6 @@ class GamePb:
             SurvivorState.ALIVE if new_state == 0 else SurvivorState.DEAD
         )
         self.survivor_health_updates.append(pb_update)
-
-        LOGGER.info(
-            f"Survivor {survivor_id} new health: {new_health} round {self.round}"
-        )
 
     def team_to_schema(self, team: Team) -> PbTeam:
         return PbTeam.GOOBS if team == Team.GOOBS else PbTeam.VOIDSEERS
