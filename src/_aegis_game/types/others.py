@@ -36,6 +36,7 @@ FeatureKey = Literal[
     "ALLOW_CUSTOM_AGENT_COUNT",
     "DEFAULT_AGENT_AMOUNT",
     "SURV_HEALTH_DECAY_RATE",
+    "ADVANCED_SCORING_SYSTEM",
 ]
 
 CompetitionSettingKey = Literal["VERSUS_MODE",]
@@ -52,6 +53,7 @@ class FeaturesConfig(TypedDict):
     ALLOW_CUSTOM_AGENT_COUNT: bool
     DEFAULT_AGENT_AMOUNT: int
     SURV_HEALTH_DECAY_RATE: int
+    ADVANCED_SCORING_SYSTEM: bool
 
 
 class CompetitionConfig(TypedDict):

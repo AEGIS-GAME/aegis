@@ -16,10 +16,11 @@ class Constants:
     INITIAL_TEAM_LUMENS: int = 100
 
     # Points constants
-    SURVIVOR_SAVE_ALIVE_SCORE: int = 100 # Only used if SURV_HEALTH_DECAY_RATE is 0
-    SURVIVOR_SAVE_DEAD_SCORE: int = 50 # Only used if SURV_HEALTH_DECAY_RATE is 0
-    MIN_SURVIVOR_SAVE_SCORE: int = 10 # Only used if SURV_HEALTH_DECAY_RATE is 0, defines lowest possible score for a survivor save
+    SURVIVOR_SAVE_ALIVE_SCORE: int = 100  # Only used if SURV_HEALTH_DECAY_RATE is 0
+    SURVIVOR_SAVE_DEAD_SCORE: int = 50  # Only used if SURV_HEALTH_DECAY_RATE is 0
+    MIN_SURVIVOR_SAVE_SCORE: int = 10  # Only used if SURV_HEALTH_DECAY_RATE is 0, defines lowest possible score for a survivor save
     PRED_CORRECT_SCORE: int = 10
+    ALIVE_AGENT_SCORE: int = 50
 
     # Cooldown constants
     COOLDOWN_LIMIT: int = 10

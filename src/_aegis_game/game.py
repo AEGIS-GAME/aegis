@@ -163,16 +163,18 @@ class Game:
         if self.round == self.world.rounds and self.reason is None:
             self.reason = GameOverReason.MAX_ROUNDS_REACHED
 
-        saved_goobs = self.team_info.get_saved(Team.GOOBS)
-        saved_seers = self.team_info.get_saved(Team.VOIDSEERS)
-        if (
-            saved_goobs + saved_seers == self.world.total_survivors
-            and self.reason is None
-        ):
+        saved_survs = self.team_info.get_saved(Team.GOOBS)
+        saved_survs += self.team_info.get_saved(Team.VOIDSEERS)
+        if saved_survs == self.world.total_survivors and self.reason is None:
             self.reason = GameOverReason.ALL_SURVIVORS_SAVED
 
         if self.reason is not None:
             self.stop()
+            if has_feature("ADVANCED_SCORING_SYSTEM"):
+                for team in Team:
+                    alive_agents = self.team_info.get_units(team)
+                    alive_agent_score = alive_agents * Constants.ALIVE_AGENT_SCORE
+                    self.team_info.add_score(team, alive_agent_score)
 
     def grim_reaper(self) -> None:
         dead_agents: list[Agent] = []
@@ -218,7 +220,7 @@ class Game:
         self.remove_agent_from_loc(agent_id, agent.location)
         agent.kill()
         self.game_pb.add_dead(agent_id)
-        # self.team_info.add_units(agent.team, -1)
+        self.team_info.add_units(agent.team, -1)
         self.end_if_no_units(agent.team)
 
     def spawn_agent(
