@@ -4,12 +4,12 @@ import Round from "./Round"
 import invariant from "tiny-invariant"
 
 export default class RoundStats {
-  private readonly teams: Map<schema.Team, TeamStats>
+  private readonly _teams: Map<schema.Team, TeamStats>
   private readonly game: Game
 
   constructor(game: Game, teams?: Map<schema.Team, TeamStats>) {
     this.game = game
-    this.teams =
+    this._teams =
       teams ??
       new Map([
         [schema.Team.GOOBS, new TeamStats()],
@@ -18,16 +18,20 @@ export default class RoundStats {
   }
 
   public getTeamStats(team: schema.Team): TeamStats {
-    const stats = this.teams.get(team)
+    const stats = this._teams.get(team)
     invariant(stats, "team not found in `getTeamStats`")
     return stats
+  }
+
+  public get teams(): Map<schema.Team, TeamStats> {
+    return this._teams
   }
 
   applyRound(round: Round, delta: schema.Round | null): void {
     if (delta) {
       for (let i = 0; i < delta.teamInfo.length; i++) {
         const teamInfo = delta.teamInfo[i]
-        const teamStats = this.teams.get(teamInfo.team)
+        const teamStats = this._teams.get(teamInfo.team)
 
         invariant(teamStats, "team not found in `applyRound` for stats")
 
@@ -41,7 +45,7 @@ export default class RoundStats {
       }
     }
 
-    for (const stat of this.teams.values()) {
+    for (const stat of this._teams.values()) {
       stat.units = 0
     }
 
