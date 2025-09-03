@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.5.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.4.0...aegis-v2.5.0) (2025-09-03)
+
+
+### Features
+
+* **client:** calm luh individual agent view ([#330](https://github.com/AEGIS-GAME/aegis/issues/330)) ([5204e20](https://github.com/AEGIS-GAME/aegis/commit/5204e20d67c0ffb50e839abe64b43589a5c5e90f))
+* **score:** advanced scoring config option ([#334](https://github.com/AEGIS-GAME/aegis/issues/334)) ([f89c0cd](https://github.com/AEGIS-GAME/aegis/commit/f89c0cd8fcd88d65e0251f151c85e4716cdd28ad))
+* **survivors:** added option of survivor health decay ([#327](https://github.com/AEGIS-GAME/aegis/issues/327)) ([1a1a111](https://github.com/AEGIS-GAME/aegis/commit/1a1a111a1142f3cc83eee1b6cb29e470d33e67de))
+
+
+### Bug Fixes
+
+* **client:** synced game tab metrics with round ([#333](https://github.com/AEGIS-GAME/aegis/issues/333)) ([152f921](https://github.com/AEGIS-GAME/aegis/commit/152f92199410fe314e689b941b9613837afb3779))
+* **worlds:** turn them into protobuf format ([#326](https://github.com/AEGIS-GAME/aegis/issues/326)) ([3d3be90](https://github.com/AEGIS-GAME/aegis/commit/3d3be90f84c605a19543a4353b4b1894920540cd))
+
+
+### Documentation
+
+* **config:** comments to config ([#332](https://github.com/AEGIS-GAME/aegis/issues/332)) ([1fbcdb0](https://github.com/AEGIS-GAME/aegis/commit/1fbcdb05e6757daefa78e62378602e4f1dda91ca))
+
 ## [2.4.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.3.0...aegis-v2.4.0) (2025-08-19)
 
 
