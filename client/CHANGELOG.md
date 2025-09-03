@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.5.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-client-v2.4.0...aegis-client-v2.5.0) (2025-09-03)
+
+
+### Features
+
+* **client:** calm luh individual agent view ([#330](https://github.com/AEGIS-GAME/aegis/issues/330)) ([5204e20](https://github.com/AEGIS-GAME/aegis/commit/5204e20d67c0ffb50e839abe64b43589a5c5e90f))
+* **client:** sidebar resizing ([#331](https://github.com/AEGIS-GAME/aegis/issues/331)) ([af98564](https://github.com/AEGIS-GAME/aegis/commit/af9856478873cc66772c331d5fd6742695744615))
+* **survivors:** added option of survivor health decay ([#327](https://github.com/AEGIS-GAME/aegis/issues/327)) ([1a1a111](https://github.com/AEGIS-GAME/aegis/commit/1a1a111a1142f3cc83eee1b6cb29e470d33e67de))
+
+
+### Bug Fixes
+
+* **client:** synced game tab metrics with round ([#333](https://github.com/AEGIS-GAME/aegis/issues/333)) ([152f921](https://github.com/AEGIS-GAME/aegis/commit/152f92199410fe314e689b941b9613837afb3779))
+
 ## [2.4.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-client-v2.3.0...aegis-client-v2.4.0) (2025-08-19)
 
 
