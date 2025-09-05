@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { Scaffold } from "@/types"
 import GameCycler from "../GameCycler"
@@ -30,6 +31,7 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
     refreshWorldsAndAgents,
     readAegisConfig,
     config,
+    updateConfigValue,
   } = scaffold
   const [selectedWorlds, setSelectedWorlds] = useState<string[]>([])
   const [rounds, setRounds] = useLocalStorage<number>("aegis_rounds", 0)
@@ -60,6 +62,21 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
 
     loadConfigForTab()
   }, [])
+
+  const handleHiddenMoveCostsChange = async (checked: boolean): Promise<void> => {
+    if (!config) {
+      return
+    }
+
+    try {
+      const success = await updateConfigValue("features.HIDDEN_MOVE_COSTS", checked)
+      if (!success) {
+        console.error("Failed to update config")
+      }
+    } catch (error) {
+      console.error("Error updating config:", error)
+    }
+  }
 
   const isButtonDisabled = useMemo(
     () => !selectedWorlds.length || !rounds || !agent || config === null,
@@ -128,6 +145,29 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
             min={1}
             onChange={(_, val) => setAgentAmount(val)}
           />
+        </div>
+      )}
+
+      {config?.configType === "path-assignment" && (
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <Label className="text-xs text-muted-foreground">
+              Move Cost Visibility
+            </Label>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-xs text-muted-foreground">v1</span>
+              <Switch
+                checked={config?.hiddenMoveCosts ?? false}
+                onCheckedChange={handleHiddenMoveCostsChange}
+              />
+              <span className="text-xs text-muted-foreground">v2&3</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {config?.hiddenMoveCosts
+                ? "Move costs are hidden"
+                : "Move costs are known"}
+            </p>
+          </div>
         </div>
       )}
 

@@ -132,7 +132,7 @@ def init_scaffold(kind: str = "path") -> None:
     """
     Copy predefined scaffold files into the current working directory.
 
-    kind: one of "path" (default), "mas", or "comp".
+    kind: one of "path" (default), "path-v2&3", "mas", or "comp".
     """
     cwd = Path.cwd()
 
@@ -153,7 +153,7 @@ def init_scaffold(kind: str = "path") -> None:
     # Determine agent folder name and whether to include predictions
     agent_folder_name = (
         "agent_path"
-        if kind == "path"
+        if kind in {"path", "path-v2&3"}
         else "agent_mas"
         if kind == "mas"
         else "agent_comp"

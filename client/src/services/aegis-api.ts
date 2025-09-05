@@ -5,6 +5,8 @@ type AegisAPI = {
   exportWorld: (name: string, world: Uint8Array) => Promise<void>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   read_config: (aegisPath: string) => Promise<any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  update_config_value: (aegisPath: string, keyPath: string, value: any) => Promise<void>
   path: {
     join: (...args: string[]) => Promise<string>
     dirname: (dir: string) => Promise<string>
@@ -13,6 +15,7 @@ type AegisAPI = {
     existsSync: (arg: string) => Promise<boolean>
     readdirSync: (arg: string) => Promise<string[]>
     readFileSync: (arg: string) => Promise<string>
+    writeFileSync: (path: string, data: string) => Promise<void>
     isDirectory: (arg: string) => Promise<boolean>
   }
   aegis_child_process: {

@@ -81,9 +81,10 @@ class ElectronApp {
       this.killProcess(pid)
     })
 
-    ipcMain.handle("read_config", async (_, aegisPath) => {
-      return this.readConfig(aegisPath)
-    })
+    ipcMain.handle("read_config", async (_, aegisPath) => this.readConfig(aegisPath))
+    ipcMain.handle("update_config_value", async (_, aegisPath, keyPath, value) =>
+      this.updateConfigValue(aegisPath, keyPath, value)
+    )
   }
 
   private killAllProcesses(): void {
@@ -112,6 +113,8 @@ class ElectronApp {
         return fs.statSync(args[0]).isDirectory()
       case "fs.readFileSync":
         return fs.readFileSync(args[0], "utf8")
+      case "fs.writeFileSync":
+        return fs.writeFileSync(args[0], args[1])
       case "exportWorld":
         return this.exportWorld(args[0], args[1])
       case "aegis_child_process.spawn":
@@ -152,40 +155,54 @@ class ElectronApp {
       const configPath = path.join(aegisPath, "config", "config.yaml")
       const fileContent = fs.readFileSync(configPath, "utf8")
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const config = yaml.parse(fileContent) as Record<string, any>
-      return config
+      return yaml.parse(fileContent) as Record<string, any>
     } catch (error) {
       console.error(`Error reading the config file: ${error}`)
-      // Return null if the config file is not found
       return null
     }
   }
 
-  // private updateConfig(filePath: string, updates: any) {
-  //   try {
-  //     const config = this.readConfig(filePath) as Record<string, any>
-  //
-  //     // Handle nested updates (like assignment_specific.ENABLE_MOVE_COST)
-  //     for (const [key, value] of Object.entries(updates)) {
-  //       if (typeof value === 'object' && value !== null) {
-  //         // Handle nested objects
-  //         if (!config[key]) {
-  //           config[key] = {}
-  //         }
-  //         Object.assign(config[key], value)
-  //       } else {
-  //         // Handle direct properties
-  //         config[key] = value
-  //       }
-  //     }
-  //
-  //     fs.writeFileSync(filePath, yaml.stringify(config))
-  //   } catch (error) {
-  //     // @ts-ignore: error type
-  //     console.error(`Error updating the config file: ${error.message}`)
-  //     throw error
-  //   }
-  // }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private updateConfigValue(aegisPath: string, keyPath: string, value: any): void {
+    const configPath = path.join(aegisPath, "config", "config.yaml")
+
+    try {
+      const fileContent = fs.readFileSync(configPath, "utf8")
+      const config = yaml.parse(fileContent)
+
+      if (!config) {
+        throw new Error("Failed to parse config file")
+      }
+
+      // Validate key path exists in config
+      const keys = keyPath.split(".")
+      let current = config
+      for (const key of keys) {
+        if (current?.[key] === undefined) {
+          throw new Error(`Key path '${keyPath}' not found in config`)
+        }
+        current = current[key]
+      }
+
+      // Create regex to match key: value (with comments)
+      const keyName = keys[keys.length - 1]
+      const escapedKey = keyName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      const regex = new RegExp(`^(\\s*)${escapedKey}\\s*:\\s*(.*?)(\\s*#.*)?$`, "gm")
+      const newValue = typeof value === "string" ? `"${value}"` : value
+      const replacement = `$1${keyName}: ${newValue}$3`
+
+      const updatedContent = fileContent.replace(regex, replacement)
+
+      if (updatedContent === fileContent) {
+        throw new Error(`Key '${keyName}' not found in file`)
+      }
+
+      fs.writeFileSync(configPath, updatedContent, "utf8")
+    } catch (error) {
+      console.error(`Error updating config value: ${error}`)
+      throw error
+    }
+  }
 
   private spawnAegisProcess(
     rounds: string,

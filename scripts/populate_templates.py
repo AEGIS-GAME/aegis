@@ -4,6 +4,7 @@ Script to populate the template directories for aegis init command.
 
 This script copies the necessary files into the templates directory structure:
 - templates/path/ - for pathfinding assignment
+- templates/path-v2&3/ - for pathfinding assignment v2 and v3
 - templates/mas/ - for multi-agent assignment
 - templates/comp/ - for competition
 
@@ -17,19 +18,25 @@ from pathlib import Path
 TEMPLATE_STRUCTURE: dict[str, dict[str, str | None]] = {
     "path": {
         "agents": "agents/agent_path",
-        "worlds": "worlds/ExampleWorld.world",
+        "worlds": "worlds/path-worlds",
         "config": "config/presets/pathfinding-assignment.yaml",
+        "predictions": None,
+    },
+    "path-v2&3": {
+        "agents": "agents/agent_path",
+        "worlds": "worlds/path-worlds",
+        "config": "config/presets/pathfinding-v2&3-assignment.yaml",
         "predictions": None,
     },
     "mas": {
         "agents": "agents/agent_mas",
-        "worlds": "worlds/ExampleWorld.world",
+        "worlds": "worlds/mas-worlds",
         "config": "config/presets/multi-agent-assignment.yaml",
         "predictions": "prediction_data",
     },
     "comp": {
         "agents": "agents/agent_comp",
-        "worlds": "worlds/ExampleWorld.world",
+        "worlds": "worlds/comp-worlds",
         "config": "config/presets/competiton-versus.yaml",
         "predictions": "prediction_data",
     },
@@ -90,7 +97,7 @@ def _copy_agents(
 def _copy_worlds(
     worlds_path: str | None, project_root: Path, template_dir: Path
 ) -> None:
-    """Copy worlds file to template."""
+    """Copy worlds directory to template."""
     if not worlds_path:
         print("No worlds specified")
         return
@@ -101,8 +108,12 @@ def _copy_worlds(
         return
 
     worlds_dest = template_dir / "worlds"
+    if worlds_dest.exists():
+        shutil.rmtree(worlds_dest)
     worlds_dest.mkdir(parents=True, exist_ok=True)
-    _ = shutil.copy2(worlds_src, worlds_dest / worlds_src.name)
+
+    # Copy entire directory
+    copy_directory_excluding_cache(worlds_src, worlds_dest)
     # print(f"Copied worlds: {worlds_path}")
 
 
@@ -147,7 +158,7 @@ def populate_template(
     template_name: str, template_config: dict[str, str | None], project_root: Path
 ) -> None:
     """Populate a single template directory."""
-    template_dir = project_root / "src" / "_aegis" / "templates" / template_name
+    template_dir = project_root / "src" / "_aegis_game" / "templates" / template_name
 
     if template_dir.exists():
         shutil.rmtree(template_dir)

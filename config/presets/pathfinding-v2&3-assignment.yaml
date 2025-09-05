@@ -1,3 +1,6 @@
+# Pathfinding Assignment Configuration Template
+# Copy these settings to config/config.yaml and modify as needed
+
 # General aegis features
 features:
   ALLOW_AGENT_PREDICTIONS: false # allows predicting images from saved survivors (enables the predict and read_pending_predictions command for agents)
