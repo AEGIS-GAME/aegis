@@ -16,7 +16,7 @@ export function createScaffold(): Scaffold {
   const [worlds, setWorlds] = useState<string[]>([])
   const [agents, setAgents] = useState<string[]>([])
   const [config, setConfig] = useState<ClientConfig | null>(null)
-  const [rawConfig, setRawConfig] = useState<Record<string, unknown> | null>(null)
+  // const [rawConfig, setRawConfig] = useState<Record<string, unknown> | null>(null)
   const aegisPid = useRef<string | undefined>(undefined)
   const currentGameIdx = useRef(0)
   const output = useRef<RingBuffer<ConsoleLine>>(new RingBuffer(20000))
@@ -88,14 +88,14 @@ export function createScaffold(): Scaffold {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rawConfigData = (await aegisAPI!.read_config(aegisPath)) as any
       const parsedConfig = parseClientConfig(rawConfigData)
-      setRawConfig(rawConfigData)
+      // setRawConfig(rawConfigData)
       setConfig(parsedConfig)
       return true
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.debug("Config loading failed:", error)
       }
-      setRawConfig(null)
+      // setRawConfig(null)
       setConfig(null)
       return false
     }
@@ -120,28 +120,28 @@ export function createScaffold(): Scaffold {
     forceUpdate()
   }
 
-  // Freaky way to edit specific config value while keeping orginal comments, etc.
-  const updateConfigValueInObject = (
-    configObj: Record<string, unknown>,
-    path: string,
-    value: unknown
-  ): void => {
-    const keys = path.split(".")
-    let current: Record<string, unknown> = configObj
+  // // Freaky way to edit specific config value while keeping orginal comments, etc.
+  // const updateConfigValueInObject = (
+  //   configObj: Record<string, unknown>,
+  //   path: string,
+  //   value: unknown
+  // ): void => {
+  //   const keys = path.split(".")
+  //   let current: Record<string, unknown> = configObj
 
-    for (let i = 0; i < keys.length - 1; i++) {
-      if (
-        !current[keys[i]] ||
-        typeof current[keys[i]] !== "object" ||
-        current[keys[i]] === null
-      ) {
-        current[keys[i]] = {}
-      }
-      current = current[keys[i]] as Record<string, unknown>
-    }
+  //   for (let i = 0; i < keys.length - 1; i++) {
+  //     if (
+  //       !current[keys[i]] ||
+  //       typeof current[keys[i]] !== "object" ||
+  //       current[keys[i]] === null
+  //     ) {
+  //       current[keys[i]] = {}
+  //     }
+  //     current = current[keys[i]] as Record<string, unknown>
+  //   }
 
-    current[keys[keys.length - 1]] = value
-  }
+  //   current[keys[keys.length - 1]] = value
+  // }
 
   const updateConfigValue = async (
     keyPath: string,
@@ -158,7 +158,7 @@ export function createScaffold(): Scaffold {
         return false
       }
 
-      setRawConfig(freshConfig)
+      // setRawConfig(freshConfig)
       setConfig(parseClientConfig(freshConfig))
       return true
     } catch (error) {
