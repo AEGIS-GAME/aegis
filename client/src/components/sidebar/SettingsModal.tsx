@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react"
-import { Folder, SlidersHorizontal, Bug } from "lucide-react"
-import { Modal } from "@/components/ui/modal"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import { ErrorMessage } from "@/components/ui/error-message"
+import { Label } from "@/components/ui/label"
+import { Modal } from "@/components/ui/modal"
+import { Switch } from "@/components/ui/switch"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { Scaffold } from "@/types"
+import { Bug, Folder, SlidersHorizontal } from "lucide-react"
+import { useEffect, useState } from "react"
 
 type Tab = "aegis" | "config" | "user"
 
@@ -129,6 +129,14 @@ export default function SettingsModal({
                     <div className="flex justify-between">
                       <span>Agent Types</span>
                       {renderConfigValue(config.allowAgentTypes)}
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Hidden Move Costs</span>
+                      {renderConfigValue(config.hiddenMoveCosts)}
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Versus Mode</span>
+                      {renderConfigValue(config.configType === "competition")}
                     </div>
                   </div>
                 </div>

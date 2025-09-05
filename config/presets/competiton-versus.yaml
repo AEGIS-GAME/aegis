@@ -19,4 +19,4 @@ competition_specific:
 
 # Client-specific configuration
 client:
-  CONFIG_TYPE: "competition" # "assignment" or "competition"
+  CONFIG_TYPE: "competition" # "path-assignment" or "mas-assignment" or "competition", for client to conditionally render some options/settings/game elements

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ClientConfig {
-  configType: "assignment" | "competition" | null
+  configType: "path-assignment" | "mas-assignment" | "competition" | null
   variableAgentAmount: boolean
   defaultAgentAmount: number
   allowAgentTypes: boolean
+  hiddenMoveCosts: boolean
 }
 
 function getNestedValue(obj: any, path: string): any {
@@ -32,15 +33,20 @@ export function parseClientConfig(configData: any): ClientConfig {
   }
 
   const config: ClientConfig = {
-    configType: "assignment",
+    configType: "path-assignment",
     variableAgentAmount: false,
     defaultAgentAmount: 1,
     allowAgentTypes: false,
+    hiddenMoveCosts: false,
   }
 
   try {
     const configType = getNestedValue(configData, "client.CONFIG_TYPE")
-    if (configType === "assignment" || configType === "competition") {
+    if (
+      configType === "path-assignment" ||
+      configType === "mas-assignment" ||
+      configType === "competition"
+    ) {
       config.configType = configType
     }
 
@@ -63,6 +69,11 @@ export function parseClientConfig(configData: any): ClientConfig {
     const allowAgentTypes = getNestedValue(configData, "features.ALLOW_AGENT_TYPES")
     if (typeof allowAgentTypes === "boolean") {
       config.allowAgentTypes = allowAgentTypes
+    }
+
+    const hiddenMoveCosts = getNestedValue(configData, "features.HIDDEN_MOVE_COSTS")
+    if (typeof hiddenMoveCosts === "boolean") {
+      config.hiddenMoveCosts = hiddenMoveCosts
     }
 
     return config

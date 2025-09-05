@@ -64,4 +64,5 @@ export interface Scaffold {
   refreshWorldsAndAgents: () => Promise<void>
   config: ClientConfig | null
   spawnError: string
+  updateConfigValue: (keyPath: string, value: unknown) => Promise<boolean>
 }

@@ -16,6 +16,7 @@ export function createScaffold(): Scaffold {
   const [worlds, setWorlds] = useState<string[]>([])
   const [agents, setAgents] = useState<string[]>([])
   const [config, setConfig] = useState<ClientConfig | null>(null)
+  const [rawConfig, setRawConfig] = useState<Record<string, unknown> | null>(null)
   const aegisPid = useRef<string | undefined>(undefined)
   const currentGameIdx = useRef(0)
   const output = useRef<RingBuffer<ConsoleLine>>(new RingBuffer(20000))
@@ -85,14 +86,16 @@ export function createScaffold(): Scaffold {
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const rawConfig = (await aegisAPI!.read_config(aegisPath)) as any
-      const parsedConfig = parseClientConfig(rawConfig)
+      const rawConfigData = (await aegisAPI!.read_config(aegisPath)) as any
+      const parsedConfig = parseClientConfig(rawConfigData)
+      setRawConfig(rawConfigData)
       setConfig(parsedConfig)
       return true
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.debug("Config loading failed:", error)
       }
+      setRawConfig(null)
       setConfig(null)
       return false
     }
@@ -115,6 +118,55 @@ export function createScaffold(): Scaffold {
     aegisAPI!.aegis_child_process.kill(aegisPid.current)
     aegisPid.current = undefined
     forceUpdate()
+  }
+
+  // Freaky way to edit specific config value while keeping orginal comments, etc.
+  const updateConfigValueInObject = (
+    configObj: Record<string, unknown>,
+    path: string,
+    value: unknown
+  ): void => {
+    const keys = path.split(".")
+    let current: Record<string, unknown> = configObj
+
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (
+        !current[keys[i]] ||
+        typeof current[keys[i]] !== "object" ||
+        current[keys[i]] === null
+      ) {
+        current[keys[i]] = {}
+      }
+      current = current[keys[i]] as Record<string, unknown>
+    }
+
+    current[keys[keys.length - 1]] = value
+  }
+
+  const updateConfigValue = async (
+    keyPath: string,
+    value: unknown
+  ): Promise<boolean> => {
+    invariant(aegisPath, "Can't find AEGIS path!")
+
+    try {
+      await aegisAPI!.update_config_value(aegisPath, keyPath, value)
+
+      const freshConfig = await aegisAPI!.read_config(aegisPath)
+      if (!freshConfig) {
+        console.error("Failed to read config after update")
+        return false
+      }
+
+      setRawConfig(freshConfig)
+      setConfig(parseClientConfig(freshConfig))
+      return true
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.debug("Config update failed:", error)
+      }
+      return false
+    }
   }
 
   useEffect(() => {
@@ -200,6 +252,7 @@ export function createScaffold(): Scaffold {
     refreshWorldsAndAgents,
     config,
     spawnError,
+    updateConfigValue,
   }
 }
 
