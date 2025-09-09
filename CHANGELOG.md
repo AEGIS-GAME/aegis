@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.4.0...aegis-v2.5.0) (2025-09-09)
+
+
+### Miscellaneous Chores
+
+* **release:** release please ([#8](https://github.com/AEGIS-GAME/aegis/issues/8)) ([7430a70](https://github.com/AEGIS-GAME/aegis/commit/7430a703404137cb6b8f9fd0011219a34093556c))
+
 ## [2.4.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.3.0...aegis-v2.4.0) (2025-08-19)
 
 
