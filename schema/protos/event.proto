@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package aegis;
+
+import "game.proto";
+
+message Event {
+  oneof event {
+    GamesHeader games_header = 1;
+    GameHeader game_header = 2;
+    Round round = 3;
+    GameFooter game_footer = 4;
+    GamesFooter games_footer = 5;
+    DroneScanUpdate drone_scan_update = 6;
+  }
+}

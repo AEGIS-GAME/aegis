@@ -1,0 +1,22 @@
+# Competition Template
+# Copy these settings to config/config.yaml and modify as needed
+
+# General aegis features
+features:
+  ALLOW_AGENT_PREDICTIONS: true # allows predicting images from saved survivors (enables the predict and read_pending_predictions command for agents)
+  ALLOW_AGENT_MESSAGES: true # allows agents to send messages to each other (enables the send_message and read_messages command for agents)
+  ALLOW_DRONE_SCAN: true # allows agents to scan the map for more information (enables the drone_scan command for agents)
+  ALLOW_AGENT_TYPES: true # allows agents to have different types: Commander, Medic, and Engineer (enables type-specific commands and functionality)
+  HIDDEN_MOVE_COSTS: false # hides the move costs from the agents, requiring exploration to discover them
+  ALLOW_CUSTOM_AGENT_COUNT: true # allows setting a custom number of agents to be spawned at the start of the game
+  DEFAULT_AGENT_AMOUNT: 7 # the number of agents to spawn at the start of the game
+  SURV_HEALTH_DECAY_RATE: 2 # How much health a survivor loses per round
+  ADVANCED_SCORING_SYSTEM: true # Score calculated by normal score + alive agents on team
+
+# Settings more specific to competitions, usually only competitions will decide to enable these
+competition_specific:
+  VERSUS_MODE: false # enables GOOBS vs VOIDSEERS
+
+# Client-specific configuration
+client:
+  CONFIG_TYPE: "competition" # "path-assignment" or "mas-assignment" or "competition", for client to conditionally render some options/settings/game elements

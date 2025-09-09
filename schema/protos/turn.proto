@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package aegis;
+
+import "location.proto";
+import "spawn.proto";
+
+message Turn {
+  int32 agentId = 1;
+  int32 energy_level = 2;
+  int32 steps_taken = 3;
+  Location loc = 4;
+  repeated string commands = 5;
+  repeated Spawn spawns = 6;
+}

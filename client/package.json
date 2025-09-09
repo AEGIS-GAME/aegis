@@ -1,0 +1,141 @@
+{
+  "name": "aegis-client",
+  "version": "2.4.0",
+  "description": "A client for Aegis",
+  "main": "dist/main/index.js",
+  "author": "CPSC 383",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint src src-electron --fix",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "build:pack": "npm run build && electron-builder build --publish never",
+    "build:pack:win": "npm run build && electron-builder build --win --publish never",
+    "build:pack:mac": "npm run build && electron-builder build --mac --publish never",
+    "build:pack:linux": "npm run build && electron-builder build --linux --publish never"
+  },
+  "build": {
+    "appId": "com.aegis.app",
+    "productName": "AEGIS",
+    "compression": "store",
+    "directories": {
+      "output": "releases/${platform}"
+    },
+    "files": [
+      "dist/**",
+      "!**/.vscode/*",
+      "!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}",
+      "!{.env,.env.*, .npmrc, pnpm-lock.yaml}",
+      "!{tsconfig.json, tsconfig.node.json, tsconfig.web.json}"
+    ],
+    "win": {
+      "executableName": "client",
+      "icon": "./src/assets/goob.png",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "mergeASARs": false,
+      "category": "public.app-category.games",
+      "icon": "./src/assets/goob.png",
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "universal"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "./src/assets/goob.png",
+      "target": [
+        {
+          "target": "appImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Game"
+    },
+    "artifactName": "${name}.${ext}",
+    "npmRebuild": false,
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true
+    }
+  },
+  "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.4",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.1",
+    "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.1.0",
+    "@electron-toolkit/preload": "^3.0.0",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@protobuf-ts/runtime": "^2.11.1",
+    "@radix-ui/react-checkbox": "^1.3.2",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-progress": "^1.1.1",
+    "@radix-ui/react-scroll-area": "^1.2.2",
+    "@radix-ui/react-select": "^2.1.3",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-switch": "^1.1.2",
+    "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.5",
+    "aegis-schema": "file:../schema",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "electron-updater": "^6.1.7",
+    "framer-motion": "^11.2.10",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.468.0",
+    "protobufjs": "^7.5.3",
+    "radix-ui": "^1.4.2",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7",
+    "tiny-invariant": "^1.3.3",
+    "zustand": "^5.0.6"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config-prettier": "^2.0.0",
+    "@electron-toolkit/eslint-config-ts": "^1.0.1",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@swc/core": "^1.10.1",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^18.19.68",
+    "@types/pako": "^2.0.3",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "cross-env": "^7.0.3",
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1",
+    "electron-vite": "^2.0.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.33.2",
+    "postcss-loader": "^8.1.1",
+    "prettier": "^3.6.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12"
+  }
+}

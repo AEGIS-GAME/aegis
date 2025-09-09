@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package aegis;
+
+import "location.proto";
+import "spawn.proto";
+import "team.proto";
+import "turn.proto";
+import "world.proto";
+import "world_object.proto";
+
+message DroneScan {
+  Location location = 1;
+  Team team = 2;
+  int32 duration = 3;
+}
+
+message DroneScanUpdate {
+  repeated DroneScan drone_scans = 1;
+}
+
+message SurvivorHealthUpdate {
+  Location location = 1;
+  int32 survivor_id = 2;
+  int32 new_health = 3;
+  SurvivorState new_state = 4;
+}
+
+message GamesHeader {
+}
+
+message GameHeader {
+  World world = 1;
+  int32 rounds = 2;
+  repeated Spawn spawns = 3;
+}
+
+message Round {
+  int32 round = 1;  
+  repeated Location layers_removed = 2;
+  repeated int32 dead_ids = 3;
+  repeated Turn turns = 4;
+  repeated TeamInfo team_info = 5;
+  repeated DroneScan drone_scans = 6;
+  repeated SurvivorHealthUpdate survivor_health_updates = 7;
+}
+
+message GameFooter {
+}
+
+message GamesFooter {
+}

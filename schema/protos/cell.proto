@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package aegis;
+
+import "location.proto";
+import "world_object.proto";
+
+enum CellType {
+  NORMAL = 0;
+  SPAWN = 1;
+  KILLER = 2;
+  CHARGING = 3;
+}
+
+message Cell {
+  Location loc = 1;
+  int32 moveCost = 2;
+  CellType type = 3;
+  repeated int32 agents = 4;
+  repeated WorldObject layers = 5;
+}

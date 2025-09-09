@@ -1,0 +1,29 @@
+{
+  "name": "aegis-schema",
+  "version": "1.0.0",
+  "private": "true",
+  "main": "./ts/index.ts",
+  "types": "./ts/index.ts",
+  "scripts": {
+    "prebuild": "npm run clean:dirs",
+    "build": "npm run build:python && npm run build:ts && npm run fix && npm run move:client",
+    "clean:dirs": "rimraf --glob ./python/* ./ts/* ../client/node_modules/aegis-schema ../src/_aegis_game/schemas/*",
+    "build:python": "protoc --proto_path=protos --python_out=python --pyi_out=python protos/*.proto",
+    "build:ts": "npx protoc --ts_out=ts --proto_path protos protos/*.proto",
+    "fix": "python scripts/fix_imports.py && python scripts/make_index.py && python scripts/fix_line_endings.py && python scripts/check_protobuf_version.py",
+    "move:schemas": "cp -v ./python/* ../src/_aegis_game/schemas/",
+    "move:client": "npm run move:schemas && cd ../client && npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@protobuf-ts/plugin": "^2.11.1"
+  },
+  "dependencies": {
+    "@protobuf-ts/runtime": "^2.11.1",
+    "rimraf": "^6.0.1",
+    "ts-proto": "^2.7.5"
+  }
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package aegis;
+
+enum Team {
+  GOOBS = 0;
+  VOIDSEERS = 1;
+}
+
+message TeamInfo {
+  int32 saved_alive = 1;
+  int32 saved_dead = 2;
+  int32 saved = 3;
+  int32 predicted_right = 4;
+  int32 predicted_wrong = 5;
+  int32 predicted = 6;
+  int32 score = 7;
+  int32 units = 8;
+  Team team = 9;
+}
+

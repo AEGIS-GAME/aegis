@@ -1,0 +1,7 @@
+client:
+  - changed-files:
+    - any-glob-to-any-file: client/**
+
+aegis:
+  - changed-files:
+    - any-glob-to-any-file: src/**

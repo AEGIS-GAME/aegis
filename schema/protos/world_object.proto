@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package aegis;
+
+enum SurvivorState {
+  ALIVE = 0;
+  DEAD = 1;
+}
+
+message Survivor {
+  int32 id = 1;
+  int32 health = 2;
+  SurvivorState state = 3;
+}
+
+message Rubble {
+  int32 id = 1;
+  int32 energy_required = 2;
+  int32 agents_required = 3;
+}
+
+message WorldObject {
+  oneof object {
+    Survivor survivor = 1;
+    Rubble rubble = 2;
+  }
+}

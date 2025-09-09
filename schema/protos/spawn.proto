@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package aegis;
+
+import "location.proto";
+import "team.proto";
+
+message Spawn {
+  int32 agentId = 1;
+  Location loc = 2;
+  Team team = 3;
+}
+
+message InitSpawn {
+  Location loc = 1;
+  int32 amount = 2;
+}

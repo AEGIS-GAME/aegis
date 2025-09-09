@@ -1,0 +1,10 @@
+policy:
+  - template: ['bug.yml', 'feature.yml']
+    section:
+      - id: ['component']
+        label:
+          - name: 'aegis'
+            keys: ['Aegis']
+          - name: 'client'
+            keys: ['Client']
+
