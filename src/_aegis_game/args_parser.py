@@ -124,9 +124,9 @@ def parse_args() -> Args:
     _ = init_parser.add_argument(
         "--type",
         dest="init_type",
-        choices=["path-v1&2", "path-v3", "mas", "comp"],
-        default="path-v1&2",
-        help="Initialization type: 'path-v1&2' (default), 'path-v3', 'mas', or 'comp'",
+        choices=["path", "mas", "comp"],
+        default="path",
+        help="Initialization type: 'path' (default), 'mas', or 'comp'",
     )
 
     args = parser.parse_args(namespace=TypedNamespace)
