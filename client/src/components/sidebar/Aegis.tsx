@@ -31,7 +31,7 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
     readAegisConfig,
     config,
   } = scaffold
-  const [world, setWorld] = useState<string>('')
+  const [world, setWorld] = useState<string>("")
   // const [selectedWorlds, setSelectedWorlds] = useState<string[]>([])
   const [rounds, setRounds] = useLocalStorage<number>("aegis_rounds", 0)
   const [agent, setAgent] = useLocalStorage<string>("aegis_agent", "")
@@ -84,7 +84,9 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
         <Label className="text-xs text-muted-foreground">Worlds</Label>
         <Select value={world} onValueChange={(value) => setWorld(value)}>
           <SelectTrigger>
-            <SelectValue placeholder="Choose a world">{world || 'Select a world'}</SelectValue>
+            <SelectValue placeholder="Choose a world">
+              {world || "Select a world"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {worlds.map((world) => (
