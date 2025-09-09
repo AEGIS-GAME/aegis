@@ -7,7 +7,6 @@
     },
     ".": {
       "release-type": "python",
-      "package-name": "aegis",
       "exclude-paths": ["client"]
     }
   }
