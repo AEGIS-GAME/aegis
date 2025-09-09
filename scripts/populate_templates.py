@@ -1,10 +1,8 @@
-#!/usr/bin/env python3
 """
 Script to populate the template directories for aegis init command.
 
 This script copies the necessary files into the templates directory structure:
-- templates/path-v1&2/ - for pathfinding assignment v1&2
-- templates/path-v3/ - for pathfinding assignment v3
+- templates/path/ - for pathfinding assignment
 - templates/mas/ - for multi-agent assignment
 - templates/comp/ - for competition
 
@@ -16,16 +14,10 @@ import sys
 from pathlib import Path
 
 TEMPLATE_STRUCTURE: dict[str, dict[str, str | None]] = {
-    "path-v1&2": {
+    "path": {
         "agents": "agents/agent_path",
         "worlds": "worlds/path-worlds",
-        "config": "config/presets/pathfinding-v1&2-assignment.yaml",
-        "predictions": None,
-    },
-    "path-v3": {
-        "agents": "agents/agent_path",
-        "worlds": "worlds/path-worlds",
-        "config": "config/presets/pathfinding-v3-assignment.yaml",
+        "config": "config/presets/pathfinding-assignment.yaml",
         "predictions": None,
     },
     "mas": {

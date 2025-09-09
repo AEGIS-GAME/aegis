@@ -11,16 +11,15 @@ These preset files contain example configurations that you can copy into the mai
 
 ## Available Presets:
 
-- `pathfinding-v1&2-assignment.yaml` - Settings for pathfinding assignments v1&2
-- `pathfinding-v3-assignment.yaml` - Settings for pathfinding assignments v3
-- `multi-agent-assignment.yaml` - Settings for multi-agent assignments
+- `pathfinding-assignment.yaml` - Settings for pathfinding assignment
+- `multi-agent-assignment.yaml` - Settings for multi-agent assignment
 - `competition.yaml` - Configuration for competition mode with two teams
 
 ## Example:
 
 If you want to use the pathfinding preset:
 
-1. Open `pathfinding-v1&2-assignment.yaml` or `pathfinding-v3-assignment.yaml` and copy the settings
+1. Open `pathfinding-assignment.yaml` and copy the settings
 2. Open `config/config.yaml`
 3. Replace the relevant sections with the copied settings
 4. Save `config/config.yaml`

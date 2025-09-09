@@ -128,11 +128,11 @@ def _print_summary(  # noqa: PLR0913
         )
 
 
-def init_scaffold(kind: str = "path-v1&2") -> None:
+def init_scaffold(kind: str = "path") -> None:
     """
     Copy predefined scaffold files into the current working directory.
 
-    kind: one of "path-v1&2" (default), "path-v3", "mas", or "comp".
+    kind: one of "path" (default), "mas", or "comp".
     """
     cwd = Path.cwd()
 
@@ -153,7 +153,7 @@ def init_scaffold(kind: str = "path-v1&2") -> None:
     # Determine agent folder name and whether to include predictions
     agent_folder_name = (
         "agent_path"
-        if kind in {"path-v1&2", "path-v3"}
+        if kind == "path"
         else "agent_mas"
         if kind == "mas"
         else "agent_comp"
