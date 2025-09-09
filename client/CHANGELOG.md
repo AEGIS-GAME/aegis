@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.5.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-client-v2.5.2...aegis-client-v2.5.2) (2025-09-09)
+
+
+### Bug Fixes
+
+* **client world picker:** multiselect back to single for now in client only ([#12](https://github.com/AEGIS-GAME/aegis/issues/12)) ([4f66834](https://github.com/AEGIS-GAME/aegis/commit/4f66834bfe9bf251862e33cda2adfebd68ddc493))
+
+
+### Miscellaneous Chores
+
+* release 2.5.0 ([3eb076d](https://github.com/AEGIS-GAME/aegis/commit/3eb076dff4a0336558ca30647a628417b46666db))
+* release 2.5.2 ([bdb4a12](https://github.com/AEGIS-GAME/aegis/commit/bdb4a12f48ffb9191d0097d9f3fd43f6e5323970))
+
 ## [2.5.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-client-v2.5.0...aegis-client-v2.5.1) (2025-09-09)
 
 
