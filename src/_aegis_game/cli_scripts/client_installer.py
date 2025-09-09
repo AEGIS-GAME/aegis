@@ -15,7 +15,7 @@ class ClientInstaller:
     """Handles downloading and installing AEGIS client releases."""
 
     OWNER: str = "AEGIS-GAME"
-    REPO: str = "AEGIS"
+    REPO: str = "aegis"
     CHUNK_SIZE: int = 8192
     CLIENT_DIR: Path = Path("client")
 
