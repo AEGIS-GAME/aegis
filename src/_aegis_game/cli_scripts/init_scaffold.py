@@ -114,17 +114,17 @@ def _print_summary(  # noqa: PLR0913
 ) -> None:
     print("[aegis] Init scaffold:")
     print(
-        f"  - worlds/ExampleWorld.world: {'copied' if created_world else 'exists, skipped'}"
+        f"\t- worlds/ExampleWorld.world: {'copied' if created_world else 'exists, skipped'}"
     )
     print(
-        f"  - agents/{agent_folder_name}: {'copied' if created_agent else 'exists, skipped'}"
+        f"\t- agents/{agent_folder_name}: {'copied' if created_agent else 'exists, skipped'}"
     )
     print(
-        f"  - config/config.yaml: {'copied' if created_config else 'exists, skipped'}"
+        f"\t- config/config.yaml: {'copied' if created_config else 'exists, skipped'}"
     )
     if include_predictions:
         print(
-            f"  - prediction_data: {'copied' if created_predictions else 'exists, skipped'}"
+            f"\t- prediction_data: {'copied' if created_predictions else 'exists, skipped'}"
         )
 
 
