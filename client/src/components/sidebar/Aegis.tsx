@@ -15,7 +15,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { Scaffold } from "@/types"
 import GameCycler from "../GameCycler"
 import NumberInput from "../NumberInput"
-import { MultiSelect } from "../ui/multiselect"
+// import { MultiSelect } from "../ui/multiselect"
 
 type Props = {
   scaffold: Scaffold
@@ -31,7 +31,8 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
     readAegisConfig,
     config,
   } = scaffold
-  const [selectedWorlds, setSelectedWorlds] = useState<string[]>([])
+  const [world, setWorld] = useState<string>('')
+  // const [selectedWorlds, setSelectedWorlds] = useState<string[]>([])
   const [rounds, setRounds] = useLocalStorage<number>("aegis_rounds", 0)
   const [agent, setAgent] = useLocalStorage<string>("aegis_agent", "")
   const getInitialAgentAmount = (): number => {
@@ -62,8 +63,8 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
   }, [])
 
   const isButtonDisabled = useMemo(
-    () => !selectedWorlds.length || !rounds || !agent || config === null,
-    [selectedWorlds, rounds, agent, config]
+    () => !world || !rounds || !agent || config === null,
+    [world, rounds, agent, config]
   )
 
   const showMultiAgentOptions = config?.variableAgentAmount ?? false
@@ -81,11 +82,23 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
 
       <div>
         <Label className="text-xs text-muted-foreground">Worlds</Label>
-        <MultiSelect
-          options={worlds}
-          selected={selectedWorlds}
-          onChange={setSelectedWorlds}
-        />
+        <Select value={world} onValueChange={(value) => setWorld(value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Choose a world">{world || 'Select a world'}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {worlds.map((world) => (
+              <SelectItem key={world} value={world}>
+                {world}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {/* <MultiSelect */}
+        {/*   options={worlds} */}
+        {/*   selected={selectedWorlds} */}
+        {/*   onChange={setSelectedWorlds} */}
+        {/* /> */}
       </div>
 
       <div>
@@ -153,7 +166,7 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
               startSimulation(
                 rounds.toString(),
                 agentAmount.toString(),
-                selectedWorlds,
+                [world],
                 agent,
                 debug
               )
