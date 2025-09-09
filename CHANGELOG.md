@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.5.0...aegis-v2.5.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* init, change it to aegis init path instead of versions ([#10](https://github.com/AEGIS-GAME/aegis/issues/10)) ([d3a32d8](https://github.com/AEGIS-GAME/aegis/commit/d3a32d814cb64cefd54d6c254ce6d40757caff48))
+
 ## [2.5.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.4.0...aegis-v2.5.0) (2025-09-09)
 
 
