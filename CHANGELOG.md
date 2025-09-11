@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.5](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.5.4...aegis-v2.5.5) (2025-09-11)
+
+
+### Bug Fixes
+
+* idk ([#24](https://github.com/AEGIS-GAME/aegis/issues/24)) ([ea59136](https://github.com/AEGIS-GAME/aegis/commit/ea591367d348cce15aae46e172e5e2a19458f509))
+
 ## [2.5.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.5.2...aegis-v2.5.2) (2025-09-09)
 
 
