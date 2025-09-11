@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.5.4](https://github.com/AEGIS-GAME/aegis/compare/aegis-client-v2.5.2...aegis-client-v2.5.4) (2025-09-11)
+
+
+### Miscellaneous Chores
+
+* release 2.5.3 ([9572d85](https://github.com/AEGIS-GAME/aegis/commit/9572d8598bb30d72ded4806fcad0016a97316efe))
+* release 2.5.3 ([#16](https://github.com/AEGIS-GAME/aegis/issues/16)) ([52a8fbf](https://github.com/AEGIS-GAME/aegis/commit/52a8fbfd5bc2bbdc5522a0857fe2beed37fcfa6c))
+* release 2.5.4 ([#18](https://github.com/AEGIS-GAME/aegis/issues/18)) ([8053984](https://github.com/AEGIS-GAME/aegis/commit/8053984580d6df587a8ae074b3ed23ee328fe082))
+
 ## [2.5.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-client-v2.5.2...aegis-client-v2.5.2) (2025-09-09)
 
 
