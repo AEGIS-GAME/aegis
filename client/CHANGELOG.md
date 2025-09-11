@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.6](https://github.com/AEGIS-GAME/aegis/compare/client-v2.5.5...client-v2.5.6) (2025-09-11)
+
+
+### Miscellaneous Chores
+
+* **release:** release 2.5.6 ([dfba2f3](https://github.com/AEGIS-GAME/aegis/commit/dfba2f3aa87e85b7997fafd95e99b37ed30bafc7))
+
 ## [2.5.5](https://github.com/AEGIS-GAME/aegis/compare/client-v2.5.4...client-v2.5.5) (2025-09-11)
 
 
