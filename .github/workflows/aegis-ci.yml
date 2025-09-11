@@ -69,21 +69,21 @@ jobs:
           echo "${{ toJSON(steps.release.outputs) }}"
 
       - name: Install uv
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        # if: ${{ steps.release.outputs.releases_created == 'true' }}
         uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
 
       - name: Install dependencies
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        # if: ${{ steps.release.outputs.releases_created == 'true' }}
         run: uv sync --dev
 
       - name: Build
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        # if: ${{ steps.release.outputs.releases_created == 'true' }}
         run: uv build
 
       - name: Publish to PyPI
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        # if: ${{ steps.release.outputs.releases_created == 'true' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
