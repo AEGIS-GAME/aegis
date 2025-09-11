@@ -5,7 +5,6 @@
   "tag-separator": "-",
   "release-type": "python",
   "last-release-sha": "983b8b0bfee73b8c1f728035907f4df51bbf5f60",
-  "release-as": "2.8.0",
   "packages": {
     "client": {
       "release-type": "node",
