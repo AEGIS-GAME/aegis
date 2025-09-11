@@ -179,13 +179,3 @@ jobs:
           release_name: "Client ${{ needs.release-please.outputs.tag_name }}"
           overwrite: true
           make_latest: true
-
-      - name: Tag stable versions
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/google-github-actions/release-please-action.git"
-          git tag -d client/stable || true
-          git push origin :client/stable || true
-          git tag -a client/stable -m "Last Stable Client Release"
-          git push origin client/stable
