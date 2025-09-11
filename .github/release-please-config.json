@@ -3,6 +3,7 @@
   "group-pull-request-title-pattern": "chore: release ${version}",
   "include-component-in-tag": true,
   "tag-separator": "-",
+  "bootstrap-sha": "983b8b0bfee73b8c1f728035907f4df51bbf5f60",
   "packages": {
     "client": {
       "release-type": "node",
