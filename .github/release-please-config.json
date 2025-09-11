@@ -3,11 +3,13 @@
   "group-pull-request-title-pattern": "chore: release ${version}",
   "packages": {
     "client": {
-      "release-type": "node"
+      "release-type": "node",
+      "component": "client"
     },
     ".": {
       "release-type": "python",
       "package-name": "aegis",
+      "component": "aegis",
       "exclude-paths": ["client"]
     }
   }
