@@ -33,7 +33,7 @@ jobs:
         run: npx eslint src src-electron
 
   release-please:
-    if: ${{ false && !failure() && github.ref == 'refs/heads/main' }}
+    if: ${{ !failure() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
