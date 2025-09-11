@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.5.5 (2025-09-11)
+
+
+### Bug Fixes
+
+* idk ([#24](https://github.com/AEGIS-GAME/aegis/issues/24)) ([ea59136](https://github.com/AEGIS-GAME/aegis/commit/ea591367d348cce15aae46e172e5e2a19458f509))
+* init, change it to aegis init path instead of versions ([#10](https://github.com/AEGIS-GAME/aegis/issues/10)) ([d3a32d8](https://github.com/AEGIS-GAME/aegis/commit/d3a32d814cb64cefd54d6c254ce6d40757caff48))
+* **release-please:** hopefully this works ([#20](https://github.com/AEGIS-GAME/aegis/issues/20)) ([97da806](https://github.com/AEGIS-GAME/aegis/commit/97da806345bcbe0225263b689600508ff73120e9))
+
+
+### Miscellaneous Chores
+
+* release 2.5.2 ([130a22e](https://github.com/AEGIS-GAME/aegis/commit/130a22e950b8ecbc144dbc5f4ad6b8ee9dc3ec38))
+* **release:** release please ([#8](https://github.com/AEGIS-GAME/aegis/issues/8)) ([7430a70](https://github.com/AEGIS-GAME/aegis/commit/7430a703404137cb6b8f9fd0011219a34093556c))
+
 ## [2.5.5](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.5.4...aegis-v2.5.5) (2025-09-11)
 
 
