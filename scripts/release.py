@@ -202,8 +202,8 @@ def create_or_update_pr(
 
     try:
         repo.git.commit("-m", title)  # pyright: ignore[reportAny]
-    except GitCommandError:
-        print("[*] No changes to commit")
+    except GitCommandError as e:
+        print(f"[*] No changes to commit: {e}")
 
     repo.git.push("origin", branch)  # pyright: ignore[reportAny]
 
