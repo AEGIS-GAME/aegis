@@ -1,14 +1,15 @@
 """Custom script to copy the trash google software (release-please)."""
 # ruff: noqa: S603, S607, PLW1510
 
+import contextlib
 import json
 import subprocess
 from pathlib import Path
+from typing import cast
 
 import toml
 from git import Commit, GitCommandError, Repo
 from semver import VersionInfo
-import contextlib
 
 PACKAGES = {
     "client": {
@@ -43,7 +44,6 @@ def collect_commits_by_package(
         commits = list(repo.iter_commits(f"{last_tag}..HEAD", paths=path_filter))
     else:
         commits = list(repo.iter_commits("HEAD", paths=path_filter))
-
     return [c for c in commits if "release" not in str(c.message.lower())]
 
 
@@ -82,21 +82,21 @@ def update_version(pkg: str, new_version: str) -> None:
     """Update version in package specific file."""
     path = Path(PACKAGES[pkg]["file"])
     if pkg == "client":
-        with Path.open(path) as f:
+        with path.open() as f:
             data = json.load(f)  # pyright: ignore[reportAny]
         data["version"] = new_version
-        with Path.open(path, "w") as f:
+        with path.open("w") as f:
             json.dump(data, f, indent=2)
             _ = f.write("\n")
     else:
         data = toml.load(path)
         data["project"]["version"] = new_version
-        with Path.open(path, "w") as f:
+        with path.open("w") as f:
             _ = toml.dump(data, f)
 
 
-def build_changelog(messages: list[str]) -> str:
-    """Build a changelog grouped by section."""
+def build_package_section(pkg: str, messages: list[str], version: str) -> str:
+    """Build a changelog section for a single package."""
     features: list[str] = []
     fixes: list[str] = []
     breaking: list[str] = []
@@ -104,8 +104,8 @@ def build_changelog(messages: list[str]) -> str:
 
     for msg in messages:
         header_line = msg.splitlines()[0].strip()
-
         header = header_line.split(":", 1)[0]
+
         if "BREAKING CHANGE" in header_line or "!" in header:
             breaking.append(f"- {header_line}")
         elif header_line.startswith("feat"):
@@ -125,13 +125,36 @@ def build_changelog(messages: list[str]) -> str:
     if others:
         sections.append("### 📝 Other\n" + "\n".join(others))
 
-    return "\n\n".join(sections) if sections else "No notable changes."
+    section_text = "\n\n".join(sections) if sections else "No notable changes."
+
+    # Wrap in collapsible
+    return f"<details>\n  <summary>{pkg} v{version}</summary>\n\n{section_text}\n</details>"
 
 
-def create_or_update_pr(pkg: str, new_version: str, changelog: str) -> None:
-    """Create or update a release PR without overwriting."""
-    branch = f"release/{pkg}-v{new_version}"
-    title = f"chore(release): {pkg} v{new_version}"
+def build_changelog(
+    all_commit_messages: dict[str, list[str]], new_versions: dict[str, str]
+) -> str:
+    """Build a combined changelog for all packages and update their versions."""
+    changelog_sections: list[str] = []
+
+    for pkg, messages in all_commit_messages.items():
+        if not messages or pkg not in new_versions:
+            continue
+
+        # Update package version
+        update_version(pkg, new_versions[pkg])
+
+        # Build section
+        section = build_package_section(pkg, messages, new_versions[pkg])
+        changelog_sections.append(section)
+
+    return "\n\n".join(changelog_sections)
+
+
+def create_or_update_pr(changelog_body: str) -> None:
+    """Create or update a single combined release PR."""
+    branch = "release-branch"
+    title = "chore(release): release updates"
 
     repo = Repo(".")
     try:
@@ -140,16 +163,15 @@ def create_or_update_pr(pkg: str, new_version: str, changelog: str) -> None:
     except GitCommandError:
         repo.git.checkout("-b", branch)  # pyright: ignore[reportAny]
 
-    update_version(pkg, new_version)
-    changelog_path = Path(f"{pkg}_CHANGELOG.md")
-    _ = changelog_path.write_text(changelog + "\n")
-
+    # Commit changelog updates
+    changelog_path = Path("CHANGELOG.md")
+    _ = changelog_path.write_text(changelog_body + "\n")
     repo.git.add(A=True)  # pyright: ignore[reportAny]
     with contextlib.suppress(GitCommandError):
         repo.git.commit(m=title)  # pyright: ignore[reportAny]
-
     repo.git.push("origin", branch)  # pyright: ignore[reportAny]
 
+    # Create PR if it doesn't exist
     pr_list = subprocess.run(
         ["gh", "pr", "list", "--head", branch, "--json", "number"],
         capture_output=True,
@@ -164,7 +186,7 @@ def create_or_update_pr(pkg: str, new_version: str, changelog: str) -> None:
                 "--title",
                 title,
                 "--body",
-                changelog,
+                changelog_body,
                 "--base",
                 "main",
                 "--head",
@@ -177,13 +199,17 @@ def create_or_update_pr(pkg: str, new_version: str, changelog: str) -> None:
 def main() -> None:
     """Entry point for release script."""
     repo = Repo(".")
+    all_commit_messages: dict[str, list[str]] = {}
+    bumps: dict[str, str] = {}
+
+    # 1️⃣ Collect commits & detect bumps
     for pkg in PACKAGES:
         print(f"[*] Checking {pkg}...")
         prefix = PACKAGES[pkg]["tag_prefix"]
         last_tag = get_last_tag(repo, prefix)
-        if last_tag is None:
-            print(f"[!] Could not find recent tag for {pkg}")
+
         commits = collect_commits_by_package(repo, last_tag, PACKAGES[pkg]["path"])
+
         if pkg == "aegis":
             commits = [
                 c
@@ -192,28 +218,36 @@ def main() -> None:
                     str(f).startswith(PACKAGES["client"]["path"]) for f in c.stats.files
                 )
             ]
-        commit_messages = [str(c.message.strip()) for c in commits]
-        bump = detect_bump(commit_messages)
-        if not bump:
-            print(f"[*] No release needed for {pkg}")
-            continue
 
-        # TODO: remove this if check after I release first version with tag
+        messages = [str(c.message.strip()) for c in commits]
+        all_commit_messages[pkg] = messages
+        bump = detect_bump(messages)
+        if bump:
+            bumps[pkg] = bump
+
+    if not bumps:
+        print("[*] No release needed for any package")
+        return
+
+    new_versions: dict[str, str] = {}
+    for pkg in PACKAGES:
+        if pkg not in bumps:
+            continue
         path = Path(PACKAGES[pkg]["file"])
-        current = "2.5.5"
-        if last_tag is None:
-            new_version = "2.6.0"
-        elif pkg == "client":
-            with Path.open(path) as f:
-                current = json.load(f)["version"]
+        if pkg == "client":
+            with path.open() as f:
+                current = cast("str", json.load(f)["version"])
         else:
             data = toml.load(path)
-            current = data["project"]["version"]
+            current = cast("str", data["project"]["version"])
 
-        new_version = bump_version(current, bump)
-        print(f"[*] {pkg}: {current} → {new_version}")
-        changelog = build_changelog(commit_messages)
-        create_or_update_pr(pkg, new_version, changelog)
+        new_versions[pkg] = bump_version(current, bumps[pkg])
+
+    # TODO: DELETE AFTER FIRST RELEASE
+    new_versions = {"client": "2.6.0", "aegis": "2.6.0"}
+    changelog_body = build_changelog(all_commit_messages, new_versions)
+    create_or_update_pr(changelog_body)
+    print("[*] Release PR updated")
 
 
 if __name__ == "__main__":
