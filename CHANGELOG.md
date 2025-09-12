@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [2.6.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.5.5...aegis-v2.6.2) (2025-09-12)
+
+
+### Miscellaneous Chores
+
+* **release:** release 2.6.1 ([fac6d6a](https://github.com/AEGIS-GAME/aegis/commit/fac6d6aa2045e8a55613ef819fa848da18bc46dd))
+* **release:** release 2.6.2 ([3a67a71](https://github.com/AEGIS-GAME/aegis/commit/3a67a7105dad112d8e03af9de96e18bf26fa0fd5))
+* **release:** release 2.6.2 ([295ca06](https://github.com/AEGIS-GAME/aegis/commit/295ca06f80e56a78aef2fd22ba23cf6f9e424047))
+* **release:** release 2.6.2 ([8787df7](https://github.com/AEGIS-GAME/aegis/commit/8787df78bc9b3420c6d1cae15ea6406de9cb11f0))
+
 ## 2.5.5 (2025-09-12)
 
 
