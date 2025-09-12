@@ -126,11 +126,12 @@ export default function Sidebar(): JSX.Element {
                   onClick={() => handleSidebarClick(item.id)}
                   className={`
                   p-3 my-2 rounded-xl transition-colors 
-                  ${selectedView === item.id
+                  ${
+                    selectedView === item.id
                       ? "text-foreground bg-accent"
                       : "text-muted-foreground hover:bg-accent"
-                    }
-                  `}
+                  }
+                `}
                 >
                   <item.icon />
                 </Button>
@@ -144,8 +145,9 @@ export default function Sidebar(): JSX.Element {
       </div>
 
       <div
-        className={`h-full overflow-hidden bg-background border-r relative ${isDragging ? "" : "transition-all duration-300"
-          }`}
+        className={`h-full overflow-hidden bg-background border-r relative ${
+          isDragging ? "" : "transition-all duration-300"
+        }`}
         style={{ width: selectedView ? `${width}px` : "0rem" }}
       >
         {selectedView && (
