@@ -1,17 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "group-pull-request-title-pattern": "chore(${component}): release ${version}",
-  "include-component-in-tag": true,
-  "tag-separator": "-",
+  "group-pull-request-title-pattern": "chore: release ${version}",
   "packages": {
     "client": {
-      "release-type": "node",
-      "component": "client"
+      "release-type": "node"
     },
     ".": {
       "release-type": "python",
       "package-name": "aegis",
-      "component": "aegis",
       "exclude-paths": ["client"]
     }
   }
