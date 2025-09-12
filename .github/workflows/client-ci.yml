@@ -39,7 +39,7 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
-  outputs:
+    outputs:
       release_created: ${{ steps.check-pr.outputs.release_merged }}
     steps:
       - name: Checkout Repository
@@ -168,7 +168,7 @@ jobs:
     needs: [build, release] 
     runs-on: ubuntu-latest
     permissions:
-clientcontents: write
+     contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4

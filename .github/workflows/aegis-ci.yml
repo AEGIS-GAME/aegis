@@ -68,17 +68,17 @@ jobs:
         run: uv run scripts/release.py
 
       - name: Build
-        if: contains(github.event.head_commit.message, 'chore(release): release updates')
+        if: ${{ github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release-branch' }}
         run: uv build
 
       - name: Publish to PyPI
-        if: contains(github.event.head_commit.message, 'chore(release): release updates')
+        if: ${{ github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release-branch' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
 
       - name: Tag release
-        if: contains(github.event.head_commit.message, 'chore(release): release updates')
+        if: ${{ github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release-branch' }}
         run: |
           VERSION=$(uv run python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
           git config user.name "github-actions[bot]"
