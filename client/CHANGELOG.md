@@ -45,6 +45,21 @@
 </details>
 
 
+## v2.6.0 (2025-09-12)
+
+<details>
+  <summary>client v2.6.0</summary>
+
+### 🐛 Fixes
+- fix(client world picker): multiselect back to single for now in client only (#12)
+
+### 📝 Other
+- chore(idk): just trying (#21)
+- chore: update logs settings message
+- chore: push everything
+</details>
+
+
 ## 2.5.7 (2025-09-11)
 
 
