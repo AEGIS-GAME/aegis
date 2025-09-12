@@ -152,6 +152,8 @@ jobs:
 
   release-aegis:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
