@@ -67,7 +67,6 @@ export default function Sidebar(): JSX.Element {
     document.body.style.userSelect = ""
   }, [])
 
-  // Global mouse events
   useEffect(() => {
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove)
@@ -132,7 +131,7 @@ export default function Sidebar(): JSX.Element {
                       ? "text-foreground bg-accent"
                       : "text-muted-foreground hover:bg-accent"
                   }
-                  `}
+                `}
                 >
                   <item.icon />
                 </Button>

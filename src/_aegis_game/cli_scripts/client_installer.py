@@ -12,7 +12,7 @@ import requests
 
 
 class ClientInstaller:
-    """Handles downloading and installing AEGIS client releases."""
+    """Handles downloading and installing the AEGIS client."""
 
     OWNER: str = "AEGIS-GAME"
     REPO: str = "aegis"
