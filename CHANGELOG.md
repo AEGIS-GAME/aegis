@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.6.4...aegis-v2.7.0) (2025-09-12)
+
+
+### Features
+
+* **new workflow:** move release into one workflow ([bf76e95](https://github.com/AEGIS-GAME/aegis/commit/bf76e95af4b9afdefd75a0a9cc1c09e1d29505da))
+
 ## [2.6.4](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.6.3...aegis-v2.6.4) (2025-09-12)
 
 
