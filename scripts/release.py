@@ -251,6 +251,7 @@ def main() -> None:
             ]
 
         messages = [str(c.message.strip()) for c in commits]
+        print(messages)
         all_commit_messages[pkg] = messages
         bump = detect_bump(messages)
         if bump:
