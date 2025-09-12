@@ -42,19 +42,3 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
-
-  bump:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: write
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Python Semantic Release
-        uses: python-semantic-release/python-semantic-release@v9.8.8
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
