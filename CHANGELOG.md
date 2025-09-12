@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.1...aegis-v2.7.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* **ci:** release wrong platforms ([ecbec71](https://github.com/AEGIS-GAME/aegis/commit/ecbec71816f5f2be925f38ef0fb60ef8a42bbc6c))
+
 ## [2.7.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.0...aegis-v2.7.1) (2025-09-12)
 
 
