@@ -161,7 +161,7 @@ def create_or_update_pr(
 ) -> None:
     """Create or update a single combined release PR with per-package changelogs."""
     branch = "release-branch"
-    title = "chore(release): release updates"
+    title = f"chore(release): release v{new_versions['aegis']}"
 
     repo = Repo(".")
     try:
