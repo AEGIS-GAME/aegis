@@ -4,8 +4,7 @@
   "packages": {
     ".": {
       "release-type": "python",
-      "package-name": "aegis",
-      "exclude-paths": ["client"]
+      "package-name": "aegis"
     }
   }
 }
