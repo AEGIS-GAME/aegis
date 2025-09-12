@@ -204,6 +204,9 @@ def create_or_update_pr(
         capture_output=True,
         text=True,
     )
+
+    print(f"[*] Existing PRs: {pr_list.stdout}")
+
     if "[]" in pr_list.stdout:
         body = "\n\n".join(
             f"<details><summary>{pkg} v{new_versions[pkg]}</summary>\n\n{changelog}\n</details>"

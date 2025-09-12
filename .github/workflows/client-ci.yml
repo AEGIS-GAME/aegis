@@ -56,6 +56,8 @@ jobs:
         run: uv sync --dev
 
       - name: Run custom release script
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: uv run scripts/release.py
 
       - name: Check if release PR was merged
