@@ -32,35 +32,47 @@ jobs:
         working-directory: client
         run: npx eslint src src-electron
 
-  release-please:
+  release:
     if: ${{ !failure() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
       issues: write
-    outputs:
-      releases_created: ${{ steps.release.outputs.releases_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+  outputs:
+      release_created: ${{ steps.check-pr.outputs.release_merged }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Create Release
-        uses: googleapis/release-please-action@v4
-        id: release
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-          config-file: ${{ hashFiles('.github/release-please-config.json') != '' && '.github/release-please-config.json' || '' }}
-          manifest-file: ${{ hashFiles('.github/release-please-manifest.json') != '' && '.github/release-please-manifest.json' || hashFiles('.github/.release-please-manifest.json') != '' && '.github/.release-please-manifest.json' || '' }}
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Run custom release script
+        run: uv run scripts/release.py
+
+      - name: Check if release PR was merged
+        id: check-pr
+        run: |
+          PR_TITLE="chore(release): release updates"
+          MERGED=$(gh pr list --state merged --search "$PR_TITLE in:title" --json number --jq '.[0].number' || echo "")
+          if [ -n "$MERGED" ]; then
+            echo "release_merged=true" >> $GITHUB_OUTPUT
+          else
+            echo "release_merged=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Debug release
-        continue-on-error: true
-        run: |
-          echo "${{ toJSON(steps.release.outputs) }}"
+        run: echo "Release merged? ${{ steps.check-pr.outputs.release_merged }}"
 
   build:
     if: ${{ !failure() && (github.ref == 'refs/heads/main' || github.base_ref == 'main') }}
-    needs: [lint, release-please]
+    needs: [lint, release]
     strategy:
       matrix:
         include:
@@ -122,7 +134,7 @@ jobs:
           fi
 
       - name: Prepare zips
-        if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+        if: ${{ needs.release.outputs.release_created == 'true' }}
         working-directory: client 
         shell: bash
         run: |
@@ -143,7 +155,7 @@ jobs:
           7z a -tzip "$RELEASE_ASSETS_PATH/${{ matrix.artifact-name }}.zip" "$ARTIFACT_NAME"
 
       - name: Upload built client as artifact
-        if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+        if: ${{ needs.release.outputs.release_created == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact-name }}
@@ -152,11 +164,11 @@ jobs:
           if-no-files-found: error
 
   publish:
-    if: ${{ !failure() && github.ref == 'refs/heads/main' && needs.release-please.outputs.releases_created == 'true' }}
-    needs: [build, release-please] 
+    if: ${{ !failure() && github.ref == 'refs/heads/main' && needs.release.outputs.release_created == 'true' }}
+    needs: [build, release] 
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+clientcontents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -169,13 +181,24 @@ jobs:
       - name: List artifacts
         run: find ./release-assets -type f -ls
 
+      - name: Tag release
+        id: tag
+        run: |
+          VERSION=$(uv run python -c "import json; print(json.load(open('client/package.json','rb'))['version'])")
+          TAG="client-v$VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG
+          git push origin $TAG
+          echo "release_tag=$TAG" >> $GITHUB_OUTPUT
+
       - name: Upload assets to GitHub Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: release-assets/**/*.zip
           file_glob: true
-          tag: ${{ needs.release-please.outputs.tag_name }}
-          release_name: "Client ${{ needs.release-please.outputs.tag_name }}"
+          tag: ${{ steps.tag.outputs.release_tag }}
+          release_name: "Client ${{ steps.tag.outputs.release_tag }}"
           overwrite: true
           make_latest: true
