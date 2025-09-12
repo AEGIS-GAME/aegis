@@ -42,6 +42,9 @@ jobs:
       issues: write
       id-token: write
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -81,12 +84,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: |
+            schema/package-lock.json
+            client/package-lock.json
+
+      - name: Install schema dependencies
+        working-directory: schema
+        run: npm ci
 
       - name: Install client dependencies
         working-directory: client
@@ -95,6 +104,25 @@ jobs:
       - name: Build client
         working-directory: client
         run: npm run build:pack
+
+      - name: List top-level releases folder
+        working-directory: client
+        shell: bash
+        run: |
+          echo "Top-level releases folders:"
+          ls -1 releases
+
+      - name: Check build output
+        id: check-build
+        working-directory: client
+        shell: bash
+        run: |
+          if [ -d "releases/${{ matrix.platform }}" ] && [ "$(ls -A releases/${{ matrix.platform }})" ]; then
+            echo "Build successful"
+          else
+            echo "Build failed - no output found"
+            exit 1
+          fi
 
       - name: Prepare release assets
         working-directory: client

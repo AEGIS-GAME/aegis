@@ -75,22 +75,3 @@ jobs:
       - name: Build app
         working-directory: client 
         run: npm run build:pack
-
-      - name: List top-level releases folder
-        working-directory: client
-        shell: bash
-        run: |
-          echo "Top-level releases folders:"
-          ls -1 releases
-
-      - name: Check build output
-        id: check-build
-        working-directory: client
-        shell: bash
-        run: |
-          if [ -d "releases/${{ matrix.platform }}" ] && [ "$(ls -A releases/${{ matrix.platform }})" ]; then
-            echo "Build successful"
-          else
-            echo "Build failed - no output found"
-            exit 1
-          fi
