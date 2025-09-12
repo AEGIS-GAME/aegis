@@ -168,6 +168,8 @@ Release-As: 2.5.0 ([`3eb076d`](https://github.com/AEGIS-GAME/aegis/commit/3eb076
 
 ### Ci
 
+* ci(permissions): add pypi permissions ([`adcea1f`](https://github.com/AEGIS-GAME/aegis/commit/adcea1f0e2326f617a808698b22d1c98f8cbbaa9))
+
 * ci(fix release checks): change if checks to work (hopefully) ([`ec81c04`](https://github.com/AEGIS-GAME/aegis/commit/ec81c04a5b27058bcc731dee9422071b13fe507a))
 
 * ci(client): update merge check ([`6d1d1cc`](https://github.com/AEGIS-GAME/aegis/commit/6d1d1ccb699fb68a7b18368588b755be1f9e96ed))
