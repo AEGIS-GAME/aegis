@@ -64,7 +64,6 @@ jobs:
   client-release:
     if: ${{ needs.release.outputs.releases_created == 'true' }}
     needs: release
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
@@ -80,6 +79,7 @@ jobs:
             platform: win32
             artifact-name: windows-client
             extension: exe
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
