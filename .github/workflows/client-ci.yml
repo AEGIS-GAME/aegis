@@ -32,9 +32,35 @@ jobs:
         working-directory: client
         run: npx eslint src src-electron
 
+  release-please:
+    if: ${{ !failure() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: ${{ hashFiles('.github/release-please-config.json') != '' && '.github/release-please-config.json' || '' }}
+          manifest-file: ${{ hashFiles('.github/release-please-manifest.json') != '' && '.github/release-please-manifest.json' || hashFiles('.github/.release-please-manifest.json') != '' && '.github/.release-please-manifest.json' || '' }}
+
+      - name: Debug release
+        continue-on-error: true
+        run: |
+          echo "${{ toJSON(steps.release.outputs) }}"
+
   build:
     if: ${{ !failure() && (github.ref == 'refs/heads/main' || github.base_ref == 'main') }}
-    needs: [lint]
+    needs: [lint, release-please]
     strategy:
       matrix:
         include:
@@ -94,3 +120,62 @@ jobs:
             echo "Build failed - no output found"
             exit 1
           fi
+
+      - name: Prepare zips
+        if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+        working-directory: client 
+        shell: bash
+        run: |
+          RELEASE_ASSETS_PATH="$(pwd)/release-assets"
+          mkdir -p "$RELEASE_ASSETS_PATH"
+
+          ARTIFACT_PATH=$(find releases -maxdepth 3 -iname "*aegis*${{ matrix.extension }}")
+
+          if [[ -z "$ARTIFACT_PATH" ]]; then
+            echo "Error: no artifact found for extension ${{ matrix.extension }}"
+            exit 1
+          fi
+
+          ARTIFACT_NAME=$(basename "$ARTIFACT_PATH")
+          echo "Zipping $ARTIFACT_PATH into $RELEASE_ASSETS_PATH/${{ matrix.artifact-name }}.zip"
+
+          cd "$(dirname "$ARTIFACT_PATH")"
+          7z a -tzip "$RELEASE_ASSETS_PATH/${{ matrix.artifact-name }}.zip" "$ARTIFACT_NAME"
+
+      - name: Upload built client as artifact
+        if: ${{ needs.release-please.outputs.releases_created == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: |
+            client/release-assets/${{ matrix.artifact-name }}.zip
+          if-no-files-found: error
+
+  publish:
+    if: ${{ !failure() && github.ref == 'refs/heads/main' && needs.release-please.outputs.releases_created == 'true' }}
+    needs: [build, release-please] 
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./release-assets/
+
+      - name: List artifacts
+        run: find ./release-assets -type f -ls
+
+      - name: Upload assets to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: release-assets/**/*.zip
+          file_glob: true
+          tag: ${{ needs.release-please.outputs.tag_name }}
+          release_name: "Client ${{ needs.release-please.outputs.tag_name }}"
+          overwrite: true
+          make_latest: true
