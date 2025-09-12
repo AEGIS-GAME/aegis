@@ -200,8 +200,11 @@ def create_or_update_pr(
     staged_files = repo.git.diff("--cached", "--name-only")  # pyright: ignore[reportAny]
     print(f"[*] Files staged for commit:\n{staged_files}")
 
-    with contextlib.suppress(GitCommandError):
-        repo.git.commit(m=title)  # pyright: ignore[reportAny]
+    try:
+        repo.git.commit("-m", title)  # pyright: ignore[reportAny]
+    except GitCommandError:
+        print("[*] No changes to commit")
+
     repo.git.push("origin", branch)  # pyright: ignore[reportAny]
 
     pr_list = subprocess.run(
