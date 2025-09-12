@@ -46,6 +46,40 @@
 - fix: init, change it to aegis init path instead of versions (#10)
 
 ### 📝 Other
+- ci(client): update merge check
+- chore(config): add actions as user to commit
+- chore(debug): print GitCommandError
+- chore(debug): more debug stuff
+- ci(github token): add token
+- chore(packages): missing packages somehow
+- chore: wrong setting
+- chore(manifest): make empty manifest
+- chore(delete): manifest
+- chore: i hate google software
+- chore: remove ggroup pr title pattern
+- chore: update title
+- chore(idk): idk
+- chore: add if checks back
+- chore: add if check back
+- chore: add checks back
+- chore: use \t in scaffold script (#7)
+- chore: maybe
+- chore: try again
+</details>
+
+
+## v2.6.0 (2025-09-12)
+
+<details>
+  <summary>aegis v2.6.0</summary>
+
+### 🐛 Fixes
+- fix(ci): add fetch-depth to grab all commits
+- fix(ci): ci
+- fix: idk (#24)
+- fix: init, change it to aegis init path instead of versions (#10)
+
+### 📝 Other
 - chore(config): add actions as user to commit
 - chore(debug): print GitCommandError
 - chore(debug): more debug stuff
