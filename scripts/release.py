@@ -49,7 +49,7 @@ def collect_commits_by_package(
         commits = list(repo.iter_commits(f"{last_tag}..HEAD", paths=path_filter))
     else:
         commits = list(repo.iter_commits("HEAD", paths=path_filter))
-    return [c for c in commits if "release" not in str(c.message.lower())]
+    return [c for c in commits if "release" not in str(c.message.lower()) and c.parents]
 
 
 def has_breaking_change(msg: str) -> bool:
@@ -234,7 +234,6 @@ def main() -> None:
     all_commit_messages: dict[str, list[str]] = {}
     bumps: dict[str, str] = {}
 
-    # 1️⃣ Collect commits & detect bumps
     for pkg in PACKAGES:
         print(f"[*] Checking {pkg}...")
         prefix = PACKAGES[pkg]["tag_prefix"]
