@@ -167,8 +167,10 @@ def create_or_update_pr(
     repo = Repo(".")
     try:
         repo.git.checkout(branch)  # pyright: ignore[reportAny]
+        print(f"[*] Pulled existing branch '{branch}' from origin")
         repo.git.pull("origin", branch)  # pyright: ignore[reportAny]
     except GitCommandError:
+        print(f"[!] Branch '{branch}' does not exist. Creating new branch.")
         repo.git.checkout("-b", branch)  # pyright: ignore[reportAny]
 
     today = datetime.datetime.now(tz=datetime.UTC).date()
@@ -194,6 +196,9 @@ def create_or_update_pr(
 
         _ = changelog_path.write_text(new_content)
         repo.git.add(str(changelog_path))  # pyright: ignore[reportAny]
+
+    staged_files = repo.git.diff("--cached", "--name-only")  # pyright: ignore[reportAny]
+    print(f"[*] Files staged for commit:\n{staged_files}")
 
     with contextlib.suppress(GitCommandError):
         repo.git.commit(m=title)  # pyright: ignore[reportAny]
