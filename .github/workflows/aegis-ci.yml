@@ -56,36 +56,32 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Create Release
-        uses: googleapis/release-please-action@v4
-        id: release
-        with:
-          config-file: ${{ hashFiles('.github/release-please-config.json') != '' && '.github/release-please-config.json' || '' }}
-          manifest-file: ${{ hashFiles('.github/release-please-manifest.json') != '' && '.github/release-please-manifest.json' || hashFiles('.github/.release-please-manifest.json') != '' && '.github/.release-please-manifest.json' || '' }}
-
-      - name: Debug release
-        continue-on-error: true
-        run: |
-          echo "${{ toJSON(steps.release.outputs) }}"
-
       - name: Install uv
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
         uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
 
       - name: Install dependencies
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
         run: uv sync --dev
 
+      - name: Run custom release script
+        run: uv run scripts/release.py
+
       - name: Build
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        if: contains(github.event.head_commit.message, 'chore(release): release updates')
         run: uv build
 
       - name: Publish to PyPI
-        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        if: contains(github.event.head_commit.message, 'chore(release): release updates')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
-          # repository-url: https://test.pypi.org/legacy/
-          # comment line above to publish to normal pypi
+
+      - name: Tag release
+        if: contains(github.event.head_commit.message, 'chore(release): release updates')
+        run: |
+          VERSION=$(uv run python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag aegis-v$VERSION
+          git push origin aegis-v$VERSION 
