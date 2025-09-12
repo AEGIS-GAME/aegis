@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.0...aegis-v2.7.1) (2025-09-12)
+
+
+### Bug Fixes
+
+* **workflows:** add missing steps ([4a24ef9](https://github.com/AEGIS-GAME/aegis/commit/4a24ef930a0fa86da488b1dbfcbde4c63feeabad))
+
 ## [2.7.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.6.4...aegis-v2.7.0) (2025-09-12)
 
 

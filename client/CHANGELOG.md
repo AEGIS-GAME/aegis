@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.1](https://github.com/AEGIS-GAME/aegis/compare/client-v2.7.0...client-v2.7.1) (2025-09-12)
+
+
+### Miscellaneous Chores
+
+* **release:** release 2.7.1 ([9d57c24](https://github.com/AEGIS-GAME/aegis/commit/9d57c2484cbb0bf5664c0dd25f7965a8cab027d2))
+
 ## [2.7.0](https://github.com/AEGIS-GAME/aegis/compare/client-v2.6.4...client-v2.7.0) (2025-09-12)
 
 
