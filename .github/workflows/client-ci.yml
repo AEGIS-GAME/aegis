@@ -55,11 +55,10 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
-      - name: Check if release PR was merged
+      - name: Check if release-branch was merged
         id: check-pr
         run: |
-          PR_TITLE="chore(release): release updates"
-          MERGED=$(gh pr list --state merged --search "$PR_TITLE in:title" --json number --jq '.[0].number' || echo "")
+          MERGED=$(gh pr list --state merged --head release-branch --json number --jq '.[0].number' || echo "")
           if [ -n "$MERGED" ]; then
             echo "release_merged=true" >> $GITHUB_OUTPUT
           else
