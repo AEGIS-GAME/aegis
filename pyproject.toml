@@ -60,8 +60,11 @@ aegis = "aegis_game:main"
 
 [dependency-groups]
 dev = [
+    "gitpython>=3.1.45",
     "griffe>=1.11.0",
     "hatch>=1.14.1",
     "pytest>=8.4.1",
     "ruff>=0.12.2",
+    "semver>=3.0.4",
+    "toml>=0.10.2",
 ]
