@@ -44,7 +44,7 @@ class ClientInstaller:
         sys.exit(f"Unsupported platform: {system}")
 
     def _get_latest_release(self) -> dict[str, Any]:
-        """Fetch the latest client release from GitHub."""
+        """Fetch the latest client release."""
         url = f"https://api.github.com/repos/{self.OWNER}/{self.REPO}/releases/latest"
 
         try:
