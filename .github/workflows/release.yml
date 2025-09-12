@@ -1,0 +1,173 @@
+name: Release Aegis & Client 
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: "Which package(s) to release"
+        required: true
+        default: "both"
+        type: choice
+        options:
+          - client
+          - aegis
+          - both
+
+jobs:
+  build-client:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            platform: darwin
+            artifact-name: mac-client
+            extension: app
+          - os: ubuntu-latest
+            platform: linux
+            artifact-name: linux-client
+            extension: AppImage
+          - os: windows-latest
+            platform: win32
+            artifact-name: windows-client
+            extension: exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            schema/package-lock.json
+            client/package-lock.json
+
+      - name: Install schema dependencies
+        working-directory: schema
+        run: npm ci
+
+      - name: Install client dependencies
+        working-directory: client 
+        run: npm ci
+
+      - name: Build app
+        working-directory: client 
+        run: npm run build:pack
+
+      - name: List top-level releases folder
+        working-directory: client
+        shell: bash
+        run: |
+          echo "Top-level releases folders:"
+          ls -1 releases
+
+      - name: Check build output
+        id: check-build
+        working-directory: client
+        shell: bash
+        run: |
+          if [ -d "releases/${{ matrix.platform }}" ] && [ "$(ls -A releases/${{ matrix.platform }})" ]; then
+            echo "Build successful"
+          else
+            echo "Build failed - no output found"
+            exit 1
+          fi
+
+      - name: Prepare zips
+        working-directory: client 
+        shell: bash
+        run: |
+          RELEASE_ASSETS_PATH="$(pwd)/release-assets"
+          mkdir -p "$RELEASE_ASSETS_PATH"
+
+          ARTIFACT_PATH=$(find releases -maxdepth 3 -iname "*aegis*${{ matrix.extension }}")
+
+          if [[ -z "$ARTIFACT_PATH" ]]; then
+            echo "Error: no artifact found for extension ${{ matrix.extension }}"
+            exit 1
+          fi
+
+          ARTIFACT_NAME=$(basename "$ARTIFACT_PATH")
+          echo "Zipping $ARTIFACT_PATH into $RELEASE_ASSETS_PATH/${{ matrix.artifact-name }}.zip"
+
+          cd "$(dirname "$ARTIFACT_PATH")"
+          7z a -tzip "$RELEASE_ASSETS_PATH/${{ matrix.artifact-name }}.zip" "$ARTIFACT_NAME"
+
+      - name: Upload built client as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: |
+            client/release-assets/${{ matrix.artifact-name }}.zip
+          if-no-files-found: error
+
+  publish:
+    needs: [build-client] 
+    runs-on: ubuntu-latest
+    permissions:
+     contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./release-assets/
+
+      - name: List artifacts
+        run: find ./release-assets -type f -ls
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Tag release
+        id: tag
+        run: |
+          VERSION=$(uv run python -c "import json; print(json.load(open('client/package.json','rb'))['version'])")
+          TAG="client-v$VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG
+          git push origin $TAG
+          echo "release_tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Upload assets to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: release-assets/**/*.zip
+          file_glob: true
+          tag: ${{ steps.tag.outputs.release_tag }}
+          release_name: "Client ${{ steps.tag.outputs.release_tag }}"
+          overwrite: true
+          make_latest: true
+
+  release-aegis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Build
+        run: uv build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
