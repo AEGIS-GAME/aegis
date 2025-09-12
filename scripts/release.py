@@ -219,9 +219,7 @@ def create_or_update_pr(
 
     if "[]" in pr_list.stdout:
         body = "\n\n".join(
-            f"<details><summary>{pkg} v{new_versions[pkg]}</summary>\n\n{changelog}\n</details>"
-            for pkg, changelog in changelogs.items()
-            if pkg in new_versions
+            changelog for pkg, changelog in changelogs.items() if pkg in new_versions
         )
         _ = subprocess.run(
             [
