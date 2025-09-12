@@ -57,16 +57,17 @@ jobs:
 
       - name: Check if release-branch was merged
         id: check-pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           MERGED=$(gh pr list --state merged --head release-branch --json number --jq '.[0].number' || echo "")
           if [ -n "$MERGED" ]; then
             echo "release_merged=true" >> $GITHUB_OUTPUT
+            echo "Found merged PR #$MERGED"
           else
             echo "release_merged=false" >> $GITHUB_OUTPUT
+            echo "No merged PR found for release-branch"
           fi
-
-      - name: Debug release
-        run: echo "Release merged? ${{ steps.check-pr.outputs.release_merged }}"
 
   build:
     if: ${{ !failure() && (github.ref == 'refs/heads/main' || github.base_ref == 'main') }}

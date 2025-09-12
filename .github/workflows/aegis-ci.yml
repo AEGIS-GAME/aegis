@@ -66,26 +66,40 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
-      - name: Run custom release script
+      - name: Check if release-branch was merged
+        id: check-pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: uv run scripts/release.py
+        run: |
+          MERGED=$(gh pr list --state merged --head release-branch --json number --jq '.[0].number' || echo "")
+          if [ -n "$MERGED" ]; then
+            echo "release_merged=true" >> $GITHUB_OUTPUT
+            echo "Found merged PR #$MERGED"
+          else
+            echo "release_merged=false" >> $GITHUB_OUTPUT
+            echo "No merged PR found for release-branch"
+          fi
 
       - name: Build
-        if: ${{ github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release-branch' }}
+        if: steps.check-pr.outputs.release_merged == 'true'
         run: uv build
 
       - name: Publish to PyPI
-        if: ${{ github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release-branch' }}
+        if: steps.check-pr.outputs.release_merged == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
 
       - name: Tag release
-        if: ${{ github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release-branch' }}
+        if: steps.check-pr.outputs.release_merged == 'true'
         run: |
           VERSION=$(uv run python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag aegis-v$VERSION
           git push origin aegis-v$VERSION 
+
+      - name: Run custom release script
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run scripts/release.py
