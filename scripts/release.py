@@ -5,7 +5,6 @@ DO NOT RUN THIS MANUALLY!!!!!! The workflow will run this when PRs are merged.
 """
 # ruff: noqa: S603, S607, PLW1510
 
-import contextlib
 import datetime
 import json
 import subprocess
@@ -199,6 +198,9 @@ def create_or_update_pr(
 
     staged_files = repo.git.diff("--cached", "--name-only")  # pyright: ignore[reportAny]
     print(f"[*] Files staged for commit:\n{staged_files}")
+
+    repo.git.config("user.name", "github-actions[bot]")  # pyright: ignore[reportAny]
+    repo.git.config("user.email", "github-actions[bot]@users.noreply.github.com")  # pyright: ignore[reportAny]
 
     try:
         repo.git.commit("-m", title)  # pyright: ignore[reportAny]
