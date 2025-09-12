@@ -1,0 +1,133 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    if: ${{ !failure() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      client_tag: ${{ needs.release.outputs['client--tag_name'] }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: ${{ hashFiles('.github/release-please-config.json') != '' && '.github/release-please-config.json' || '' }}
+          manifest-file: ${{ hashFiles('.github/release-please-manifest.json') != '' && '.github/release-please-manifest.json' || hashFiles('.github/.release-please-manifest.json') != '' && '.github/.release-please-manifest.json' || '' }}
+
+      - name: Debug release
+        continue-on-error: true
+        run: |
+          echo "${{ toJSON(steps.release.outputs) }}"
+
+  aegis-release:
+    if: ${{ needs.release.outputs.releases_created == 'true' }}
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Build
+        run: uv build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+  client-release:
+    if: ${{ needs.release.outputs.releases_created == 'true' }}
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            platform: darwin
+            artifact-name: mac-client
+            extension: app
+          - os: ubuntu-latest
+            platform: linux
+            artifact-name: linux-client
+            extension: AppImage
+          - os: windows-latest
+            platform: win32
+            artifact-name: windows-client
+            extension: exe
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install client dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Build client
+        working-directory: client
+        run: npm run build:pack
+
+      - name: Prepare release assets
+        working-directory: client
+        shell: bash
+        run: |
+          RELEASE_ASSETS_PATH="$(pwd)/release-assets"
+          mkdir -p "$RELEASE_ASSETS_PATH"
+
+          ARTIFACT_PATH=$(find releases -maxdepth 3 -iname "*aegis*${{ matrix.extension }}")
+          if [[ -z "$ARTIFACT_PATH" ]]; then
+            echo "Error: no artifact found for extension ${{ matrix.extension }}"
+            exit 1
+          fi
+
+          ARTIFACT_NAME=$(basename "$ARTIFACT_PATH")
+          echo "Zipping $ARTIFACT_PATH into $RELEASE_ASSETS_PATH/${{ matrix.artifact-name }}.zip"
+          cd "$(dirname "$ARTIFACT_PATH")"
+          7z a -tzip "$RELEASE_ASSETS_PATH/${{ matrix.artifact-name }}.zip" "$ARTIFACT_NAME"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: client/release-assets/${{ matrix.artifact-name }}.zip
+          if-no-files-found: error
+
+      - name: Publish to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: client/release-assets/**/*.zip
+          file_glob: true
+          tag: ${{ needs.release.outputs.client_tag }}
+          release_name: "Client ${{ needs.release.outputs.client_tag }}"
+          overwrite: true
+          make_latest: true
