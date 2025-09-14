@@ -15,7 +15,7 @@ jobs:
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
-      client_tag: ${{ needs.release.outputs['client--tag_name'] }}
+      client_tag: ${{ steps.release.outputs['client--tag_name'] }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
