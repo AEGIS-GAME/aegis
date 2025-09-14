@@ -1,6 +1,6 @@
 {
   "name": "aegis-client",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "A client for Aegis",
   "main": "dist/main/index.js",
   "author": "CPSC 383",
