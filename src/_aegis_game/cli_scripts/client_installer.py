@@ -61,7 +61,7 @@ class ClientInstaller:
         return release
 
     def _find_asset(self, release: dict[str, Any]) -> dict[str, Any]:
-        """Find the matching asset in a release."""
+        """Find the matching asset in the GitHub release."""
         for asset in release["assets"]:
             if asset["name"] == self.asset_name:
                 return asset

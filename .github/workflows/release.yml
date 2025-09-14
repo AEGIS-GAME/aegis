@@ -156,6 +156,5 @@ jobs:
           file: client/release-assets/**/*.zip
           file_glob: true
           tag: ${{ needs.release.outputs.client_tag }}
-          release_name: "Client ${{ needs.release.outputs.client_tag }}"
           overwrite: true
           make_latest: true
