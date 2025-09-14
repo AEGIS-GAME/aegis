@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.3](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.2...aegis-v2.7.3) (2025-09-14)
+
+
+### Bug Fixes
+
+* **just to force a aegis release:** . ([36a8b9c](https://github.com/AEGIS-GAME/aegis/commit/36a8b9cebef495eed3ce8f02b813ed2a95fda448))
+
 ## [2.7.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.1...aegis-v2.7.2) (2025-09-12)
 
 
