@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.5](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.4...aegis-v2.7.5) (2025-09-14)
+
+
+### Bug Fixes
+
+* **permissions:** write perms ([1b9b956](https://github.com/AEGIS-GAME/aegis/commit/1b9b9563693f54bf4521e64535bf5d2c2d4513c6))
+
 ## [2.7.4](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.3...aegis-v2.7.4) (2025-09-14)
 
 
