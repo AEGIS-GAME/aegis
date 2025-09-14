@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "aegis-game"
 description = "Survivor Simulation Game"
-version = "2.7.2"
+version = "2.7.3"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [ "numpy>=2.1.3", "protobuf>=6.32.0", "pyyaml>=6.0.2", "requests>=2.32.4", "restrictedpython>=8.0", "websocket-server==0.6.4",]
