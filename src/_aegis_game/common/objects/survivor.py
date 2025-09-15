@@ -35,23 +35,9 @@ class Survivor(WorldObject):
         return self._state == self.State.ALIVE
 
     def set_state(self, state: State) -> None:
-        """
-        Set the survivor's state.
-
-        Args:
-            state: The new state for the survivor.
-
-        """
         self._state = state
 
     def get_state(self) -> State:
-        """
-        Get the survivor's current state.
-
-        Returns:
-            The current state of the survivor.
-
-        """
         return self._state
 
     @override
