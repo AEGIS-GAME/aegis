@@ -15,6 +15,9 @@ const invoke = (command: string, ...args: any[]) => {
 const electronAPI = {
   openAegisDirectory: () => invoke("openAegisDirectory"),
   getAppPath: (...args: any[]) => invoke("getAppPath", ...args),
+  getAppVersion: () => invoke("getAppVersion"),
+  getClientVersion: (aegisPath: string) => invoke("getClientVersion", aegisPath),
+  openExternal: (url: string) => invoke("openExternal", url),
   exportWorld: (...args: any[]) => invoke("exportWorld", ...args),
   read_config: (aegisPath: string) => ipcRenderer.invoke("read_config", aegisPath),
   update_config_value: (aegisPath: string, keyPath: string, value: any) =>

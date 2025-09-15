@@ -43,11 +43,18 @@ class ForgeArgs:
 
 
 @dataclass
+class UpdateArgs:
+    # If we ever need args
+    pass
+
+
+@dataclass
 class Args:
     command: str
     launch_args: LaunchArgs | None = None
     forge_args: ForgeArgs | None = None
     init_args: InitArgs | None = None
+    update_args: UpdateArgs | None = None
 
 
 def parse_args() -> Args:
@@ -129,6 +136,10 @@ def parse_args() -> Args:
         help="Initialization type: 'path' (default), 'mas', or 'comp'",
     )
 
+    _ = subparsers.add_parser(
+        "update", help="Update the AEGIS client to the latest version"
+    )
+
     args = parser.parse_args(namespace=TypedNamespace)
 
     if args.command == "launch":
@@ -149,6 +160,8 @@ def parse_args() -> Args:
         return Args(command="forge", forge_args=ForgeArgs())
     if args.command == "init":
         return Args(command="init", init_args=InitArgs(init_type=args.init_type))
+    if args.command == "update":
+        return Args(command="update", update_args=UpdateArgs())
 
     error = f"Unknown command: {args.command}"
     raise ValueError(error)

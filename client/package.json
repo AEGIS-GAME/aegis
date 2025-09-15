@@ -10,10 +10,11 @@
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
-    "build:pack": "npm run build && electron-builder build --publish never",
-    "build:pack:win": "npm run build && electron-builder build --win --publish never",
-    "build:pack:mac": "npm run build && electron-builder build --mac --publish never",
-    "build:pack:linux": "npm run build && electron-builder build --linux --publish never"
+    "create-version-file": "echo $npm_package_version > client-version.txt",
+    "build:pack": "npm run create-version-file && npm run build && electron-builder build --publish never",
+    "build:pack:win": "npm run create-version-file && npm run build && electron-builder build --win --publish never",
+    "build:pack:mac": "npm run create-version-file && npm run build && electron-builder build --mac --publish never",
+    "build:pack:linux": "npm run create-version-file && npm run build && electron-builder build --linux --publish never"
   },
   "build": {
     "appId": "com.aegis.app",
@@ -24,6 +25,7 @@
     },
     "files": [
       "dist/**",
+      "client-version.txt",
       "!**/.vscode/*",
       "!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}",
       "!{.env,.env.*, .npmrc, pnpm-lock.yaml}",
