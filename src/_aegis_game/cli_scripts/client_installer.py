@@ -71,7 +71,7 @@ class ClientInstaller:
         )
 
     def _download_with_progress(self, url: str, output_path: Path) -> None:
-        """Download file with progress indicator."""
+        """Download client zip file with progress indicator."""
         try:
             response = requests.get(url, stream=True, timeout=10)
             response.raise_for_status()
