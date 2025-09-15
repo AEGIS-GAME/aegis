@@ -1,5 +1,37 @@
 # Changelog
 
+## [2.8.2](https://github.com/AEGIS-GAME/aegis/compare/client-v2.8.1...client-v2.8.2) (2025-09-15)
+
+
+### Bug Fixes
+
+* **client:** only check client version once aegis path set ([c4c68d5](https://github.com/AEGIS-GAME/aegis/commit/c4c68d51efe47c5b75ecfb5e75f7350a20718163))
+
+## [2.8.1](https://github.com/AEGIS-GAME/aegis/compare/client-v2.8.0...client-v2.8.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* add things ([425a407](https://github.com/AEGIS-GAME/aegis/commit/425a407464e62a06eefc8f03aabc418a01f0fe59))
+* **client:** change thing ([fa6e967](https://github.com/AEGIS-GAME/aegis/commit/fa6e967c3bcee38c59f4e258ba36ffed17f7ae42))
+
+## [2.8.0](https://github.com/AEGIS-GAME/aegis/compare/client-v2.7.6...client-v2.8.0) (2025-09-15)
+
+
+### Features
+
+* **client:** update client feature ([41963ac](https://github.com/AEGIS-GAME/aegis/commit/41963ac38061bdfd20b010933603e7a94a80a10e))
+
+
+### Bug Fixes
+
+* client jsut checks version mismatch, aegis update just downloads ([85877fa](https://github.com/AEGIS-GAME/aegis/commit/85877fa7f45afe54710a6d071553e8604dc96967))
+* **client:** dismissal of update banner if u wanna ([6279ff0](https://github.com/AEGIS-GAME/aegis/commit/6279ff007d1e76a6adf3c8e9f97d5cf0a5e7cc35))
+* **client:** open "view on github" in default browser instead of electron ([b4684c1](https://github.com/AEGIS-GAME/aegis/commit/b4684c16ba3e80680ae67fea05570daa95334293))
+* **client:** show aegis version in client "about" section in settings ([31f523b](https://github.com/AEGIS-GAME/aegis/commit/31f523bc2f084a2b862d0798e77ca6a38fbca2d3))
+* **client:** wrong api ([61517ba](https://github.com/AEGIS-GAME/aegis/commit/61517baf84e0dc34a62ccc6c254daa11d0d988bf))
+* using client-version.txt file for client version ([3fa68b1](https://github.com/AEGIS-GAME/aegis/commit/3fa68b1a468199095fc9571f15172c8c0c46f65e))
+
 ## [2.7.6](https://github.com/AEGIS-GAME/aegis/compare/client-v2.7.5...client-v2.7.6) (2025-09-15)
 
 

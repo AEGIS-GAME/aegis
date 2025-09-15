@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.8.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.8.0...aegis-v2.8.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* add things ([425a407](https://github.com/AEGIS-GAME/aegis/commit/425a407464e62a06eefc8f03aabc418a01f0fe59))
+* **aegis:** properly create client version file from aegis init ([cc6097d](https://github.com/AEGIS-GAME/aegis/commit/cc6097de9a3936fee9660b42c8edfa70ef673222))
+
+## [2.8.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.6...aegis-v2.8.0) (2025-09-15)
+
+
+### Features
+
+* **client:** update client feature ([41963ac](https://github.com/AEGIS-GAME/aegis/commit/41963ac38061bdfd20b010933603e7a94a80a10e))
+
+
+### Bug Fixes
+
+* **aegis:** clean up client zip after installing ([a664e89](https://github.com/AEGIS-GAME/aegis/commit/a664e897831c6762f10e54b3a507cdc3e0d6c17e))
+* client jsut checks version mismatch, aegis update just downloads ([85877fa](https://github.com/AEGIS-GAME/aegis/commit/85877fa7f45afe54710a6d071553e8604dc96967))
+* using client-version.txt file for client version ([3fa68b1](https://github.com/AEGIS-GAME/aegis/commit/3fa68b1a468199095fc9571f15172c8c0c46f65e))
+
+
+### Documentation
+
+* **functions:** functions not following google style docstrings ([#61](https://github.com/AEGIS-GAME/aegis/issues/61)) ([2ee241b](https://github.com/AEGIS-GAME/aegis/commit/2ee241b120d738b742317ef033bd5a18c5a682fe))
+
 ## [2.7.6](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.5...aegis-v2.7.6) (2025-09-15)
 
 

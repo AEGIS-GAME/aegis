@@ -455,7 +455,7 @@ class Game:
             loc: The location to check.
 
         Returns:
-            True if the location is on the map, False otherwise.
+            A boolean indication whetever the given location is on the map.
 
         """
         return 0 <= loc.x < self.world.width and 0 <= loc.y < self.world.height

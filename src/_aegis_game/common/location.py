@@ -78,7 +78,7 @@ class Location:
             location: The target location.
 
         Returns:
-            int: The squared distance between the two locations.
+            The squared distance between the two locations.
 
         """
         dx = self.x - location.x
@@ -89,7 +89,7 @@ class Location:
         """
         Check if this Location is adjacent to another Location.
 
-        Arguments:
+        Args:
             location: The target location.
 
         Returns:
