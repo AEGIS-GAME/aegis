@@ -20,7 +20,7 @@ def main() -> None:
         return
 
     print(
-        f"Update available: {version_info['local_version']} -> {version_info['latest_version']}"
+        f"Client Update available: {version_info['local_version']} -> {version_info['latest_version']}"
     )
     print("Updating client...")
 
