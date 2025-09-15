@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.8.0...aegis-v2.8.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* add things ([425a407](https://github.com/AEGIS-GAME/aegis/commit/425a407464e62a06eefc8f03aabc418a01f0fe59))
+* **aegis:** properly create client version file from aegis init ([cc6097d](https://github.com/AEGIS-GAME/aegis/commit/cc6097de9a3936fee9660b42c8edfa70ef673222))
+
 ## [2.8.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.6...aegis-v2.8.0) (2025-09-15)
 
 
