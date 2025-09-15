@@ -301,7 +301,7 @@ class AgentController:
             loc: The location to query.
 
         Returns:
-            Information about the cell at the given location.
+            A CellInfo object following visibility rules.
 
         """
         self.assert_loc(loc)
