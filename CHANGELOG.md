@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.6](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.5...aegis-v2.7.6) (2025-09-15)
+
+
+### Bug Fixes
+
+* **client win name:** . ([f753c2e](https://github.com/AEGIS-GAME/aegis/commit/f753c2e7860b99f1fce092401b57c2139441f8f0))
+
 ## [2.7.5](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.7.4...aegis-v2.7.5) (2025-09-14)
 
 
