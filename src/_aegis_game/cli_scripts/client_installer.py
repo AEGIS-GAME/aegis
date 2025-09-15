@@ -200,6 +200,10 @@ class ClientInstaller:
         else:
             print("Installation completed with warnings")
 
+        if zip_path.exists():
+            zip_path.unlink()
+            print(f"Cleaned up downloaded archive: {zip_path}")
+
 
 def main() -> None:
     """Entry point for the client installer."""
