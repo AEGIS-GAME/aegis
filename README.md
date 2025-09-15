@@ -28,22 +28,17 @@ Additional
   
 ### Package name (PyPI)
 
-The Python package is published as `aegis-game`. You can install it with:
-
-```bash
-pip install aegis-game
-```
-- If you see "Defaulting to user installation because normal site-packages is not writeable"
-  - You will likely get "aegis: command not found" (Linux)  or "'aegis' is not recognized as an internal or external command, operable program or batch file." (Windows) when using it
-  - This can be rectfied by adding the local location of 'aegis' to your PATH
-    - Linux 
-      - `PATH=$PATH:~/.local/bin`
-    - Windows
-      - `PATH=%PATH%;%appdata%\Python\Python313\Scripts`
-
-The CLI entrypoint is `aegis` (e.g., `aegis launch`).
+- The Python package is published as `aegis-game`. 
 
 ### Download for usage in assignments or competitions
+
+0. Verify Python version accessible from shell (Should be 3.13+)
+
+```bash
+python --version
+# OR if you have Python 2 installed (often the case on Mac/Linux)
+python3 --version
+```
 
 1. Create a folder and install the `aegis-game` package 
 
@@ -51,6 +46,47 @@ The CLI entrypoint is `aegis` (e.g., `aegis launch`).
 # Initialize project
 mkdir my-new-project
 cd my-new-project
+```
+
+2. Activate the virtual environment
+
+```bash
+python -m venv .venv
+```
+
+On macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+On Windows (CMD):
+
+```cmd
+.\.venv\Scripts\Activate
+```
+
+On Windows (PowerShell):
+
+```cmd
+.\.venv\Scripts\Activate.ps1
+```
+
+This creates a virtual project environment under `.venv/`
+
+3. Install `aegis-game` with:
+
+```bash
+pip install aegis-game
+```
+
+The CLI entrypoint is `aegis` (e.g., `aegis launch`).
+
+### Download for usage in assignments or competitions
+
+3. Create folder scaffold
+
+```bash
 aegis init
 ```
 
@@ -68,7 +104,7 @@ Notes:
 - Client GUI code under `client/`
 - Worlds under `worlds/` 
 
-2. Configure features (Optional)
+4. Configure features (Optional)
 
 If default `aegis init` is not desired edit `config/config.yaml` to enable/disable features (e.g., messages, dynamic spawning, abilities). If you change features, regenerate stubs so the API your agent recongizes matches the config:
 
@@ -76,28 +112,27 @@ If default `aegis init` is not desired edit `config/config.yaml` to enable/disab
 aegis forge
 ```
 
-3a. Use the client UI
+5a. Use the client UI
 
 The client is in the `\client` folder
 You can run it by interacting with it through your OS folder system or
 
-Linux
+On Linux
 ```bash
-cd client
-./aegis-client.AppImage
-```
-Windows
-```cmd
-cd client
-aegis-client.exe
-```
-Mac
-```console
-cd client
-open Aegis.app
+client/aegis-client.AppImage
 ```
 
-3b. Launch a game (through the console)
+On Windows (CMD/PowerShell):
+```cmd
+client\aegis-client.exe
+```
+
+On Mac:
+```console
+open client/Aegis.app
+```
+
+5b. Launch a game (through the console)
 
 ```bash
 # One agent
@@ -110,26 +145,50 @@ aegis launch --world example --agent agent_path --amount 5 --rounds 500
 
 Run `aegis launch -h` to see all ways you can run an aegis simulation
 
+6. Deactivate (venv)
+Close your terminal/shell or run command
+
+```bash
+deactivate
+```
+
+&. Reactivate (venv)
+Open terminal shell within project folder or change directory into it and run
+
+On macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+On Windows (CMD):
+
+```cmd
+.\.venv\Scripts\Activate
+```
+
+On Windows (PowerShell):
+
+```cmd
+.\.venv\Scripts\Activate.ps1
+```
+
+
 ### Download for Development
 
 Before you start, please read our [Contributing Guidelines](https://github.com/AEGIS-GAME/aegis/blob/main/CONTRIBUTING.md) to understand
 the full contribution process, coding standards, and PR requirements.
 
 1. Clone the repository and set up the Python environment
-   
- - `uv` (optional for dev) — `pip install uv` or see `https://docs.astral.sh/uv/`
-   - If you see "Defaulting to user installation because normal site-packages is not writeable"
-     - You will likely get "uv: command not found"  or "'uv' is not recognized as an internal or external command, operable program or batch file." when using it, this can be rectfied by adding the local location of 'uv' to your PATH
-     - Linux (eg.)
-       - `PATH=$PATH:~/.local/bin`
-     - Windows (eg.)
-       - `PATH=%PATH%;%appdata%\Python\Python313\Scripts`
+
+- `uv` (for Python env/build) — `pip install uv` or see `https://docs.astral.sh/uv/`
 
 ```bash
 git clone https://github.com/AEGIS-GAME/aegis.git
 cd aegis
 uv sync --group dev
 ```
+
 
 2. Activate the virtual environment
 
@@ -139,9 +198,15 @@ On macOS/Linux:
 source .venv/bin/activate
 ```
 
+On Windows (CMD):
+
+```cmd
+.\.venv\Scripts\Activate
+```
+
 On Windows (PowerShell):
 
-```powershell
+```cmd
 .\.venv\Scripts\Activate.ps1
 ```
 
@@ -160,11 +225,19 @@ For instructions on local development and setup of the client application, pleas
 The documentation can be found [here](https://github.com/AEGIS-GAME/aegis-docs).
 
 ### Troubleshooting
-
 - "Config Error Failed to load config.yaml. Please check your config file and ensure it's valid."
   - Use Settings 'Gear' icon to open settings and set 'Aegis Path' to the base folder of your project
       - The folder 'config' within that base folder should have the missing 'config.yaml' in it
 - Windows PowerShell execution policy may block script activation; if needed, run PowerShell as Administrator and execute:
   - `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
 - Ensure Node.js 20+ and Python 3.13+ are on your PATH
-- If the client cannot connect, verify the server was started with `--client` and that no firewall is blocking the port
+- If the client cannot connect, verify the server was started with `--client` and that no firewall is blocking the port 
+- If you aren't using a virtual environment (.venv) and see "Defaulting to user installation because normal site-packages is not writeable" during pip 
+  - You will likely get "<package>: command not found" (Linux)  or "'<package>' is not recognized as an internal or external command, operable program or batch file." (Windows) when using commands
+  - This can be rectfied by adding the local location of '<package>' to your PATH. A local installation for python package installed via pip is generally able to be added to path with
+    - Linux 
+      - ```bash
+        PATH=$PATH:~/.local/bin```
+    - Windows
+      - ```cmd
+        PATH=%PATH%;%appdata%\Python\Python313\Scripts```
