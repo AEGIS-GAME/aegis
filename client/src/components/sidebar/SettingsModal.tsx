@@ -5,6 +5,7 @@ import { Modal } from "@/components/ui/modal"
 import { Switch } from "@/components/ui/switch"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { useVersionCheck } from "@/hooks/useVersionCheck"
+import { aegisAPI } from "@/services/aegis-api"
 import { Scaffold } from "@/types"
 import { Bug, Folder, Info, SlidersHorizontal } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -229,10 +230,8 @@ export default function SettingsModal({
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      if (window.electronAPI?.openExternal) {
-                        window.electronAPI.openExternal(
-                          "https://github.com/AEGIS-GAME/aegis"
-                        )
+                      if (aegisAPI?.openExternal) {
+                        aegisAPI.openExternal("https://github.com/AEGIS-GAME/aegis")
                       } else {
                         window.open("https://github.com/AEGIS-GAME/aegis", "_blank")
                       }
