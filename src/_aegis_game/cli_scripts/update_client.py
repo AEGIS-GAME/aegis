@@ -15,16 +15,9 @@ def main() -> None:
         print("No AEGIS client found. Run 'aegis init' first to install the client.")
         sys.exit(1)
 
-    if not version_info["update_available"]:
-        print(f"Client is up to date (version {version_info['local_version']})")
-        return
+    print("Downloading and installing latest client release...")
 
-    print(
-        f"Client Update available: {version_info['local_version']} -> {version_info['latest_version']}"
-    )
-    print("Updating client...")
-
-    # Reuse the client installer logic
+    # Always download and install the latest release
     installer = ClientInstaller()
     installer.install()
 

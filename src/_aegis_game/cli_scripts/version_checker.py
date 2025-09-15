@@ -12,21 +12,40 @@ class VersionChecker:
     REPO: str = "aegis"
 
     def __init__(self) -> None:
-        self.client_dir: Path = Path("client")
+        self.client_dir: Path = self._find_client_directory()
+
+    def _find_client_directory(self) -> Path:
+        """Find the client directory, searching up from current directory."""
+        current_dir = Path.cwd()
+
+        # First, try the current directory
+        if (current_dir / "client").exists():
+            return current_dir / "client"
+
+        # Search up the directory tree for AEGIS project root
+        for parent in current_dir.parents:
+            client_dir = parent / "client"
+            if client_dir.exists():
+                return client_dir
+
+        # If not found, return relative path (fallback)
+        return Path("client")
 
     def get_local_version(self) -> str | None:
         """Get the version of the locally installed client."""
+        # First try to find package.json (for development)
         package_json_path: Path = self.client_dir / "package.json"
+        if package_json_path.exists():
+            try:
+                with package_json_path.open() as f:
+                    data = json.load(f)  # pyright: ignore[reportAny]
+                    return data.get("version")  # pyright: ignore[reportAny]
+            except (json.JSONDecodeError, KeyError):
+                pass
 
-        if not package_json_path.exists():
-            return None
-
-        try:
-            with package_json_path.open() as f:
-                data = json.load(f)  # pyright: ignore[reportAny]
-                return data.get("version")  # pyright: ignore[reportAny]
-        except (json.JSONDecodeError, KeyError):
-            return None
+        # For installed clients, we can't determine version from executable alone
+        # Return None to indicate we can't determine the version
+        return None
 
     def get_latest_version(self) -> str | None:
         """Get the latest version from GitHub releases."""
@@ -46,7 +65,10 @@ class VersionChecker:
         local_version = self.get_local_version()
         latest_version = self.get_latest_version()
 
-        if not local_version or not latest_version:
+        if not local_version:
+            return latest_version is not None
+
+        if not latest_version:
             return False
 
         # Simple version comparison (assumes semantic versioning)
@@ -69,10 +91,30 @@ class VersionChecker:
         local_version: str | None = self.get_local_version()
         latest_version: str | None = self.get_latest_version()
 
+        # Check if client exists (either package.json or executable)
+        client_exists = False
+        if self.client_dir.exists():
+            # Check for package.json (development) or executable (installed)
+            if (self.client_dir / "package.json").exists():
+                client_exists = True
+            else:
+                # Check for executable files
+                executable_patterns = ["*.exe", "*.app", "*.AppImage"]
+                for pattern in executable_patterns:
+                    if list(self.client_dir.glob(pattern)):
+                        client_exists = True
+                        break
+
+        print(f"Debug: Looking for client in: {self.client_dir.absolute()}")
+        print(f"Debug: Client directory exists: {self.client_dir.exists()}")
+        if self.client_dir.exists():
+            print(
+                f"Debug: Client directory contents: {list(self.client_dir.iterdir())}"
+            )
+
         return {
             "local_version": local_version,
             "latest_version": latest_version,
             "update_available": self.is_update_available(),
-            "client_exists": self.client_dir.exists()
-            and (self.client_dir / "package.json").exists(),
+            "client_exists": client_exists,
         }

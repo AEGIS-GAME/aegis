@@ -38,9 +38,7 @@ export function useVersionCheck(): VersionInfo {
           release.tag_name?.replace("v", "").replace("client-", "") || null
 
         const isUpdateAvailable =
-          latestVersion &&
-          localVersion &&
-          compareVersions(latestVersion, localVersion) > 0
+          latestVersion && localVersion && localVersion !== latestVersion
 
         setVersionInfo({
           localVersion,
@@ -62,24 +60,4 @@ export function useVersionCheck(): VersionInfo {
   }, [])
 
   return versionInfo
-}
-
-function compareVersions(version1: string, version2: string): number {
-  const v1Parts: number[] = version1.split(".").map(Number)
-  const v2Parts: number[] = version2.split(".").map(Number)
-
-  const maxLength = Math.max(v1Parts.length, v2Parts.length)
-
-  for (let i = 0; i < maxLength; i++) {
-    const v1Part = v1Parts[i] || 0
-    const v2Part = v2Parts[i] || 0
-
-    if (v1Part > v2Part) {
-      return 1
-    } else if (v1Part < v2Part) {
-      return -1
-    }
-  }
-
-  return 0
 }

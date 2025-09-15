@@ -1,6 +1,5 @@
 import { useVersionCheck } from "@/hooks/useVersionCheck"
-import { aegisAPI } from "@/services/aegis-api"
-import { AlertCircle, Download, X } from "lucide-react"
+import { AlertCircle, X } from "lucide-react"
 import { useState } from "react"
 
 export default function VersionInfoBar(): JSX.Element | null {
@@ -12,14 +11,6 @@ export default function VersionInfoBar(): JSX.Element | null {
     return null
   }
 
-  const handleUpdateClick = (): void => {
-    if (aegisAPI?.openExternal) {
-      aegisAPI.openExternal("https://github.com/AEGIS-GAME/aegis/releases/latest")
-    } else {
-      window.open("https://github.com/AEGIS-GAME/aegis/releases/latest", "_blank")
-    }
-  }
-
   const handleDismiss = (): void => {
     setDismissed(true)
   }
@@ -29,17 +20,11 @@ export default function VersionInfoBar(): JSX.Element | null {
       <div className="flex items-center gap-2">
         <AlertCircle className="h-4 w-4" />
         <span>
-          Client Update available: {localVersion} → {latestVersion}
+          Client Update available: {localVersion} → {latestVersion}. Run &apos;aegis
+          update&apos; to update.
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <button
-          onClick={handleUpdateClick}
-          className="flex items-center gap-1 px-2 py-1 bg-blue-700 hover:bg-blue-800 rounded text-xs transition-colors"
-        >
-          <Download className="h-3 w-3" />
-          Update
-        </button>
         <button
           onClick={handleDismiss}
           className="p-1 hover:bg-blue-700 rounded transition-colors"
