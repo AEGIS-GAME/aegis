@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.2](https://github.com/AEGIS-GAME/aegis/compare/client-v2.8.1...client-v2.8.2) (2025-09-15)
+
+
+### Bug Fixes
+
+* **client:** only check client version once aegis path set ([c4c68d5](https://github.com/AEGIS-GAME/aegis/commit/c4c68d51efe47c5b75ecfb5e75f7350a20718163))
+
 ## [2.8.1](https://github.com/AEGIS-GAME/aegis/compare/client-v2.8.0...client-v2.8.1) (2025-09-15)
 
 
