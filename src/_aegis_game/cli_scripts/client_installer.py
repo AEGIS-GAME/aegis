@@ -33,7 +33,7 @@ class ClientInstaller:
         self.VERSION_CHECKER: VersionChecker = VersionChecker()
         self.platform: str = self._detect_platform()
         self.asset_name: str = self.PLATFORM_ASSETS[self.platform]
-        self.version: str | None = self.VERSION_CHECKER.get_local_version()
+        self.version: str | None = self.VERSION_CHECKER.get_latest_version()
         if not self.version:
             msg = "No client version found"
             raise ValueError(msg)
@@ -212,12 +212,11 @@ class ClientInstaller:
         print("Extracting client files...")
         self._extract_archive(zip_path)
 
-        self._create_version_file()
-
         executable_name = self._move_executable_to_root()
 
         if executable_name:
             self._cleanup_directory(executable_name)
+            self._create_version_file()
             print(f"Installation complete! Client available in: {self.CLIENT_DIR}")
         else:
             print("Installation completed with warnings")
