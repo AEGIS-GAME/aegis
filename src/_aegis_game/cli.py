@@ -8,7 +8,7 @@ from .cli_scripts.update_client import main as update_client
 from .play import run
 
 
-def main() -> None:
+def main() -> None:  # noqa: C901
     args = parse_args()
 
     if args.command == "run":
