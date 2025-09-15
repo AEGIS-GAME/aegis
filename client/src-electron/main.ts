@@ -104,6 +104,8 @@ class ElectronApp {
         return app.getAppPath()
       case "getAppVersion":
         return app.getVersion()
+      case "getClientVersion":
+        return this.getClientVersion(args[0])
       case "openExternal":
         return shell.openExternal(args[0])
       case "path.join":
@@ -331,6 +333,32 @@ class ElectronApp {
       ? path.join(aegisPath, ".venv", "Scripts")
       : path.join(aegisPath, ".venv", "bin")
     return fs.existsSync(venvPath) ? venvPath : null
+  }
+
+  private getClientVersion(aegisPath: string): string | null {
+    try {
+      if (!aegisPath) {
+        return null
+      }
+
+      const versionFile = path.join(aegisPath, "client", "client-version.txt")
+      if (fs.existsSync(versionFile)) {
+        const version = fs.readFileSync(versionFile, "utf8").trim()
+        return version || null
+      }
+
+      // Fallback to package.json for development
+      const packageJsonPath = path.join(aegisPath, "client", "package.json")
+      if (fs.existsSync(packageJsonPath)) {
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
+        return packageJson.version || null
+      }
+
+      return null
+    } catch (error) {
+      console.error("Error reading client version:", error)
+      return null
+    }
   }
 }
 

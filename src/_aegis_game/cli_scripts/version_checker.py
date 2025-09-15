@@ -33,7 +33,17 @@ class VersionChecker:
 
     def get_local_version(self) -> str | None:
         """Get the version of the locally installed client."""
-        # First try to find package.json (for development)
+        # First try to find client-version.txt
+        version_file_path: Path = self.client_dir / "client-version.txt"
+        if version_file_path.exists():
+            try:
+                with version_file_path.open() as f:
+                    version = f.read().strip()
+                    return version if version else None
+            except Exception as e:  # noqa: BLE001
+                print(f"Error reading client-version.txt: {e}")
+
+        # Fallback to package.json (for development)
         package_json_path: Path = self.client_dir / "package.json"
         if package_json_path.exists():
             try:
@@ -43,8 +53,6 @@ class VersionChecker:
             except (json.JSONDecodeError, KeyError):
                 pass
 
-        # For installed clients, we can't determine version from executable alone
-        # Return None to indicate we can't determine the version
         return None
 
     def get_latest_version(self) -> str | None:
@@ -65,40 +73,23 @@ class VersionChecker:
         local_version = self.get_local_version()
         latest_version = self.get_latest_version()
 
-        if not local_version:
-            return latest_version is not None
-
-        if not latest_version:
+        if not local_version or not latest_version:
             return False
 
-        # Simple version comparison (assumes semantic versioning)
-        try:
-            local_parts: list[int] = [int(x) for x in local_version.split(".")]
-            latest_parts = [int(x) for x in latest_version.split(".")]
-        except ValueError:
-            # If version parsing fails, assume no update available
-            return False
-        else:
-            # Pad with zeros if needed
-            max_len: int = max(len(local_parts), len(latest_parts))
-            local_parts.extend([0] * (max_len - len(local_parts)))
-            latest_parts.extend([0] * (max_len - len(latest_parts)))
-
-            return latest_parts > local_parts
+        return local_version != latest_version
 
     def get_version_info(self) -> dict[str, Any]:  # pyright: ignore[reportExplicitAny]
         """Get comprehensive version information."""
         local_version: str | None = self.get_local_version()
         latest_version: str | None = self.get_latest_version()
 
-        # Check if client exists (either package.json or executable)
         client_exists = False
         if self.client_dir.exists():
-            # Check for package.json (development) or executable (installed)
-            if (self.client_dir / "package.json").exists():
+            # Check for client-version.txt (primary indicator) or package.json (development)
+            if (self.client_dir / "client-version.txt").exists() or (self.client_dir / "package.json").exists():
                 client_exists = True
+            # Check for executable files (installed client)
             else:
-                # Check for executable files
                 executable_patterns = ["*.exe", "*.app", "*.AppImage"]
                 for pattern in executable_patterns:
                     if list(self.client_dir.glob(pattern)):

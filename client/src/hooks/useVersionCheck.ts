@@ -23,7 +23,10 @@ export function useVersionCheck(): VersionInfo {
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        const localVersion = (await aegisAPI?.getAppVersion?.()) || "2.7.5"
+        const aegisPath = localStorage.getItem("aegisPath")
+        const localVersion = aegisPath
+          ? (await aegisAPI?.getClientVersion?.(aegisPath)) || "1.0.0"
+          : "1.0.0"
 
         // Get latest version from GitHub
         const response = await fetch(

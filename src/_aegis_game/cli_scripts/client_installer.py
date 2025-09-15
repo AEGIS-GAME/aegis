@@ -10,6 +10,8 @@ from typing import Any, ClassVar
 
 import requests
 
+from .version_checker import VersionChecker
+
 
 class ClientInstaller:
     """Handles downloading and installing the AEGIS client."""
@@ -28,8 +30,13 @@ class ClientInstaller:
     EXECUTABLE_PATTERNS: ClassVar[list[str]] = ["*.app", "*.AppImage", "*.exe"]
 
     def __init__(self) -> None:
+        self.VERSION_CHECKER: VersionChecker = VersionChecker()
         self.platform: str = self._detect_platform()
         self.asset_name: str = self.PLATFORM_ASSETS[self.platform]
+        self.version: str | None = self.VERSION_CHECKER.get_local_version()
+        if not self.version:
+            msg = "No client version found"
+            raise ValueError(msg)
 
     def _detect_platform(self) -> str:
         """Detect the current platform."""
@@ -129,6 +136,19 @@ class ClientInstaller:
 
         print(f"Extracted to: {self.CLIENT_DIR}")
 
+    def _create_version_file(self) -> None:
+        """Create client-version.txt file with the current version."""
+        version_file = self.CLIENT_DIR / "client-version.txt"
+        if not self.version:
+            msg = "No client version found"
+            raise ValueError(msg)
+        try:
+            with version_file.open("w") as f:
+                _ = f.write(self.version)
+            print(f"Created version file: {version_file}")
+        except Exception as e:  # noqa: BLE001
+            print(f"Warning: Failed to create version file: {e}")
+
     def _find_executable(self) -> Path | None:
         """Find the main executable in the extracted files."""
         for pattern in self.EXECUTABLE_PATTERNS:
@@ -191,6 +211,8 @@ class ClientInstaller:
 
         print("Extracting client files...")
         self._extract_archive(zip_path)
+
+        self._create_version_file()
 
         executable_name = self._move_executable_to_root()
 
