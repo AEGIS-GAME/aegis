@@ -43,7 +43,7 @@ class CellInfo:
         Check if the cell is a killer cell.
 
         Returns:
-            bool: True if the cell type is KILLER_CELL, else False.
+            A boolean value indicating whether cell is a KILLER_CELL.
 
         """
         return self.type == CellType.KILLER_CELL
