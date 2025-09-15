@@ -22,11 +22,12 @@ class ElectronApp {
   }
 
   private createWindow(): void {
+    const version = app.getVersion()
     this.mainWindow = new BrowserWindow({
       width: 1200,
       height: 800,
       autoHideMenuBar: true,
-      title: "AEGIS",
+      title: `AEGIS v${version}`,
       webPreferences: {
         devTools: is.dev,
         preload: path.join(__dirname, "../preload/index.js"),

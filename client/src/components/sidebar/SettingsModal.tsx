@@ -4,11 +4,12 @@ import { Label } from "@/components/ui/label"
 import { Modal } from "@/components/ui/modal"
 import { Switch } from "@/components/ui/switch"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
+import { useVersionCheck } from "@/hooks/useVersionCheck"
 import { Scaffold } from "@/types"
-import { Bug, Folder, SlidersHorizontal } from "lucide-react"
+import { Bug, Folder, Info, SlidersHorizontal } from "lucide-react"
 import { useEffect, useState } from "react"
 
-type Tab = "aegis" | "config" | "user"
+type Tab = "aegis" | "config" | "user" | "about"
 
 interface Props {
   isOpen: boolean
@@ -25,6 +26,7 @@ export default function SettingsModal({
     scaffold
   const [debugMode, setDebugMode] = useLocalStorage<boolean>("aegis_debug_mode", false)
   const [activeTab, setActiveTab] = useState<Tab>("aegis")
+  const { localVersion } = useVersionCheck()
 
   useEffect(() => {
     readAegisConfig()
@@ -102,6 +104,12 @@ export default function SettingsModal({
             onClick={() => setActiveTab("user")}
           >
             <Bug size={16} /> User Settings
+          </button>
+          <button
+            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "about" ? "bg-muted shadow-sm" : "hover:bg-gray-100"}`}
+            onClick={() => setActiveTab("about")}
+          >
+            <Info size={16} /> About
           </button>
         </div>
 
@@ -193,6 +201,40 @@ export default function SettingsModal({
                   />
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === "about" && (
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold border-b border-zinc-300 -ml-4 pl-4 pb-2 mr-0">
+                About AEGIS
+              </h2>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium">Version</span>
+                  <span className="px-2 py-1 rounded text-sm font-medium bg-blue-100 text-blue-800">
+                    {localVersion || "Unknown"}
+                  </span>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  <p>AEGIS is a survivor simulation game for educational purposes.</p>
+                  <p className="mt-2">
+                    Built with Electron, React, TypeScript, and Python.
+                  </p>
+                </div>
+                <div className="pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      window.open("https://github.com/AEGIS-GAME/aegis", "_blank")
+                    }
+                    className="w-full"
+                  >
+                    View on GitHub
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
