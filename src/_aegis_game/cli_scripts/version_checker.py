@@ -86,22 +86,17 @@ class VersionChecker:
         client_exists = False
         if self.client_dir.exists():
             # Check for client-version.txt (primary indicator) or package.json (development)
-            if (self.client_dir / "client-version.txt").exists() or (self.client_dir / "package.json").exists():
+            if (self.client_dir / "client-version.txt").exists() or (
+                self.client_dir / "package.json"
+            ).exists():
                 client_exists = True
-            # Check for executable files (installed client)
             else:
+                # Check for executable files (installed client)
                 executable_patterns = ["*.exe", "*.app", "*.AppImage"]
                 for pattern in executable_patterns:
                     if list(self.client_dir.glob(pattern)):
                         client_exists = True
                         break
-
-        print(f"Debug: Looking for client in: {self.client_dir.absolute()}")
-        print(f"Debug: Client directory exists: {self.client_dir.exists()}")
-        if self.client_dir.exists():
-            print(
-                f"Debug: Client directory contents: {list(self.client_dir.iterdir())}"
-            )
 
         return {
             "local_version": local_version,
