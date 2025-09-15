@@ -24,9 +24,20 @@ export function useVersionCheck(): VersionInfo {
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
         const aegisPath = localStorage.getItem("aegisPath")
-        const localVersion = aegisPath
-          ? (await aegisAPI?.getClientVersion?.(aegisPath)) || "1.0.0"
-          : "1.0.0"
+
+        // Don't show banner if AEGIS path is not set up
+        if (!aegisPath) {
+          setVersionInfo({
+            localVersion: null,
+            latestVersion: null,
+            updateAvailable: false,
+            isLoading: false,
+            error: null,
+          })
+          return
+        }
+
+        const localVersion = (await aegisAPI?.getClientVersion?.(aegisPath)) || "1.0.0"
 
         // Get latest version from GitHub
         const response = await fetch(
