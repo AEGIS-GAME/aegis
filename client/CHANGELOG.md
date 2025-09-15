@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.1](https://github.com/AEGIS-GAME/aegis/compare/client-v2.8.0...client-v2.8.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* add things ([425a407](https://github.com/AEGIS-GAME/aegis/commit/425a407464e62a06eefc8f03aabc418a01f0fe59))
+* **client:** change thing ([fa6e967](https://github.com/AEGIS-GAME/aegis/commit/fa6e967c3bcee38c59f4e258ba36ffed17f7ae42))
+
 ## [2.8.0](https://github.com/AEGIS-GAME/aegis/compare/client-v2.7.6...client-v2.8.0) (2025-09-15)
 
 
