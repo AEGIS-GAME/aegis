@@ -101,6 +101,8 @@ class ElectronApp {
         return this.openAegisDirectory()
       case "getAppPath":
         return app.getAppPath()
+      case "getAppVersion":
+        return app.getVersion()
       case "path.join":
         return path.join(...args)
       case "path.dirname":
