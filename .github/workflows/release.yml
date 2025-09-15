@@ -77,7 +77,7 @@ jobs:
             extension: AppImage
           - os: windows-latest
             platform: win32
-            artifact-name: windows-client
+            artifact-name: win-client
             extension: exe
     runs-on: ${{ matrix.os }}
     permissions:
