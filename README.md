@@ -4,98 +4,111 @@ AEGIS is a survivor simulation game. This repo contains:
 
 - Server/engine (Python package) that runs simulations and exposes a WebSocket for the client
 - Client (Electron, React, TypeScript, Tailwind CSS) for visualizing and controlling simulations
-- Documentation site (Next.js/MDX)
+- Documentation found [here](https://aegis-game.github.io/docs/)
 
 ### Repo Layout
 
-- `src/_aegis` and `src/aegis`: Python engine, CLI entrypoint, public API
+Codebase
 - `client`: Electron desktop client (builds for macOS, Windows, Linux)
-- `docs`: Documentation website and content
 - `schema`: Shared Protocol Buffer/TypeScript types
-- `worlds`: Sample worlds for running simulations
+- `src`: Python server/engine, CLI entrypoint, public API
+- `tests`: Tests
+
+Additional
 - `agents`: Example/reference agents (e.g., `agent_path`, `agent_mas`, `agent_prediction`)
-- `config/config.yaml`: Runtime configuration for the engine
+- `config`: Example/reference configurations (e.g., `pathfinding-assignment.yaml`, `multi-agent-assignment.yaml`)
+- `prediction-data`:  Example/reference prediction data
+- `scripts`: Utility scripts
+- `worlds`: Example/reference worlds for running simulations
 
 ### Prerequisites
 
-- Python 3.12+
+- Python 3.13+
 - Node.js 20+
-- `uv` (for Python env/build) — `pip install uv` or see `https://docs.astral.sh/uv/`
-
+  
 ### Package name (PyPI)
 
-The Python package is published as `aegis-game`. Once released, you can install it with:
+The Python package is published as `aegis-game`. You can install it with:
 
 ```bash
 pip install aegis-game
 ```
+- If you see "Defaulting to user installation because normal site-packages is not writeable"
+  - You will likely get "aegis: command not found" (Linux)  or "'aegis' is not recognized as an internal or external command, operable program or batch file." (Windows) when using it
+  - This can be rectfied by adding the local location of 'aegis' to your PATH
+    - Linux 
+      - `PATH=$PATH:~/.local/bin`
+    - Windows
+      - `PATH=%PATH%;%appdata%\Python\Python313\Scripts`
 
 The CLI entrypoint is `aegis` (e.g., `aegis launch`).
 
 ### Download for usage in assignments or competitions
 
-1. Create a python project and install the `aegis-game` package (Any method works, will demo with uv)
+1. Create a folder and install the `aegis-game` package 
 
 ```bash
 # Initialize project
-uv init --package my-new-project
+mkdir my-new-project
 cd my-new-project
-
-# Add the aegis-game package as a dependency
-uv add aegis-game
-```
-
-2. Activate the virtual environment
-
-On macOS/Linux:
-
-```bash
-source .venv/bin/activate
-```
-
-On Windows (PowerShell):
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-3. Create scaffold
-
-```
 aegis init
 ```
 
+Alternately, for multi-agent config use
+  ```bash
+  aegis init --type mas
+  ```
+  
 This creates all necessary files/folders in your project that an aegis simulation needs to run
 
-4. Configure features
+Notes:
 
-Edit `config/config.yaml` to enable/disable features (e.g., messages, dynamic spawning, abilities). If you change features, regenerate stubs so the API your agent recongizes matches the config:
+- Agent code under `agents/`
+- Config code under `config/`
+- Client GUI code under `client/`
+- Worlds under `worlds/` 
+
+2. Configure features (Optional)
+
+If default `aegis init` is not desired edit `config/config.yaml` to enable/disable features (e.g., messages, dynamic spawning, abilities). If you change features, regenerate stubs so the API your agent recongizes matches the config:
 
 ```bash
 aegis forge
 ```
 
-5. Launch a game (through the console)
+3a. Use the client UI
+
+The client is in the `\client` folder
+You can run it by interacting with it through your OS folder system or
+
+Linux
+```bash
+cd client
+./aegis-client.AppImage
+```
+Windows
+```cmd
+cd client
+aegis-client.exe
+```
+Mac
+```console
+cd client
+open Aegis.app
+```
+
+3b. Launch a game (through the console)
 
 ```bash
 # One agent
-aegis launch --world ExampleWorld --agent agent_path
+aegis launch --world example --agent agent_path
 
 # Five agents with max rounds of 500 (requires config of ALLOW_CUSTOM_AGENT_COUNT=true)
-aegis launch --world ExampleWorld --agent agent_path --amount 5 --rounds 500
+aegis launch --world example --agent agent_path --amount 5 --rounds 500
 
 ```
 
 Run `aegis launch -h` to see all ways you can run an aegis simulation
-
-Notes:
-
-- World names are the file names under `worlds/` without the `.world` extension. For example, `worlds/ExampleWorld.world` -> `--world ExampleWorld`.
-- Agent names are folder names under `agents/`. For example, `agents/agent_path` -> `--agent agent_path`.
-
-6. Use the client UI
-
-TODO
 
 ### Download for Development
 
@@ -103,6 +116,14 @@ Before you start, please read our [Contributing Guidelines](https://github.com/A
 the full contribution process, coding standards, and PR requirements.
 
 1. Clone the repository and set up the Python environment
+   
+ - `uv` (optional for dev) — `pip install uv` or see `https://docs.astral.sh/uv/`
+   - If you see "Defaulting to user installation because normal site-packages is not writeable"
+     - You will likely get "uv: command not found"  or "'uv' is not recognized as an internal or external command, operable program or batch file." when using it, this can be rectfied by adding the local location of 'uv' to your PATH
+     - Linux (eg.)
+       - `PATH=$PATH:~/.local/bin`
+     - Windows (eg.)
+       - `PATH=%PATH%;%appdata%\Python\Python313\Scripts`
 
 ```bash
 git clone https://github.com/AEGIS-GAME/aegis.git
@@ -140,7 +161,10 @@ The documentation can be found [here](https://github.com/AEGIS-GAME/aegis-docs).
 
 ### Troubleshooting
 
+- "Config Error Failed to load config.yaml. Please check your config file and ensure it's valid."
+  - Use Settings 'Gear' icon to open settings and set 'Aegis Path' to the base folder of your project
+      - The folder 'config' within that base folder should have the missing 'config.yaml' in it
 - Windows PowerShell execution policy may block script activation; if needed, run PowerShell as Administrator and execute:
   - `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
-- Ensure Node.js 20+ and Python 3.12+ are on your PATH
+- Ensure Node.js 20+ and Python 3.13+ are on your PATH
 - If the client cannot connect, verify the server was started with `--client` and that no firewall is blocking the port
