@@ -1,6 +1,6 @@
 import { is } from "@electron-toolkit/utils"
 import child_process from "child_process"
-import { app, BrowserWindow, dialog, ipcMain } from "electron"
+import { app, BrowserWindow, dialog, ipcMain, shell } from "electron"
 import fs from "fs"
 import path from "path"
 import yaml from "yaml"
@@ -104,6 +104,8 @@ class ElectronApp {
         return app.getAppPath()
       case "getAppVersion":
         return app.getVersion()
+      case "openExternal":
+        return shell.openExternal(args[0])
       case "path.join":
         return path.join(...args)
       case "path.dirname":

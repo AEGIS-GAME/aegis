@@ -21,6 +21,8 @@ export function useVersionCheck(): VersionInfo {
   useEffect(() => {
     const checkVersion = async (): Promise<void> => {
       try {
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
         const localVersion = (await aegisAPI?.getAppVersion?.()) || "2.7.5"
 
         // Get latest version from GitHub

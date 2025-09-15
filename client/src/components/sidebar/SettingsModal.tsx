@@ -226,9 +226,15 @@ export default function SettingsModal({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() =>
-                      window.open("https://github.com/AEGIS-GAME/aegis", "_blank")
-                    }
+                    onClick={() => {
+                      if (window.electronAPI?.openExternal) {
+                        window.electronAPI.openExternal(
+                          "https://github.com/AEGIS-GAME/aegis"
+                        )
+                      } else {
+                        window.open("https://github.com/AEGIS-GAME/aegis", "_blank")
+                      }
+                    }}
                     className="w-full"
                   >
                     View on GitHub

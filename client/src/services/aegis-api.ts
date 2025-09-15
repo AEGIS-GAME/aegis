@@ -3,6 +3,7 @@ type AegisAPI = {
   openAegisDirectory: () => Promise<string | undefined>
   getAppPath: () => Promise<string>
   getAppVersion: () => Promise<string>
+  openExternal: (url: string) => Promise<void>
   exportWorld: (name: string, world: Uint8Array) => Promise<void>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   read_config: (aegisPath: string) => Promise<any>

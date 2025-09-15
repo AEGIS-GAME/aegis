@@ -16,6 +16,7 @@ const electronAPI = {
   openAegisDirectory: () => invoke("openAegisDirectory"),
   getAppPath: (...args: any[]) => invoke("getAppPath", ...args),
   getAppVersion: () => invoke("getAppVersion"),
+  openExternal: (url: string) => invoke("openExternal", url),
   exportWorld: (...args: any[]) => invoke("exportWorld", ...args),
   read_config: (aegisPath: string) => ipcRenderer.invoke("read_config", aegisPath),
   update_config_value: (aegisPath: string, keyPath: string, value: any) =>

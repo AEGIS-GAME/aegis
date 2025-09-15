@@ -1,22 +1,47 @@
 import { useVersionCheck } from "@/hooks/useVersionCheck"
 import { AlertCircle, Download, X } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function VersionInfoBar(): JSX.Element | null {
   const { localVersion, latestVersion, updateAvailable, isLoading, error } =
     useVersionCheck()
   const [dismissed, setDismissed] = useState(false)
 
+  useEffect(() => {
+    const dismissedVersion = localStorage.getItem("aegis_version_dismissed")
+    if (dismissedVersion && latestVersion && dismissedVersion === latestVersion) {
+      setDismissed(true)
+    }
+  }, [latestVersion])
+
+  useEffect(() => {
+    if (latestVersion) {
+      const dismissedVersion = localStorage.getItem("aegis_version_dismissed")
+      if (dismissedVersion !== latestVersion) {
+        setDismissed(false)
+      }
+    }
+  }, [latestVersion])
+
   if (isLoading || error || !updateAvailable || dismissed) {
     return null
   }
 
   const handleUpdateClick = (): void => {
-    window.open("https://github.com/AEGIS-GAME/aegis/releases/latest", "_blank")
+    if (window.electronAPI?.openExternal) {
+      window.electronAPI.openExternal(
+        "https://github.com/AEGIS-GAME/aegis/releases/latest"
+      )
+    } else {
+      window.open("https://github.com/AEGIS-GAME/aegis/releases/latest", "_blank")
+    }
   }
 
   const handleDismiss = (): void => {
     setDismissed(true)
+    if (latestVersion) {
+      localStorage.setItem("aegis_version_dismissed", latestVersion)
+    }
   }
 
   return (
