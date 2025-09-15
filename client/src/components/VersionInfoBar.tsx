@@ -20,8 +20,8 @@ export default function VersionInfoBar(): JSX.Element | null {
       <div className="flex items-center gap-2">
         <AlertCircle className="h-4 w-4" />
         <span>
-          Client Update available: {localVersion} → {latestVersion}. Run &apos;aegis
-          update&apos; to update.
+          Client Update available: {localVersion} → {latestVersion}. Run{" "}
+          <span className="font-bold">aegis update</span> to update.
         </span>
       </div>
       <div className="flex items-center gap-2">
