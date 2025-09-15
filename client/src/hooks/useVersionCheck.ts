@@ -37,7 +37,19 @@ export function useVersionCheck(): VersionInfo {
           return
         }
 
-        const localVersion = (await aegisAPI?.getClientVersion?.(aegisPath)) || "1.0.0"
+        const localVersion = await aegisAPI?.getClientVersion?.(aegisPath)
+
+        // If we can't get local version, don't show update banner
+        if (!localVersion) {
+          setVersionInfo({
+            localVersion: null,
+            latestVersion: null,
+            updateAvailable: false,
+            isLoading: false,
+            error: null,
+          })
+          return
+        }
 
         // Get latest version from GitHub
         const response = await fetch(
