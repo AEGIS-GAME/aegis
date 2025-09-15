@@ -29,8 +29,10 @@ export default function SettingsModal({
   const { localVersion } = useVersionCheck()
 
   useEffect(() => {
-    readAegisConfig()
-  }, [])
+    if (aegisPath) {
+      readAegisConfig()
+    }
+  }, [aegisPath, readAegisConfig])
 
   const renderConfigValue = (value: unknown): JSX.Element => {
     if (typeof value === "boolean") {

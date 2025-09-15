@@ -1,37 +1,20 @@
 import { useVersionCheck } from "@/hooks/useVersionCheck"
+import { aegisAPI } from "@/services/aegis-api"
 import { AlertCircle, Download, X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export default function VersionInfoBar(): JSX.Element | null {
   const { localVersion, latestVersion, updateAvailable, isLoading, error } =
     useVersionCheck()
   const [dismissed, setDismissed] = useState(false)
 
-  useEffect(() => {
-    const dismissedVersion = localStorage.getItem("aegis_version_dismissed")
-    if (dismissedVersion && latestVersion && dismissedVersion === latestVersion) {
-      setDismissed(true)
-    }
-  }, [latestVersion])
-
-  useEffect(() => {
-    if (latestVersion) {
-      const dismissedVersion = localStorage.getItem("aegis_version_dismissed")
-      if (dismissedVersion !== latestVersion) {
-        setDismissed(false)
-      }
-    }
-  }, [latestVersion])
-
   if (isLoading || error || !updateAvailable || dismissed) {
     return null
   }
 
   const handleUpdateClick = (): void => {
-    if (window.electronAPI?.openExternal) {
-      window.electronAPI.openExternal(
-        "https://github.com/AEGIS-GAME/aegis/releases/latest"
-      )
+    if (aegisAPI?.openExternal) {
+      aegisAPI.openExternal("https://github.com/AEGIS-GAME/aegis/releases/latest")
     } else {
       window.open("https://github.com/AEGIS-GAME/aegis/releases/latest", "_blank")
     }
@@ -39,9 +22,6 @@ export default function VersionInfoBar(): JSX.Element | null {
 
   const handleDismiss = (): void => {
     setDismissed(true)
-    if (latestVersion) {
-      localStorage.setItem("aegis_version_dismissed", latestVersion)
-    }
   }
 
   return (
@@ -49,7 +29,7 @@ export default function VersionInfoBar(): JSX.Element | null {
       <div className="flex items-center gap-2">
         <AlertCircle className="h-4 w-4" />
         <span>
-          Update available: {localVersion} → {latestVersion}
+          Client Update available: {localVersion} → {latestVersion}
         </span>
       </div>
       <div className="flex items-center gap-2">

@@ -34,7 +34,8 @@ export function useVersionCheck(): VersionInfo {
         }
 
         const release = await response.json()
-        const latestVersion = release.tag_name?.replace("v", "") || null
+        const latestVersion =
+          release.tag_name?.replace("v", "").replace("client-", "") || null
 
         const isUpdateAvailable =
           latestVersion &&
