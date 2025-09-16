@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.8.1...aegis-v2.8.2) (2025-09-16)
+
+
+### Bug Fixes
+
+* **updating:** remove debug, check for None ([de94e55](https://github.com/AEGIS-GAME/aegis/commit/de94e55907452ff8a3a9a6707ead9d1ba2f95c21))
+* **updating:** some things ([efcc5d0](https://github.com/AEGIS-GAME/aegis/commit/efcc5d0a332167388942b8ffdd0e5ff7cc502a81))
+
 ## [2.8.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.8.0...aegis-v2.8.1) (2025-09-15)
 
 
