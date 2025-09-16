@@ -66,7 +66,37 @@ class VersionChecker:
             return None
 
         release: dict[str, Any] = response.json()  # pyright: ignore[reportAny, reportExplicitAny]
-        return release.get("tag_name", "").lstrip("v") if release else None  # pyright: ignore[reportAny]
+
+        if not release:
+            return None
+
+        return (
+            release.get("tag_name", "").lstrip("v").lstrip("client-")  # pyright: ignore[reportAny]
+            if release
+            else None
+        )
+
+    def _compare_versions(self, version1: str, version2: str) -> int:
+        """Compare two semantic versions. Returns -1 if version1 < version2, 0 if equal, 1 if version1 > version2."""
+
+        def version_parts(version: str) -> list[int]:
+            return [int(part) for part in version.split(".")]
+
+        parts1 = version_parts(version1)
+        parts2 = version_parts(version2)
+
+        # Pad with zeros to make equal length
+        max_len = max(len(parts1), len(parts2))
+        parts1.extend([0] * (max_len - len(parts1)))
+        parts2.extend([0] * (max_len - len(parts2)))
+
+        for p1, p2 in zip(parts1, parts2, strict=True):
+            if p1 < p2:
+                return -1
+            elif p1 > p2:  # noqa: RET505
+                return 1
+
+        return 0
 
     def is_update_available(self) -> bool:
         """Check if a newer version is available."""
@@ -76,7 +106,16 @@ class VersionChecker:
         if not local_version or not latest_version:
             return False
 
-        return local_version != latest_version
+        # Normalize both versions before comparing
+        normalized_local = (
+            local_version.lstrip("v").lstrip("client-") if local_version else ""
+        )
+        normalized_latest = (
+            latest_version.lstrip("v").lstrip("client-") if latest_version else ""
+        )
+
+        # Use semantic version comparison - update available if local < latest
+        return self._compare_versions(normalized_local, normalized_latest) < 0
 
     def get_version_info(self) -> dict[str, Any]:  # pyright: ignore[reportExplicitAny]
         """Get comprehensive version information."""

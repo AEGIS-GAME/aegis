@@ -17,6 +17,7 @@ export function useVersionCheck(): VersionInfo {
     isLoading: true,
     error: null,
   })
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   useEffect(() => {
     const checkVersion = async (): Promise<void> => {
@@ -39,19 +40,19 @@ export function useVersionCheck(): VersionInfo {
 
         const localVersion = await aegisAPI?.getClientVersion?.(aegisPath)
 
-        // If we can't get local version, don't show update banner
+        // If we can't get local version, show error banner
         if (!localVersion) {
           setVersionInfo({
             localVersion: null,
             latestVersion: null,
-            updateAvailable: false,
+            updateAvailable: true, // Show banner for unknown version
             isLoading: false,
-            error: null,
+            error:
+              "Version unknown - please run aegis init again or set your aegis path to the correct project location",
           })
           return
         }
 
-        // Get latest version from GitHub
         const response = await fetch(
           "https://api.github.com/repos/AEGIS-GAME/aegis/releases/latest"
         )
@@ -63,12 +64,45 @@ export function useVersionCheck(): VersionInfo {
         const latestVersion =
           release.tag_name?.replace("v", "").replace("client-", "") || null
 
-        const isUpdateAvailable =
-          latestVersion && localVersion && localVersion !== latestVersion
+        // Normalize both versions for comparison
+        const normalizeVersion = (version: string | null): string => {
+          if (!version) {
+            return ""
+          }
+          return version.replace("v", "").replace("client-", "")
+        }
+
+        const compareVersions = (a: string, b: string): number => {
+          const aParts = a.split(".").map(Number)
+          const bParts = b.split(".").map(Number)
+
+          for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+            const aPart = aParts[i] || 0
+            const bPart = bParts[i] || 0
+
+            if (aPart < bPart) {
+              return -1
+            }
+            if (aPart > bPart) {
+              return 1
+            }
+          }
+
+          return 0
+        }
+
+        const normalizedLocalVersion = normalizeVersion(localVersion)
+        const normalizedLatestVersion = normalizeVersion(latestVersion)
+
+        const isUpdateAvailable = Boolean(
+          normalizedLatestVersion &&
+            normalizedLocalVersion &&
+            compareVersions(normalizedLocalVersion, normalizedLatestVersion) < 0
+        )
 
         setVersionInfo({
-          localVersion,
-          latestVersion,
+          localVersion: normalizedLocalVersion || localVersion,
+          latestVersion: normalizedLatestVersion || latestVersion,
           updateAvailable: isUpdateAvailable,
           isLoading: false,
           error: null,
@@ -83,6 +117,32 @@ export function useVersionCheck(): VersionInfo {
     }
 
     checkVersion()
+  }, [refreshTrigger])
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent): void => {
+      if (e.key === "aegisPath") {
+        setRefreshTrigger((prev) => prev + 1)
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleAegisPathChange = (): void => {
+      setRefreshTrigger((prev) => prev + 1)
+    }
+
+    window.addEventListener("aegisPathSet", handleAegisPathChange)
+
+    return () => {
+      window.removeEventListener("aegisPathSet", handleAegisPathChange)
+    }
   }, [])
 
   return versionInfo

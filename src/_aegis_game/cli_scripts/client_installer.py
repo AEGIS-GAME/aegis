@@ -143,8 +143,10 @@ class ClientInstaller:
             msg = "No client version found"
             raise ValueError(msg)
         try:
+            # Ensure we store clean version without prefixes
+            clean_version = self.version.lstrip("v").lstrip("client-")
             with version_file.open("w") as f:
-                _ = f.write(self.version)
+                _ = f.write(clean_version)
             print(f"Created version file: {version_file}")
         except Exception as e:  # noqa: BLE001
             print(f"Warning: Failed to create version file: {e}")

@@ -46,6 +46,7 @@ export function createScaffold(): Scaffold {
     const path = await aegisAPI!.openAegisDirectory()
     if (path) {
       setAegisPath(path)
+      window.dispatchEvent(new CustomEvent("aegisPathSet"))
     }
   }
 
@@ -176,7 +177,10 @@ export function createScaffold(): Scaffold {
     if (!didInit) {
       didInit = true
       getAegisPath().then((path) => {
-        setAegisPath(path)
+        if (path) {
+          setAegisPath(path)
+          window.dispatchEvent(new CustomEvent("aegisPathSet"))
+        }
       })
 
       aegisAPI.aegis_child_process.onStdout((data: string) => {
