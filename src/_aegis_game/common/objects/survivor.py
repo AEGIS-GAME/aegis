@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from enum import Enum
 from typing import override
 
 from .world_object import WorldObject
@@ -16,11 +15,8 @@ class Survivor(WorldObject):
 
     """
 
-    def __init__(
-        self, survivor_id: int = -1, health: int = 1, state: State | None = None
-    ) -> None:
+    def __init__(self, survivor_id: int = -1, health: int = 1) -> None:
         super().__init__()
-        self._state: Survivor.State = state if state is not None else self.State.ALIVE
         self.id: int = survivor_id
         self.health: int = health
 
@@ -29,16 +25,10 @@ class Survivor(WorldObject):
         Check if the survivor is alive.
 
         Returns:
-            True if the survivor is ALIVE, False otherwise.
+            True if the survivor's health attribute is greather than zero, otherwise False.
 
         """
-        return self._state == self.State.ALIVE
-
-    def set_state(self, state: State) -> None:
-        self._state = state
-
-    def get_state(self) -> State:
-        return self._state
+        return self.health > 0
 
     @override
     def __str__(self) -> str:
@@ -47,7 +37,3 @@ class Survivor(WorldObject):
     @override
     def __repr__(self) -> str:
         return self.__str__()
-
-    class State(Enum):
-        ALIVE = 0
-        DEAD = 1

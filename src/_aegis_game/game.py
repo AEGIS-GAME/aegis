@@ -383,12 +383,14 @@ class Game:
                     layer.health = max(0, layer.health - decay_rate)
 
                     if layer.health <= 0:
-                        layer.set_state(Survivor.State.DEAD)
                         LOGGER.info(f"Survivor {layer.id} died from health decay")
 
                     # Track health change for client (only once per survivor per round)
                     self.game_pb.add_survivor_health_update(
-                        cell.location, layer.id, layer.health, layer.get_state().value
+                        cell.location,
+                        layer.id,
+                        layer.health,
+                        is_alive=layer.health > 0,
                     )
 
     def save(self, survivor: Survivor, agent: Agent) -> None:
