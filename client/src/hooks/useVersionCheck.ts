@@ -135,7 +135,7 @@ export function useVersionCheck(): VersionInfo {
 
   useEffect(() => {
     const handleAegisPathChange = (): void => {
-      window.location.reload()
+      setRefreshTrigger((prev) => prev + 1)
     }
 
     window.addEventListener("aegisPathSet", handleAegisPathChange)
