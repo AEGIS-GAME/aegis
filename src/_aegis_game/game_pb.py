@@ -202,7 +202,7 @@ class GamePb:
         self.drone_scans.append(pb_drone_scan)
 
     def add_survivor_health_update(
-        self, location: Location, survivor_id: int, new_health: int, new_state: int
+        self, location: Location, survivor_id: int, new_health: int, *, is_alive: bool
     ) -> None:
         """Add a survivor health update to be sent to the client."""
         pb_update = SurvivorHealthUpdate()
@@ -210,9 +210,7 @@ class GamePb:
         pb_update.location.y = location.y
         pb_update.survivor_id = survivor_id
         pb_update.new_health = new_health
-        pb_update.new_state = (
-            SurvivorState.ALIVE if new_state == 0 else SurvivorState.DEAD
-        )
+        pb_update.new_state = SurvivorState.ALIVE if is_alive else SurvivorState.DEAD
         self.survivor_health_updates.append(pb_update)
 
     def team_to_schema(self, team: Team) -> PbTeam:
