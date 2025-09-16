@@ -170,7 +170,7 @@ export default function SettingsModal({
               ) : (
                 <ErrorMessage
                   title="Config Error"
-                  message="Failed to load config.yaml. Please check your config file and ensure it's valid."
+                  message="Failed to load config.yaml. Check your config file or aegis path."
                   actionText="Retry Load Config"
                   onAction={readAegisConfig}
                 />
