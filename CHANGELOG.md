@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.9.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.8.1...aegis-v2.9.0) (2025-09-16)
+
+
+### Features
+
+* **client:** updating client works i think ([0e3e6d9](https://github.com/AEGIS-GAME/aegis/commit/0e3e6d99776d6439f204458fbc90b2a4600c476a))
+
+
+### Bug Fixes
+
+* **aegis:** always remove prefix to version begfore writing/comparing ([37d4181](https://github.com/AEGIS-GAME/aegis/commit/37d4181378fba7d2b52d60e214a4c770629ba014))
+* **updating:** remove debug, check for None ([de94e55](https://github.com/AEGIS-GAME/aegis/commit/de94e55907452ff8a3a9a6707ead9d1ba2f95c21))
+* **updating:** some things ([efcc5d0](https://github.com/AEGIS-GAME/aegis/commit/efcc5d0a332167388942b8ffdd0e5ff7cc502a81))
+
 ## [2.8.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.8.0...aegis-v2.8.1) (2025-09-15)
 
 
