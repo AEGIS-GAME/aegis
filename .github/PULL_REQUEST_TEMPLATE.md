@@ -16,4 +16,4 @@
 
 ## Checklist
 
-- [ ] I've read the [CONTRIBUTING](https://github.com/CPSC-383/aegis/blob/main/CONTRIBUTING.md) guidelines.
+- [ ] I've read the [CONTRIBUTING](https://github.com/AEGIS-GAME/aegis/blob/main/CONTRIBUTING.md) guidelines.
