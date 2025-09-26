@@ -72,7 +72,7 @@ export default function SettingsModal({
     }
 
     try {
-      const success = await updateConfigValue("features.HIDDEN_MOVE_COSTS", checked)
+      const success = await updateConfigValue("features.HIDDEN_MOVE_COSTS", !checked)
       if (!success) {
         console.error("Failed to update config")
       }
@@ -199,7 +199,7 @@ export default function SettingsModal({
                     </p>
                   </div>
                   <Switch
-                    checked={config?.hiddenMoveCosts ?? false}
+                    checked={!(config?.hiddenMoveCosts ?? false)}
                     onCheckedChange={handleHiddenMoveCostsChange}
                   />
                 </div>
