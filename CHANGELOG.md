@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.0...aegis-v2.9.1) (2025-09-26)
+
+
+### Documentation
+
+* **contributing:** fix link ([#77](https://github.com/AEGIS-GAME/aegis/issues/77)) ([93235bb](https://github.com/AEGIS-GAME/aegis/commit/93235bb6bbd612e2b1e2d23d3c672f37edd25b91))
+
 ## [2.9.0](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.8.1...aegis-v2.9.0) (2025-09-16)
 
 
