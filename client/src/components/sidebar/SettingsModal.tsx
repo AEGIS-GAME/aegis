@@ -186,16 +186,16 @@ export default function SettingsModal({
               <div className="flex items-center justify-between mt-2">
                 <div>
                   <Label>Enable Debug Mode</Label>
-                  <p className="text-xs text-muted-foreground">Toggle agent logs</p>
+                  <p className="text-xs text-muted-foreground">Toggle agent log visibility in client</p>
                 </div>
                 <Switch checked={debugMode} onCheckedChange={setDebugMode} />
               </div>
               {config?.configType === "path-assignment" && (
                 <div className="flex items-center justify-between mt-2">
                   <div>
-                    <Label>Enable Move Cost</Label>
+                    <Label>Enable All Move Costs Visiblility</Label>
                     <p className="text-xs text-muted-foreground">
-                      Toggle move cost visibility
+                      Toggle map movement costs to be all visible at start
                     </p>
                   </div>
                   <Switch
