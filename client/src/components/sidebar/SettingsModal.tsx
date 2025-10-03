@@ -186,7 +186,9 @@ export default function SettingsModal({
               <div className="flex items-center justify-between mt-2">
                 <div>
                   <Label>Enable Debug Mode</Label>
-                  <p className="text-xs text-muted-foreground">Toggle agent log visibility in client</p>
+                  <p className="text-xs text-muted-foreground">
+                    Toggle agent log visibility in client
+                    </p>
                 </div>
                 <Switch checked={debugMode} onCheckedChange={setDebugMode} />
               </div>
