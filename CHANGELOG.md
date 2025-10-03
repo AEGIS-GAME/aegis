@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.1...aegis-v2.9.2) (2025-10-03)
+
+
+### Bug Fixes
+
+* **surv file load bug:** remove proto bf survivor states to fix bug ([9123667](https://github.com/AEGIS-GAME/aegis/commit/91236672fb46a43843c6c52297f46114ae06ecc7))
+
 ## [2.9.1](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.0...aegis-v2.9.1) (2025-10-03)
 
 
