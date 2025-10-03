@@ -41,9 +41,7 @@ def cell_from_proto(proto_cell: PbCell) -> Cell:
     for layer_proto in proto_cell.layers:
         if layer_proto.HasField("survivor"):
             s = layer_proto.survivor
-            # Convert protobuf state to Survivor.State enum
-            state = Survivor.State.ALIVE if s.state == 0 else Survivor.State.DEAD
-            survivor = Survivor(s.id, s.health, state)
+            survivor = Survivor(s.id, s.health)
             cell.add_layer(survivor)
         elif layer_proto.HasField("rubble"):
             r = layer_proto.rubble
