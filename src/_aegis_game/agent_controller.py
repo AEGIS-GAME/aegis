@@ -312,7 +312,7 @@ class AgentController:
         is_adjacent = self._agent.location.is_adjacent_to(loc)
         is_scanned = self._game.is_loc_drone_scanned(loc, self._agent.team)
 
-        if not is_adjacent or not is_scanned:
+        if not is_adjacent and not is_scanned:
             cell_info.agents = []
             top = cell_info.top_layer
             cell_info.layers = [top] if top is not None else []
