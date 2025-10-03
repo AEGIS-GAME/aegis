@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.2](https://github.com/AEGIS-GAME/aegis/compare/client-v2.9.1...client-v2.9.2) (2025-10-03)
+
+
+### Bug Fixes
+
+* **lint:** lint issue in settings of client ([cb5849b](https://github.com/AEGIS-GAME/aegis/commit/cb5849be114633b1d7d779e9e7f3e3c84eb6741a))
+
 ## [2.9.1](https://github.com/AEGIS-GAME/aegis/compare/client-v2.9.0...client-v2.9.1) (2025-10-03)
 
 
