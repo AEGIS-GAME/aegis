@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/AEGIS-GAME/aegis/compare/client-v2.9.0...client-v2.9.1) (2025-10-03)
+
+
+### Bug Fixes
+
+* invert hidden move costs toggle functionality ([#76](https://github.com/AEGIS-GAME/aegis/issues/76)) ([1effb23](https://github.com/AEGIS-GAME/aegis/commit/1effb2365c7f3e3e3993fd50cab746c6873526ad))
+
 ## [2.9.0](https://github.com/AEGIS-GAME/aegis/compare/client-v2.8.2...client-v2.9.0) (2025-09-16)
 
 
