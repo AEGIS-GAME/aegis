@@ -188,7 +188,7 @@ export default function SettingsModal({
                   <Label>Enable Debug Mode</Label>
                   <p className="text-xs text-muted-foreground">
                     Toggle agent log visibility in client
-                    </p>
+                  </p>
                 </div>
                 <Switch checked={debugMode} onCheckedChange={setDebugMode} />
               </div>
