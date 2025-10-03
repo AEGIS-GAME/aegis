@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.9.3](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.2...aegis-v2.9.3) (2025-10-03)
+
+
+### Bug Fixes
+
+* **cooldowns for scanning:** added cooldown to scan to make it like d… ([d382921](https://github.com/AEGIS-GAME/aegis/commit/d382921e2615aed80e4afccfb23db1de890d63c4))
+* **cooldowns for scanning:** added cooldown to scan to make it like dig/save ([5e2f898](https://github.com/AEGIS-GAME/aegis/commit/5e2f8987b0b87aca491d98600bcd83fc676fcd71))
+
 ## [2.9.2](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.1...aegis-v2.9.2) (2025-10-03)
 
 
