@@ -29,6 +29,11 @@ class AgentController:
             error = "Argument has invalid None value"
             raise AgentError(error)
 
+    def assert_cooldown(self) -> None:
+        if self._agent.action_cooldown != 0:
+            error = "Agent is on cooldown"
+            raise AgentError(error)
+
     def assert_spawn(self, loc: Location, team: Team) -> None:
         if loc not in self._game.get_spawns():
             error = f"Invalid spawn: {loc}"
@@ -47,6 +52,7 @@ class AgentController:
 
     def assert_move(self, direction: Direction) -> None:
         self.assert_not_none(direction)
+        self.assert_cooldown()
         new_loc = self._agent.location.add(direction)
 
         if not self._game.on_map(new_loc):
@@ -54,6 +60,7 @@ class AgentController:
             raise AgentError(error)
 
     def assert_dig(self, agent: Agent) -> None:
+        self.assert_cooldown()
         if has_feature("ALLOW_AGENT_TYPES") and agent.type not in (
             AgentType.ENGINEER,
             AgentType.COMMANDER,
@@ -62,6 +69,7 @@ class AgentController:
             raise AgentError(error)
 
     def assert_save(self, agent: Agent) -> None:
+        self.assert_cooldown()
         if has_feature("ALLOW_AGENT_TYPES") and agent.type not in (
             AgentType.MEDIC,
             AgentType.COMMANDER,
@@ -75,6 +83,7 @@ class AgentController:
             raise AgentError(msg)
 
     def assert_scan(self) -> None:
+        self.assert_cooldown()
         if not has_feature("ALLOW_DRONE_SCAN"):
             msg = "Drone scan is not enabled, therefore this method is not available."
             raise AgentError(msg)
@@ -154,6 +163,7 @@ class AgentController:
 
         Does nothing if the agent is not on a charging cell.
         """
+        self.assert_cooldown()
         self._agent.add_cooldown()
         cell = self._game.get_cell_at(self._agent.location)
         if not cell.is_charging_cell():
@@ -283,8 +293,9 @@ class AgentController:
 
         """
         self.assert_scan()
-        self.assert_loc(loc)
         self._agent.add_cooldown()
+        self.assert_loc(loc)
+
         self._game.start_drone_scan(loc, self._agent.team)
         self._agent.add_energy(-Constants.DRONE_SCAN_ENERGY_COST)
 
