@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.5](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.4...aegis-v2.9.5) (2025-10-04)
+
+
+### Bug Fixes
+
+* **packaging:** add missing package dep ([eed6b18](https://github.com/AEGIS-GAME/aegis/commit/eed6b18f334ee273cbccd6562642f989f9a35bec))
+
 ## [2.9.4](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.3...aegis-v2.9.4) (2025-10-04)
 
 
