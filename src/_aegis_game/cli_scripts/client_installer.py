@@ -1,6 +1,7 @@
 # pyright: reportAny = false
 # pyright: reportExplicitAny = false
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -9,6 +10,7 @@ from pathlib import Path
 from typing import Any, ClassVar
 
 import requests
+from packaging.version import Version
 
 from .version_checker import VersionChecker
 
@@ -52,7 +54,7 @@ class ClientInstaller:
 
     def _get_latest_release(self) -> dict[str, Any]:
         """Fetch the latest client release from GitHub."""
-        url = f"https://api.github.com/repos/{self.OWNER}/{self.REPO}/releases/latest"
+        url = f"https://api.github.com/repos/{self.OWNER}/{self.REPO}/releases"
 
         try:
             response = requests.get(url, timeout=10)
@@ -60,12 +62,25 @@ class ClientInstaller:
         except requests.RequestException as e:
             sys.exit(f"Failed to fetch releases: {e}")
 
-        release = response.json()
+        releases = response.json()
 
-        if not release:
-            sys.exit("No client release found")
+        if not releases:
+            sys.exit("No releases found")
 
-        return release
+        client_releases: list[dict[str, Any]] = []
+        for r in releases:
+            tag = r.get("tag_name", "")
+            m = re.match(r"^client-v(\d+\.\d+\.\d+)$", tag)
+            if m:
+                try:
+                    r["_parsed_version"] = Version(m.group(1))
+                    client_releases.append(r)
+                except Exception as e:  # noqa: BLE001
+                    print(f"Error parsing version: {e}")
+        if not client_releases:
+            sys.exit("No client releases found")
+
+        return max(client_releases, key=lambda r: r["_parsed_version"])
 
     def _find_asset(self, release: dict[str, Any]) -> dict[str, Any]:
         """Find the matching asset in the GitHub release."""
