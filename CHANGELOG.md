@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.9.4](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.3...aegis-v2.9.4) (2025-10-04)
+
+
+### Bug Fixes
+
+* **client_installer:** fetch latest client from all releases ([#89](https://github.com/AEGIS-GAME/aegis/issues/89)) ([4b695e5](https://github.com/AEGIS-GAME/aegis/commit/4b695e5a8714f8066ccb9c41bdc904e9d025b8d7))
+* **cooldown:** actually check cooldown so you can't spam commands ([#87](https://github.com/AEGIS-GAME/aegis/issues/87)) ([fd7cbb3](https://github.com/AEGIS-GAME/aegis/commit/fd7cbb3bc7373e612e4622bae8725c6ad479c086))
+
 ## [2.9.3](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.2...aegis-v2.9.3) (2025-10-03)
 
 
