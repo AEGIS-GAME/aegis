@@ -13,7 +13,8 @@ jobs:
       pull-requests: write
       issues: write
     outputs:
-      releases_created: ${{ steps.release.outputs.releases_created }}
+      aegis_release: ${{ steps.release.outputs.release_created }}
+      client_release: ${{ steps.release.outputs['client--release_created'] }}
       tag_name: ${{ steps.release.outputs.tag_name }}
       client_tag: ${{ steps.release.outputs['client--tag_name'] }}
     steps:
@@ -33,7 +34,7 @@ jobs:
           echo "${{ toJSON(steps.release.outputs) }}"
 
   aegis-release:
-    if: ${{ needs.release.outputs.releases_created == 'true' }}
+    if: ${{ needs.release.outputs.aegis_release == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     permissions:
@@ -62,7 +63,7 @@ jobs:
           packages-dir: dist/
 
   client-release:
-    if: ${{ needs.release.outputs.releases_created == 'true' }}
+    if: ${{ needs.release.outputs.client_release == 'true' }}
     needs: release
     strategy:
       matrix:
