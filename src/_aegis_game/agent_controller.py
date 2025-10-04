@@ -154,7 +154,7 @@ class AgentController:
 
         Does nothing if the agent is not on a charging cell.
         """
-        self._agent.add_cooldown()
+        
         cell = self._game.get_cell_at(self._agent.location)
         if not cell.is_charging_cell():
             return
@@ -284,7 +284,7 @@ class AgentController:
         """
         self.assert_scan()
         self.assert_loc(loc)
-        self._agent.add_cooldown()
+        
         self._game.start_drone_scan(loc, self._agent.team)
         self._agent.add_energy(-Constants.DRONE_SCAN_ENERGY_COST)
 
