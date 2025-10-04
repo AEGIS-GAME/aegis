@@ -119,6 +119,8 @@ class AgentController:
             AgentError: If the move is invalid.
 
         """
+        if self._agent.action_cooldown != 0:
+            return
         self.assert_move(direction)
         self._agent.add_cooldown()
         self._agent.apply_movement_cost(direction)
@@ -136,6 +138,8 @@ class AgentController:
             AgentError: If saving is invalid according to game rules.
 
         """
+        if self._agent.action_cooldown != 0:
+            return
         self.assert_save(self._agent)
         self._agent.add_cooldown()
         cell = self._game.get_cell_at(self._agent.location)
@@ -154,7 +158,9 @@ class AgentController:
 
         Does nothing if the agent is not on a charging cell.
         """
-        
+        if self._agent.action_cooldown != 0:
+            return
+        self._agent.add_cooldown()
         cell = self._game.get_cell_at(self._agent.location)
         if not cell.is_charging_cell():
             return
@@ -174,6 +180,8 @@ class AgentController:
             AgentError: If digging is invalid according to game rules.
 
         """
+        if self._agent.action_cooldown != 0:
+            return
         self.assert_dig(self._agent)
         self._agent.add_cooldown()
         cell = self._game.get_cell_at(self._agent.location)
@@ -282,6 +290,9 @@ class AgentController:
             AgentError: If drone scan is not enabled or location is invalid.
 
         """
+        if self._agent.action_cooldown != 0:
+            return
+        self._agent.add_cooldown()
         self.assert_scan()
         self.assert_loc(loc)
         
