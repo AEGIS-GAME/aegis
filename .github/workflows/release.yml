@@ -31,7 +31,6 @@ jobs:
       - name: Debug release
         continue-on-error: true
         run: |
-          echo "${{ steps.release.outputs) "
           echo "${{ toJSON(steps.release.outputs) }}"
 
   aegis-release:
