@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.9.6](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.5...aegis-v2.9.6) (2025-10-09)
+
+
+### Bug Fixes
+
+* **client:** info before toJSON on release workflow ([262f14c](https://github.com/AEGIS-GAME/aegis/commit/262f14c193aa18e335017e5e906ef8d6a48ebe73))
+* **client:** revert ([4d6bb86](https://github.com/AEGIS-GAME/aegis/commit/4d6bb8656c03133682db857c6ef1641ec2de8728))
+
 ## [2.9.5](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.4...aegis-v2.9.5) (2025-10-04)
 
 
