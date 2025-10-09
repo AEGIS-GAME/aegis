@@ -230,6 +230,10 @@ export function createScaffold(): Scaffold {
       return
     }
 
+    localStorage.removeItem("aegis_agent_amount")
+    localStorage.removeItem("aegis_agent")
+    localStorage.removeItem("aegis_rounds")
+
     const loadData = async (): Promise<void> => {
       const [worldsData, agentsData] = await Promise.all([
         getWorlds(aegisPath),

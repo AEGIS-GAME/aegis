@@ -62,6 +62,12 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
     loadConfigForTab()
   }, [])
 
+  useEffect(() => {
+    if (config?.defaultAgentAmount && !localStorage.getItem("aegis_agent_amount")) {
+      setAgentAmount(config.defaultAgentAmount)
+    }
+  }, [config?.defaultAgentAmount, setAgentAmount])
+
   const isButtonDisabled = useMemo(
     () => !world || !rounds || !agent || config === null,
     [world, rounds, agent, config]
