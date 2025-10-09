@@ -23,7 +23,7 @@ import SettingsModal from "./SettingsModal"
 
 const sidebarItems = [
   { id: SidebarView.Aegis, icon: Gamepad2, label: "Start Game" },
-  { id: SidebarView.Game, icon: ChartBarBig, label: "Game Stats" },
+  { id: SidebarView.Game, icon: ChartBarBig, label: "Game State" },
   { id: SidebarView.Editor, icon: Pencil, label: "Game Editor" },
   { id: SidebarView.Settings, icon: SettingsIcon, label: "Settings" },
 ]
