@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.9.3](https://github.com/AEGIS-GAME/aegis/compare/client-v2.9.2...client-v2.9.3) (2025-10-09)
+
+
+### Bug Fixes
+
+* **client:** try to fix client loading erroneous/old values ([e0a5859](https://github.com/AEGIS-GAME/aegis/commit/e0a58590307fa8806a9e3ee964a5e4826b891c4f))
+* **client:** trying to fix game using old values (prob from stale localstorage) ([0a41d75](https://github.com/AEGIS-GAME/aegis/commit/0a41d753baf9caef0b2794d2ba9ef57362da8814))
+* **client:** use config over localstorage for agent amount discrepancy ([7967241](https://github.com/AEGIS-GAME/aegis/commit/7967241bf5429b2ac0345246fbe9465fca839702))
+
 ## [2.9.2](https://github.com/AEGIS-GAME/aegis/compare/client-v2.9.1...client-v2.9.2) (2025-10-03)
 
 
