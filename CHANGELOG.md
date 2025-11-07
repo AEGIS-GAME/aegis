@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.9.7](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.6...aegis-v2.9.7) (2025-11-07)
+
+
+### Bug Fixes
+
+* **client:** Accidentally committed changes ([d1e2fa9](https://github.com/AEGIS-GAME/aegis/commit/d1e2fa955382e6c67dd959f1abe2759e2ae8ec7e))
+* **client:** better text for console errors ([ab9ec3f](https://github.com/AEGIS-GAME/aegis/commit/ab9ec3f0ac70cde0c9e62cee404a7a7ebe3d4129))
+
 ## [2.9.6](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.5...aegis-v2.9.6) (2025-10-09)
 
 
