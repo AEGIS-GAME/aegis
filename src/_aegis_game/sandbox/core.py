@@ -17,6 +17,35 @@ from _aegis_game.types import MethodDict
 
 from .sandbox import Sandbox
 
+def _inplacevar_(op, var, expr):
+    if op == "+=":
+        return var + expr
+    elif op == "-=":
+        return var - expr
+    elif op == "*=":
+        return var * expr
+    elif op == "/=":
+        return var / expr
+    elif op == "%=":
+        return var % expr
+    elif op == "**=":
+        return var ** expr
+    elif op == "<<=":
+        return var << expr
+    elif op == ">>=":
+        return var >> expr
+    elif op == "|=":
+        return var | expr
+    elif op == "^=":
+        return var ^ expr
+    elif op == "&=":
+        return var & expr
+    elif op == "//=":
+        return var // expr
+    elif op == "@=":
+        return var // expr
+
+
 
 class LumenCore:
     """Core executor for running agent code in a restricted, sandboxed environment."""
@@ -91,6 +120,7 @@ class LumenCore:
 
         namespace: dict[str, object] = {
             "__builtins__": builtins,
+            "_inplacevar_": _inplacevar_,
             "__name__": "__main__",
             "_getattr_": self.deny_private_attr,
             "_getitem_": self.deny_private_items,
