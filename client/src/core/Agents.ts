@@ -93,21 +93,27 @@ export default class Agents {
   }
 
   public draw(game: Game, ctx: CanvasRenderingContext2D): void {
+    console.log("draw agents")
+    console.log(game)
     for (const cell of game.world.cells) {
       const agents = cell.agents
       const perRow = 5
-
       agents.forEach((id, i) => {
-        const agent = this.getById(id)
-        const size = Math.max(
-          TILE_SIZE / perRow / TILE_SIZE,
-          TILE_SIZE / agents.length / TILE_SIZE
-        )
+        try {
+          const agent = this.getById(id)
+          const size = Math.max(
+            TILE_SIZE / perRow / TILE_SIZE,
+            TILE_SIZE / agents.length / TILE_SIZE
+          )
 
-        const offsetX = (i % perRow) * size
-        const offsetY = Math.floor(i / perRow) * size
+          const offsetX = (i % perRow) * size
+          const offsetY = Math.floor(i / perRow) * size
 
-        agent.draw(game, ctx, offsetX, offsetY, size)
+          agent.draw(game, ctx, offsetX, offsetY, size)
+        } catch (error) {
+          console.error("Not drawing agent with id", id)
+          console.error("Assumed dead")
+        }
       })
     }
   }
