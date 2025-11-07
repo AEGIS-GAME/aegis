@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.9.7](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.6...aegis-v2.9.7) (2025-11-07)
+
+
+### Bug Fixes
+
+* **bug:** inplacevar ([f8ce5bd](https://github.com/AEGIS-GAME/aegis/commit/f8ce5bdf611a21163e82d6bef27a2658746ef04f))
+* **bug:** issue inplacevar ([9d645ce](https://github.com/AEGIS-GAME/aegis/commit/9d645ce941ca003595ae69c1ecfd093a1eb77709))
+* **client:** Accidentally committed changes ([d1e2fa9](https://github.com/AEGIS-GAME/aegis/commit/d1e2fa955382e6c67dd959f1abe2759e2ae8ec7e))
+* **client:** better text for console errors ([ab9ec3f](https://github.com/AEGIS-GAME/aegis/commit/ab9ec3f0ac70cde0c9e62cee404a7a7ebe3d4129))
+
 ## [2.9.6](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.5...aegis-v2.9.6) (2025-10-09)
 
 
