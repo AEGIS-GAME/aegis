@@ -8,7 +8,7 @@
     "format": "prettier --write .",
     "lint": "eslint src src-electron --fix",
     "start": "electron-vite preview",
-    "dev": "electron-vite dev",
+    "dev": "electron-vite dev -- --sourcemap --remote-debugging-port=9222",
     "build": "electron-vite build",
     "build:pack": "npm run build && electron-builder build --publish never",
     "build:pack:win": "npm run build && electron-builder build --win --publish never",

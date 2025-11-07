@@ -111,8 +111,10 @@ export default class Agents {
 
           agent.draw(game, ctx, offsetX, offsetY, size)
         } catch (error) {
-          console.error("Not drawing agent with id", id)
-          console.error("Assumed dead")
+          console.error("Agent ID Lookup Error in Agents.draw() loop for each cell")
+          console.error(error)
+          console.log("Not drawing agent with id", id)
+          console.log("Assumed dead")
         }
       })
     }

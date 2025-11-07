@@ -10,7 +10,8 @@ from typing import Any, override
 from RestrictedPython import (
     Guards,
     limited_builtins,  # pyright: ignore[reportUnknownVariableType]
-    safe_builtins,  # pyright: ignore[reportUnknownVariableType]
+    safe_builtins,  # pyright: ignore[reportUnknownVariableType]    
+    _inplacevar_,
 )
 
 from _aegis_game.types import MethodDict
