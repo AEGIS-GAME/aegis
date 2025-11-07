@@ -7,6 +7,16 @@ from collections.abc import Callable, Mapping, Sequence
 from threading import Event, Thread
 from typing import Any, override
 
+from RestrictedPython import (
+    Guards,
+    limited_builtins,  # pyright: ignore[reportUnknownVariableType]
+    safe_builtins,  # pyright: ignore[reportUnknownVariableType]
+)
+
+from _aegis_game.types import MethodDict
+
+from .sandbox import Sandbox
+
 def _inplacevar_(op, var, expr):
     if op == "+=":
         return var + expr
@@ -35,15 +45,6 @@ def _inplacevar_(op, var, expr):
     elif op == "@=":
         return var // expr
 
-from RestrictedPython import (
-    Guards,
-    limited_builtins,  # pyright: ignore[reportUnknownVariableType]
-    safe_builtins,  # pyright: ignore[reportUnknownVariableType]
-)
-
-from _aegis_game.types import MethodDict
-
-from .sandbox import Sandbox
 
 
 class LumenCore:
