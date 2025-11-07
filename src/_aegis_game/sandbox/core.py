@@ -7,15 +7,6 @@ from collections.abc import Callable, Mapping, Sequence
 from threading import Event, Thread
 from typing import Any, override
 
-# pyright: reportMissingTypeStubs = false
-# pyright: reportUnknownMemberType = false
-import builtins as py_builtins
-import traceback
-import types
-from collections.abc import Callable, Mapping, Sequence
-from threading import Event, Thread
-from typing import Any, override
-
 def _inplacevar_(op, var, expr):
     if op == "+=":
         return var + expr
