@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "aegis-game"
 description = "Survivor Simulation Game"
-version = "2.9.7"
+version = "2.9.8"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
