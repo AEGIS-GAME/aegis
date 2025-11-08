@@ -504,10 +504,12 @@ class Game:
     def methods(self, ac: AgentController) -> MethodDict:
         return {
             "AgentType": AgentType,
+            "CellInfo": CellInfo,
             "Direction": Direction,
             "Location": Location,
             "Rubble": Rubble,
             "Survivor": Survivor,
+            "Team": Team,
             "get_round_number": ac.get_round_number,
             "get_id": ac.get_id,
             "get_type": ac.get_type,
