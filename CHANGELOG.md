@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.8](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.7...aegis-v2.9.8) (2025-11-08)
+
+
+### Bug Fixes
+
+* **bug:** added cleared methods for Team and CellInfo ([c182507](https://github.com/AEGIS-GAME/aegis/commit/c18250718155ba5004ccf81b3078437554d594c8))
+
 ## [2.9.7](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.6...aegis-v2.9.7) (2025-11-07)
 
 
