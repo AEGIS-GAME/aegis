@@ -7,7 +7,7 @@ from collections.abc import Callable, Mapping, Sequence
 from threading import Event, Thread
 from typing import Any, override
 
-from RestrictedPython import (
+from RestrictedPython import (  # pyright: ignore[reportMissingImports]
     Guards,
     limited_builtins,  # pyright: ignore[reportUnknownVariableType]
     safe_builtins,  # pyright: ignore[reportUnknownVariableType]
@@ -17,35 +17,32 @@ from _aegis_game.types import MethodDict
 
 from .sandbox import Sandbox
 
-def _inplacevar_(op, var, expr):
+
+def _inplacevar_(op: str, var:Any, expr:Any) -> Any:  # noqa: ANN401, C901, PLR0911, RET503
     if op == "+=":
         return var + expr
-    elif op == "-=":
+    if op == "-=":
         return var - expr
-    elif op == "*=":
+    if op == "*=":
         return var * expr
-    elif op == "/=":
+    if op == "/=":
         return var / expr
-    elif op == "%=":
+    if op == "%=":
         return var % expr
-    elif op == "**=":
+    if op == "**=":
         return var ** expr
-    elif op == "<<=":
+    if op == "<<=":
         return var << expr
-    elif op == ">>=":
+    if op == ">>=":
         return var >> expr
-    elif op == "|=":
+    if op == "|=":
         return var | expr
-    elif op == "^=":
+    if op == "^=":
         return var ^ expr
-    elif op == "&=":
+    if op == "&=":
         return var & expr
-    elif op == "//=":
+    if op in {"//=", "@="}:
         return var // expr
-    elif op == "@=":
-        return var // expr
-
-
 
 class LumenCore:
     """Core executor for running agent code in a restricted, sandboxed environment."""
