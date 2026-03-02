@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.9](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.8...aegis-v2.9.9) (2026-03-02)
+
+
+### Bug Fixes
+
+* **bug:** agents location updateds were visible during a turn ([8f3911a](https://github.com/AEGIS-GAME/aegis/commit/8f3911a2e6d4b52c44e6e4d7bf39f5416b3d7d36))
+
 ## [2.9.8](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.7...aegis-v2.9.8) (2025-11-08)
 
 
