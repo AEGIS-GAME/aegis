@@ -27,7 +27,7 @@ class Agent:
         agent_type: AgentType,
     ) -> None:
         self.game: Game = game
-        self.has_visited: list[bool] = [False] * (game.world.height * game.world.width)
+        self.has_visited: list[bool] = [False] * (game.current_world.height * game.current_world.width)
         self.id: int = agent_id
         self.team: Team = team
         self.location: Location = location
@@ -75,7 +75,7 @@ class Agent:
         if direction == Direction.CENTER:
             return
 
-        cell = self.game.get_cell_at(self.location.add(direction))
+        cell = self.game.get_cell_at_current(self.location.add(direction))
         self.add_energy(-cell.move_cost)
         self.steps_taken += 1
 

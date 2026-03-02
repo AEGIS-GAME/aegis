@@ -24,6 +24,10 @@ class Rubble(WorldObject):
         self.energy_required: int = energy_required
         self.agents_required: int = agents_required
 
+    def _copy(self) -> Rubble: # type: ignore
+        rubble = Rubble(self.id, self.energy_required, self.agents_required)
+        return rubble
+
     @override
     def __str__(self) -> str:
         return (
