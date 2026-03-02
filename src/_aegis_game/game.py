@@ -40,7 +40,7 @@ class Game:
         self.args: LaunchArgs = args
         self.running: bool = True
         self.reason: GameOverReason | None = None
-        self.world: World = world
+        self.current_world: World = world
         self.round: int = 0
         self.id_gen: IDGenerator = IDGenerator()
         self.team_info: TeamInfo = TeamInfo()
@@ -61,6 +61,7 @@ class Game:
         if self.args.agent2 is not None:
             self.team_agents[Team.VOIDSEERS] = self.args.agent2
         self._init_spawn()
+        self.next_world: World = None # type: ignore
 
     def _init_spawn(self) -> None:
         if has_feature("ALLOW_AGENT_TYPES"):
@@ -74,7 +75,7 @@ class Game:
         else:
             # if no agent types, spawn commanders up to agent amount specified
 
-            spawns = self.world.init_spawns
+            spawns = self.current_world.init_spawns
 
             # spawns that need to be filled
             positive_spawns = {loc: amt for loc, amt in spawns.items() if amt > 0}
@@ -136,8 +137,11 @@ class Game:
         self.round += 1
         self.game_pb.start_round(self.round)
         self.team_info.add_lumens(Team.GOOBS, Constants.LUMENS_PER_ROUND)
-        self.team_info.add_lumens(Team.VOIDSEERS, Constants.LUMENS_PER_ROUND)
+        self.team_info.add_lumens(Team.VOIDSEERS, Constants.LUMENS_PER_ROUND)        
+        self.next_world = self.current_world._copy()
         self.for_each_agent(self._run_turn)
+        self.current_world = self.next_world
+        self.next_world = self.current_world._copy()
         self.rotate_message_buffers()
         self.activate_pending_drone_scans()
         self.game_pb.send_drone_scan_update(self._drone_scans)
@@ -160,12 +164,12 @@ class Game:
             agent.message_buffer.next_round(self.round + 1)
 
     def check_game_over(self) -> None:
-        if self.round == self.world.rounds and self.reason is None:
+        if self.round == self.current_world.rounds and self.reason is None:
             self.reason = GameOverReason.MAX_ROUNDS_REACHED
 
         saved_survs = self.team_info.get_saved(Team.GOOBS)
         saved_survs += self.team_info.get_saved(Team.VOIDSEERS)
-        if saved_survs == self.world.total_survivors and self.reason is None:
+        if saved_survs == self.current_world.total_survivors and self.reason is None:
             self.reason = GameOverReason.ALL_SURVIVORS_SAVED
 
         if self.reason is not None:
@@ -181,7 +185,7 @@ class Game:
 
         for agent in self.agents.values():
             died = False
-            cell = self.get_cell_at(agent.location)
+            cell = self.get_cell_at_current(agent.location)
             if agent.energy_level <= 0:
                 LOGGER.info("Agent %s ran out of energy and died.\n", agent.id)
                 died = True
@@ -231,7 +235,7 @@ class Game:
         agent_id: int | None = None,
     ) -> None:
         agent_id = self.id_gen.next_id() if agent_id is None else agent_id
-        energy = int(self.world.start_energy * agent_type.energy_multiplier)
+        energy = int(self.current_world.start_energy * agent_type.energy_multiplier)
         agent = Agent(self, agent_id, loc, team, energy, agent_type)
         ac = AgentController(self, agent)
         agent.launch(self.code[team.value], self.methods(ac), debug=self.args.debug)
@@ -243,7 +247,7 @@ class Game:
         if agent not in self.agents:
             self.agents[agent.id] = agent
 
-            cell = self.get_cell_at(loc)
+            cell = self.get_cell_at_current(loc)
             cell.agents.append(agent.id)
             LOGGER.info("Added agent %s", agent.id)
 
@@ -271,7 +275,7 @@ class Game:
             # set true if at least one team meets threshold to remove the layer
             will_remove = False
             agents_needed_to_remove = 1
-            top_layer = self.get_cell_info_at(loc).top_layer
+            top_layer = self.get_cell_info_at_current(loc).top_layer
             if isinstance(top_layer, Rubble):
                 agents_needed_to_remove = top_layer.agents_required
             # see if each team met threshold to acc remove the layer
@@ -288,7 +292,7 @@ class Game:
         self._queued_layers_to_remove.clear()
 
     def reward_layer_removal(self, loc: Location, team: Team) -> None:
-        top_layer = self.get_cell_info_at(loc).top_layer
+        top_layer = self.get_cell_info_at_current(loc).top_layer
 
         if isinstance(top_layer, Survivor):
             points = 0
@@ -306,7 +310,7 @@ class Game:
             self.team_info.add_score(team, points)
 
     def remove_layer(self, loc: Location) -> None:
-        cell = self.get_cell_at(loc)
+        cell = self.get_cell_at_current(loc)
         _ = cell.remove_top_layer()
         self.game_pb.add_removed_layer(loc)
 
@@ -319,17 +323,17 @@ class Game:
             if not self.on_map(new_loc):
                 continue
 
-            index = new_loc.x + new_loc.y * self.world.width
+            index = new_loc.x + new_loc.y * self.current_world.width
             agent.has_visited[index] = True
 
     def add_agent_to_loc(self, agent_id: int, loc: Location) -> None:
-        self.get_cell_at(loc).agents.append(agent_id)
+        self.get_cell_at_next(loc).agents.append(agent_id)
         agent = self.get_agent(agent_id)
         if has_feature("HIDDEN_MOVE_COSTS"):
             self.mark_surrounding_cells_visited(agent, loc)
 
     def remove_agent_from_loc(self, agent_id: int, loc: Location) -> None:
-        self.get_cell_at(loc).agents.remove(agent_id)
+        self.get_cell_at_next(loc).agents.remove(agent_id)
 
     def move_agent(self, agent_id: int, start_loc: Location, end_loc: Location) -> None:
         self.remove_agent_from_loc(agent_id, start_loc)
@@ -377,7 +381,7 @@ class Game:
         if decay_rate is None or decay_rate <= 0:
             return  # Decay rate of 0 turns off health decay
 
-        for cell in self.world.cells:
+        for cell in self.current_world.cells:
             for layer in cell.layers:
                 if isinstance(layer, Survivor) and layer.is_alive():
                     layer.health = max(0, layer.health - decay_rate)
@@ -423,7 +427,7 @@ class Game:
 
     def dig(self, agent: Agent) -> None:
         rubble_energy_required = cast(
-            "Rubble", self.get_cell_info_at(agent.location).top_layer
+            "Rubble", self.get_cell_info_at_current(agent.location).top_layer
         ).energy_required
         if agent.energy_level < rubble_energy_required:
             return
@@ -460,14 +464,30 @@ class Game:
             A boolean indicating whetever the given location is on the map.
 
         """
-        return 0 <= loc.x < self.world.width and 0 <= loc.y < self.world.height
+        return 0 <= loc.x < self.current_world.width and 0 <= loc.y < self.current_world.height
 
-    def get_cell_at(self, loc: Location) -> Cell:
-        index = loc.x + loc.y * self.world.width
-        return self.world.cells[index]
+    def get_cell_at_current(self, loc: Location) -> Cell:
+        index = loc.x + loc.y * self.current_world.width
+        return self.current_world.cells[index]
 
+    def get_cell_info_at_current(self, location: Location) -> CellInfo:
+        cell = self.get_cell_at_current(location)
+        return CellInfo(
+            cell.layers, cell.type, cell.location, cell.move_cost, cell.agents
+        )
     def get_cell_info_at(self, location: Location) -> CellInfo:
-        cell = self.get_cell_at(location)
+        cell = self.get_cell_at_current(location)
+        return CellInfo(
+            cell.layers, cell.type, cell.location, cell.move_cost, cell.agents
+        )
+    
+    def get_cell_at_next(self, loc: Location) -> Cell:
+        index = loc.x + loc.y * self.current_world.width
+        return self.next_world.cells[index]
+
+    
+    def get_cell_info_at_next(self, location: Location) -> CellInfo:
+        cell = self.get_cell_at_next(location)
         return CellInfo(
             cell.layers, cell.type, cell.location, cell.move_cost, cell.agents
         )
@@ -479,17 +499,17 @@ class Game:
     def get_survs(self) -> list[Location]:
         """Return a list of survivor locations."""
         return [
-            cell.location for cell in self.world.cells if cell.number_of_survivors() > 0
+            cell.location for cell in self.current_world.cells if cell.number_of_survivors() > 0
         ]
 
     @requires("ALLOW_AGENT_TYPES")
     def get_spawns(self) -> list[Location]:
         """Return a list of spawn locations."""
-        return [cell.location for cell in self.world.cells if cell.is_spawn()]
+        return [cell.location for cell in self.current_world.cells if cell.is_spawn()]
 
     def get_charging_cells(self) -> list[Location]:
         """Return a list of charging locations."""
-        return [cell.location for cell in self.world.cells if cell.is_charging_cell()]
+        return [cell.location for cell in self.current_world.cells if cell.is_charging_cell()]
 
     def get_prediction_info_for_agent(
         self, team: Team

@@ -42,3 +42,11 @@ class World:
         if self.height > max_size:
             error = f"World height must not exceed {max_size}"
             raise ValueError(error)
+
+    def _copy(self):
+        world = World(self.width, self.height, self.seed, self.start_energy, [], self.init_spawns)
+        world.rounds = self.rounds
+        for cell in self.cells:
+            world.cells.append(cell._copy())
+        world.total_survivors = self.total_survivors
+        return world

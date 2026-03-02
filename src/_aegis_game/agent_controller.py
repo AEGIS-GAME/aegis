@@ -147,7 +147,7 @@ class AgentController:
         """
         self.assert_save(self._agent)
         self._agent.add_cooldown()
-        cell = self._game.get_cell_at(self._agent.location)
+        cell = self._game.get_cell_at_current(self._agent.location)
         top_layer = cell.get_top_layer()
         if top_layer is None or not isinstance(top_layer, Survivor):
             return
@@ -165,7 +165,7 @@ class AgentController:
         """
         self.assert_cooldown()
         self._agent.add_cooldown()
-        cell = self._game.get_cell_at(self._agent.location)
+        cell = self._game.get_cell_at_current(self._agent.location)
         if not cell.is_charging_cell():
             return
 
@@ -186,7 +186,7 @@ class AgentController:
         """
         self.assert_dig(self._agent)
         self._agent.add_cooldown()
-        cell = self._game.get_cell_at(self._agent.location)
+        cell = self._game.get_cell_at_current(self._agent.location)
         top_layer = cell.get_top_layer()
         if top_layer is None or not isinstance(top_layer, Rubble):
             return
@@ -318,8 +318,8 @@ class AgentController:
         """
         self.assert_loc(loc)
 
-        idx = loc.x + loc.y * self._game.world.width
-        cell_info = self._game.get_cell_info_at(loc)
+        idx = loc.x + loc.y * self._game.current_world.width
+        cell_info = self._game.get_cell_info_at_current(loc)
 
         is_adjacent = self._agent.location.is_adjacent_to(loc)
         is_scanned = self._game.is_loc_drone_scanned(loc, self._agent.team)
