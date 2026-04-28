@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.10](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.9...aegis-v2.9.10) (2026-04-28)
+
+
+### Bug Fixes
+
+* **bug:** move out of date mas challenge worlds from base folder ([f5c5eb6](https://github.com/AEGIS-GAME/aegis/commit/f5c5eb606e5ead78ae815057ee733d8b8455efb6))
+
 ## [2.9.9](https://github.com/AEGIS-GAME/aegis/compare/aegis-v2.9.8...aegis-v2.9.9) (2026-03-02)
 
 
