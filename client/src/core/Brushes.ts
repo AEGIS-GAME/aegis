@@ -73,6 +73,9 @@ export class ZoneBrush extends EditorBrush {
         },
         { value: schema.CellType.KILLER, label: "Killer" },
         { value: schema.CellType.CHARGING, label: "Charging" },
+        { value: schema.CellType.WALL, label: "Wall" },
+        { value: schema.CellType.DOOR, label: "Door" },
+        { value: schema.CellType.CONSOLE, label: "Console" },
       ],
     },
   }
