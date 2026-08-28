@@ -34,6 +34,7 @@ class Agent:
         self.energy_level: int = energy_level
         self.type: AgentType = agent_type
         self.action_cooldown: int = agent_type.action_cooldown
+        self.sent_message_this_turn: bool = False
         self.core: LumenCore | None = None
         self.message_buffer: MessageBuffer = MessageBuffer()
         self.steps_taken: int = 0
@@ -46,6 +47,7 @@ class Agent:
             raise RuntimeError(error)
 
         self.action_cooldown = max(0, self.action_cooldown - Constants.COOLDOWN_TICK)
+        self.sent_message_this_turn = False
 
     def process_end_of_turn(self) -> None:
         self.game.game_pb.end_turn(self)
