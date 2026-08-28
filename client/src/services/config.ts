@@ -5,12 +5,18 @@ export interface ClientConfig {
   defaultAgentAmount: number
   allowAgentTypes: boolean
   hiddenMoveCosts: boolean
+  forceMessageCooldown: boolean
 }
 
 function getNestedValue(obj: any, path: string): any {
   return path.split(".").reduce((current, key) => {
     return current && typeof current === "object" ? current[key] : undefined
   }, obj)
+}
+
+function readBoolean(configData: any, path: string, fallback: boolean): boolean {
+  const value = getNestedValue(configData, path)
+  return typeof value === "boolean" ? value : fallback
 }
 
 export function parseClientConfig(configData: any): ClientConfig {
@@ -38,6 +44,7 @@ export function parseClientConfig(configData: any): ClientConfig {
     defaultAgentAmount: 1,
     allowAgentTypes: false,
     hiddenMoveCosts: false,
+    forceMessageCooldown: false,
   }
 
   try {
@@ -50,14 +57,6 @@ export function parseClientConfig(configData: any): ClientConfig {
       config.configType = configType
     }
 
-    const variableAgentAmount = getNestedValue(
-      configData,
-      "features.ALLOW_CUSTOM_AGENT_COUNT"
-    )
-    if (typeof variableAgentAmount === "boolean") {
-      config.variableAgentAmount = variableAgentAmount
-    }
-
     const defaultAgentAmount = getNestedValue(
       configData,
       "features.DEFAULT_AGENT_AMOUNT"
@@ -66,15 +65,26 @@ export function parseClientConfig(configData: any): ClientConfig {
       config.defaultAgentAmount = defaultAgentAmount
     }
 
-    const allowAgentTypes = getNestedValue(configData, "features.ALLOW_AGENT_TYPES")
-    if (typeof allowAgentTypes === "boolean") {
-      config.allowAgentTypes = allowAgentTypes
-    }
-
-    const hiddenMoveCosts = getNestedValue(configData, "features.HIDDEN_MOVE_COSTS")
-    if (typeof hiddenMoveCosts === "boolean") {
-      config.hiddenMoveCosts = hiddenMoveCosts
-    }
+    config.variableAgentAmount = readBoolean(
+      configData,
+      "features.ALLOW_CUSTOM_AGENT_COUNT",
+      config.variableAgentAmount
+    )
+    config.allowAgentTypes = readBoolean(
+      configData,
+      "features.ALLOW_AGENT_TYPES",
+      config.allowAgentTypes
+    )
+    config.hiddenMoveCosts = readBoolean(
+      configData,
+      "features.HIDDEN_MOVE_COSTS",
+      config.hiddenMoveCosts
+    )
+    config.forceMessageCooldown = readBoolean(
+      configData,
+      "features.FORCE_MESSAGE_COOLDOWN",
+      config.forceMessageCooldown
+    )
 
     return config
   } catch (error) {

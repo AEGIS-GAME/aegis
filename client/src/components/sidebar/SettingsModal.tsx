@@ -81,6 +81,24 @@ export default function SettingsModal({
     }
   }
 
+  const handleForceMessageCooldownChange = async (checked: boolean): Promise<void> => {
+    if (!config) {
+      return
+    }
+
+    try {
+      const success = await updateConfigValue(
+        "features.FORCE_MESSAGE_COOLDOWN",
+        checked
+      )
+      if (!success) {
+        console.error("Failed to update config")
+      }
+    } catch (error) {
+      console.error("Error updating config:", error)
+    }
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -162,6 +180,10 @@ export default function SettingsModal({
                       {renderConfigValue(config.hiddenMoveCosts)}
                     </div>
                     <div className="flex justify-between">
+                      <span>Messages Consume Action</span>
+                      {renderConfigValue(config.forceMessageCooldown)}
+                    </div>
+                    <div className="flex justify-between">
                       <span>Versus Mode</span>
                       {renderConfigValue(config.configType === "competition")}
                     </div>
@@ -191,6 +213,18 @@ export default function SettingsModal({
                   </p>
                 </div>
                 <Switch checked={debugMode} onCheckedChange={setDebugMode} />
+              </div>
+              <div className="flex items-center justify-between mt-2">
+                <div>
+                  <Label>Messages Consume Agent Action</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Sending a message uses the agent&apos;s action for the round
+                  </p>
+                </div>
+                <Switch
+                  checked={config?.forceMessageCooldown ?? false}
+                  onCheckedChange={handleForceMessageCooldownChange}
+                />
               </div>
               {config?.configType === "path-assignment" && (
                 <div className="flex items-center justify-between mt-2">
