@@ -51,12 +51,14 @@ export interface Scaffold {
   setupAegisPath: () => void
   worlds: string[]
   agents: string[]
+  predictionDatasets: string[]
   output: RingBuffer<ConsoleLine>
   startSimulation: (
     rounds: string,
     amount: string,
     worlds: string[],
     agent: string,
+    predictionData: string,
     debug: boolean
   ) => void
   killSim: (() => void) | undefined

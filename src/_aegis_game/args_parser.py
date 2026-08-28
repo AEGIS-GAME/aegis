@@ -17,6 +17,7 @@ class TypedNamespace:
     debug: bool
     log: bool
     init_type: str
+    prediction_data: str
 
 
 @dataclass
@@ -29,6 +30,7 @@ class LaunchArgs:
     client: bool
     debug: bool
     log: bool
+    prediction_data: str
 
 
 @dataclass
@@ -121,6 +123,12 @@ def parse_args() -> Args:
         action="store_true",
         help="Enable AEGIS console output logging to a file",
     )
+    _ = run_parser.add_argument(
+        "--prediction-data",
+        type=str,
+        default="symbols",
+        help="Prediction dataset name (default = symbols)",
+    )
 
     _ = subparsers.add_parser("forge", help="Make stub.py file after config changes")
 
@@ -154,6 +162,7 @@ def parse_args() -> Args:
                 client=args.client,
                 debug=args.debug,
                 log=args.log,
+                prediction_data=args.prediction_data,
             ),
         )
     if args.command == "forge":

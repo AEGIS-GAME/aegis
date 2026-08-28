@@ -73,8 +73,9 @@ class ElectronApp {
         args[1], // amount
         args[2], // world
         args[3], // agent
-        args[4], // aegis path
-        args[5] // debug
+        args[4], // prediction data
+        args[5], // aegis path
+        args[6] // debug
       )
     })
 
@@ -130,8 +131,9 @@ class ElectronApp {
           args[1], // amount
           args[2], // world
           args[3], // agent
-          args[4], // aegis path
-          args[5] // debug
+          args[4], // prediction data
+          args[5], // aegis path
+          args[6] // debug
         )
       case "aegis_child_process.kill":
         return this.killProcess(args[0])
@@ -216,6 +218,7 @@ class ElectronApp {
     amount: string,
     world: string[],
     agent: string,
+    predictionData: string,
     aegisPath: string,
     debug: boolean
   ): Promise<string> {
@@ -225,6 +228,7 @@ class ElectronApp {
       amount,
       "--agent",
       `${agent}`,
+      ...(predictionData ? ["--prediction-data", predictionData] : []),
       "--world",
       ...world,
       "--rounds",
