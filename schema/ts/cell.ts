@@ -56,7 +56,19 @@ export enum CellType {
     /**
      * @generated from protobuf enum value: CHARGING = 3;
      */
-    CHARGING = 3
+    CHARGING = 3,
+    /**
+     * @generated from protobuf enum value: WALL = 4;
+     */
+    WALL = 4,
+    /**
+     * @generated from protobuf enum value: DOOR = 5;
+     */
+    DOOR = 5,
+    /**
+     * @generated from protobuf enum value: CONSOLE = 6;
+     */
+    CONSOLE = 6
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class Cell$Type extends MessageType<Cell> {

@@ -57,6 +57,9 @@ export default defineConfig({
       outDir: "dist/renderer",
     },
     plugins: [react()],
+    optimizeDeps: {
+      exclude: ["aegis-schema"],
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

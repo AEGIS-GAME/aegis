@@ -1,6 +1,7 @@
 import random
 import time
 from collections.abc import Callable
+from pathlib import Path
 from typing import cast
 
 import numpy as np
@@ -16,6 +17,7 @@ from .agent_type import AgentType
 from .args_parser import LaunchArgs
 from .common import Cell, CellInfo, Direction, Location
 from .common.objects import Rubble, Survivor
+from .console_puzzle import ConsolePuzzle
 from .constants import Constants
 from .game_pb import GamePb
 from .id_gen import IDGenerator
@@ -47,6 +49,14 @@ class Game:
         self.team_info.add_lumens(Team.GOOBS, Constants.INITIAL_TEAM_LUMENS)
         self.team_info.add_lumens(Team.VOIDSEERS, Constants.INITIAL_TEAM_LUMENS)
         self.game_pb: GamePb = game_pb
+        self.teams_that_solved: set[Team] = set()
+        self.console_puzzle: ConsolePuzzle | None = (
+            ConsolePuzzle.load(Path.cwd() / "puzzle" / "puzzle.py")
+            if has_feature("ALLOW_CONSOLE_PUZZLES")
+            else None
+        )
+        if self.console_puzzle is not None:
+            self._validate_console_world()
         # key is location, value is team -> num of agents queuing to remove the layer this round
         self._queued_layers_to_remove: dict[Location, dict[Team, int]] = {}
         self._drone_scans: dict[Location, dict[Team, int]] = {}
@@ -62,6 +72,14 @@ class Game:
             self.team_agents[Team.VOIDSEERS] = self.args.agent2
         self._init_spawn()
         self.next_world: World = None # type: ignore
+
+    def _validate_console_world(self) -> None:
+        cells = self.current_world.cells
+        has_console = any(cell.is_console_cell() for cell in cells)
+        has_door = any(cell.is_door_cell() for cell in cells)
+        if has_console != has_door:
+            error = "Console puzzle worlds must contain both consoles and doors"
+            raise ValueError(error)
 
     def _init_spawn(self) -> None:
         if has_feature("ALLOW_AGENT_TYPES"):
@@ -339,6 +357,16 @@ class Game:
         self.remove_agent_from_loc(agent_id, start_loc)
         self.add_agent_to_loc(agent_id, end_loc)
 
+    def can_enter(self, team: Team, loc: Location) -> bool:
+        cell = self.get_cell_at_current(loc)
+        if cell.is_wall_cell():
+            return False
+        return not cell.is_door_cell() or team in self.teams_that_solved
+
+    def open_doors_for(self, team: Team) -> None:
+        self.teams_that_solved.add(team)
+        self.game_pb.add_doors_opened_for_team(team)
+
     def start_drone_scan(self, loc: Location, team: Team) -> None:
         if loc not in self._pending_drone_scans:
             self._pending_drone_scans[loc] = {}
@@ -547,6 +575,8 @@ class Game:
             "recharge": ac.recharge,
             "predict": ac.predict,
             "read_pending_predictions": ac.read_pending_predictions,
+            "console_receive_puzzle": ac.console_receive_puzzle,
+            "console_send_answer": ac.console_send_answer,
             "spawn_agent": ac.spawn_agent,
             "on_map": self.on_map,
             "get_charging_cells": self.get_charging_cells,

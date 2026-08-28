@@ -30,7 +30,7 @@ export default class Game {
   }
 
   public static fromSchema(games: Games, header: schema.GameHeader): Game {
-    const world = World.fromSchema(header.world!)
+    const world = World.fromSchema(header.world!, header.spawns)
     const initialAgents = new Agents(games, header.spawns)
     return new Game(games, world, initialAgents)
   }

@@ -36,6 +36,12 @@ class Cell:
             self.type = CellType.KILLER_CELL
         elif cell_state_type == "SPAWN":
             self.type = CellType.SPAWN_CELL
+        elif cell_state_type == "WALL":
+            self.type = CellType.WALL_CELL
+        elif cell_state_type == "DOOR":
+            self.type = CellType.DOOR_CELL
+        elif cell_state_type == "CONSOLE":
+            self.type = CellType.CONSOLE_CELL
 
     def is_charging_cell(self) -> bool:
         return self.type == CellType.CHARGING_CELL
@@ -49,6 +55,15 @@ class Cell:
     def is_spawn_cell(self) -> bool:
         return self.type == CellType.SPAWN_CELL
 
+    def is_wall_cell(self) -> bool:
+        return self.type == CellType.WALL_CELL
+
+    def is_door_cell(self) -> bool:
+        return self.type == CellType.DOOR_CELL
+
+    def is_console_cell(self) -> bool:
+        return self.type == CellType.CONSOLE_CELL
+
     def set_spawn_cell(self) -> None:
         self.type = CellType.SPAWN_CELL
 
@@ -57,6 +72,15 @@ class Cell:
 
     def set_killer_cell(self) -> None:
         self.type = CellType.KILLER_CELL
+
+    def set_wall_cell(self) -> None:
+        self.type = CellType.WALL_CELL
+
+    def set_door_cell(self) -> None:
+        self.type = CellType.DOOR_CELL
+
+    def set_console_cell(self) -> None:
+        self.type = CellType.CONSOLE_CELL
 
     def get_layers(self) -> list[WorldObject]:
         return self.layers

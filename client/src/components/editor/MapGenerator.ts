@@ -17,6 +17,11 @@ class WorldValidator {
       return "Missing at least 1 survivor!"
     }
 
+    const pairingError = this.verifyDoorsAndConsoles(world)
+    if (pairingError) {
+      return pairingError
+    }
+
     // This case should be impossible, but you never know
     const moveCostError = this.verifyMoveCosts(world)
     if (moveCostError) {
@@ -30,6 +35,19 @@ class WorldValidator {
     return world.cells.some((cell) =>
       cell.layers.some((layer) => layer.object.oneofKind === "survivor")
     )
+  }
+
+  private static verifyDoorsAndConsoles(world: World): string | null {
+    const doors = world.getCellsByType(schema.CellType.DOOR).length
+    const consoles = world.getCellsByType(schema.CellType.CONSOLE).length
+
+    if (doors > 0 && consoles === 0) {
+      return "World has doors but no console to open them!"
+    }
+    if (consoles > 0 && doors === 0) {
+      return "World has a console but no doors for it to open!"
+    }
+    return null
   }
 
   private static verifyMoveCosts(world: World): string | null {
@@ -85,10 +103,13 @@ export async function exportWorld(
     const aegisPath = localStorage.getItem("aegisPath")
     invariant(aegisPath, "Aegis path not found in localStorage")
 
-    const fullName = `${worldName}.world`
-    const fullPath = await aegisAPI.path.join(aegisPath, "worlds", fullName)
+    const api = aegisAPI
+    invariant(api, "Aegis API is only available inside the desktop client")
 
-    await aegisAPI.exportWorld(fullPath, binary)
+    const fullName = `${worldName}.world`
+    const fullPath = await api.path.join(aegisPath, "worlds", fullName)
+
+    await api.exportWorld(fullPath, binary)
     return null
   } catch (error) {
     // @ts-ignore: error

@@ -10,6 +10,9 @@ class CellType(Enum):
     CHARGING_CELL = 1
     KILLER_CELL = 2
     SPAWN_CELL = 3
+    WALL_CELL = 4
+    DOOR_CELL = 5
+    CONSOLE_CELL = 6
 
     @override
     def __str__(self) -> str:
@@ -37,6 +40,7 @@ FeatureKey = Literal[
     "DEFAULT_AGENT_AMOUNT",
     "SURV_HEALTH_DECAY_RATE",
     "ADVANCED_SCORING_SYSTEM",
+    "ALLOW_CONSOLE_PUZZLES",
 ]
 
 CompetitionSettingKey = Literal["VERSUS_MODE",]
@@ -54,6 +58,7 @@ class FeaturesConfig(TypedDict):
     DEFAULT_AGENT_AMOUNT: int
     SURV_HEALTH_DECAY_RATE: int
     ADVANCED_SCORING_SYSTEM: bool
+    ALLOW_CONSOLE_PUZZLES: bool
 
 
 class CompetitionConfig(TypedDict):

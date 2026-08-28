@@ -103,12 +103,23 @@ def _copy_template_to_workspace(
     return created_world, created_agent, created_config, created_predictions
 
 
+def _copy_puzzle(template_dir: Path, workspace_dir: Path) -> bool:
+    puzzle_dest = workspace_dir / "puzzle"
+    if puzzle_dest.exists():
+        print("  - puzzle/: exists, skipped")
+        return False
+
+    _copy_directory_excluding_cache(template_dir / "puzzle", puzzle_dest)
+    return True
+
+
 def _print_summary(  # noqa: PLR0913
     *,
     created_world: bool,
     created_agent: bool,
     created_config: bool,
     created_predictions: bool,
+    created_puzzle: bool,
     include_predictions: bool,
     agent_folder_name: str,
 ) -> None:
@@ -126,6 +137,9 @@ def _print_summary(  # noqa: PLR0913
         print(
             f"\t- prediction_data: {'copied' if created_predictions else 'exists, skipped'}"
         )
+    print(
+        f"\t- puzzle/puzzle.py: {'copied' if created_puzzle else 'exists, skipped'}"
+    )
 
 
 def init_scaffold(kind: str = "path") -> None:
@@ -149,6 +163,7 @@ def init_scaffold(kind: str = "path") -> None:
     created_world, created_agent, created_config, created_predictions = (
         _copy_template_to_workspace(templates_dir, cwd)
     )
+    created_puzzle = _copy_puzzle(templates_dir, cwd)
 
     # Determine agent folder name and whether to include predictions
     agent_folder_name = (
@@ -165,6 +180,7 @@ def init_scaffold(kind: str = "path") -> None:
         created_agent=created_agent,
         created_config=created_config,
         created_predictions=created_predictions,
+        created_puzzle=created_puzzle,
         include_predictions=include_predictions,
         agent_folder_name=agent_folder_name,
     )

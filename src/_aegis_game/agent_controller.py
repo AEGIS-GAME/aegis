@@ -16,6 +16,7 @@ from .message import Message
 from .team import Team
 
 if TYPE_CHECKING:
+    from .console_puzzle import ConsolePuzzle
     from .game import Game
 
 
@@ -59,6 +60,10 @@ class AgentController:
             error = "Agent moved off the map"
             raise AgentError(error)
 
+        if not self._game.can_enter(self._agent.team, new_loc):
+            error = "Agent moved into an impassable cell"
+            raise AgentError(error)
+
     def assert_dig(self, agent: Agent) -> None:
         self.assert_cooldown()
         if has_feature("ALLOW_AGENT_TYPES") and agent.type not in (
@@ -87,6 +92,23 @@ class AgentController:
         if not has_feature("ALLOW_DRONE_SCAN"):
             msg = "Drone scan is not enabled, therefore this method is not available."
             raise AgentError(msg)
+
+    def assert_console(self) -> "ConsolePuzzle":
+        if not has_feature("ALLOW_CONSOLE_PUZZLES"):
+            msg = "Console puzzles are not enabled"
+            raise AgentError(msg)
+
+        cell = self._game.get_cell_at_current(self._agent.location)
+        if not cell.is_console_cell():
+            msg = "Agent is not on a console"
+            raise AgentError(msg)
+
+        puzzle = self._game.console_puzzle
+        if puzzle is None:
+            msg = "Console puzzle failed to load"
+            raise AgentError(msg)
+
+        return puzzle
 
     # Public Agent Methods
 
@@ -192,6 +214,51 @@ class AgentController:
             return
 
         self._game.dig(self._agent)
+
+    @requires("ALLOW_CONSOLE_PUZZLES")
+    def console_receive_puzzle(self) -> str:
+        """
+        Return the puzzle from the console to the agent.
+        
+        Returns:
+            The puzzle text.
+
+        Raises:
+            AgentError: If console puzzles are not enabled or the agent is
+                not standing on a console.
+
+        """
+        return self.assert_console().puzzle
+
+    @requires("ALLOW_CONSOLE_PUZZLES")
+    def console_send_answer(self, answer: str) -> bool:
+        """
+        Send an answer from the console
+
+        Args:
+            answer: The answer to check against the puzzle.
+
+        Returns:
+            Whether the answer was correct.
+
+        Raises:
+            AgentError: If console puzzles are not enabled, the agent is not
+                standing on a console, or the agent is on cooldown.
+
+        """
+        puzzle = self.assert_console()
+        self.assert_cooldown()
+        self._agent.add_cooldown()
+
+        if self._agent.team in self._game.teams_that_solved:
+            return True
+
+        if not puzzle.check(answer):
+            self._agent.add_energy(-Constants.CONSOLE_INCORRECT_ANSWER_PENALTY)
+            return False
+
+        self._game.open_doors_for(self._agent.team)
+        return True
 
     @requires("ALLOW_AGENT_PREDICTIONS")
     def predict(self, surv_id: int, label: np.int32) -> None:
