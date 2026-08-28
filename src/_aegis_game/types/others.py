@@ -10,6 +10,9 @@ class CellType(Enum):
     CHARGING_CELL = 1
     KILLER_CELL = 2
     SPAWN_CELL = 3
+    WALL_CELL = 4
+    DOOR_CELL = 5
+    CONSOLE_CELL = 6
 
     @override
     def __str__(self) -> str:

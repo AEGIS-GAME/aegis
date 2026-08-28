@@ -4,6 +4,9 @@
   "private": "true",
   "main": "./ts/index.ts",
   "types": "./ts/index.ts",
+  "config": {
+    "protocVersion": "32.1"
+  },
   "scripts": {
     "prebuild": "npm run clean:dirs",
     "build": "npm run build:python && npm run build:ts && npm run fix && npm run move:client",

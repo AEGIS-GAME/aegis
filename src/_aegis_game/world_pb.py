@@ -12,12 +12,16 @@ from .world import World
 
 
 def get_cell_type(cell: Cell) -> CellType:
-    if cell.is_spawn_cell():
-        return CellType.SPAWN
-    if cell.is_charging_cell():
-        return CellType.CHARGING
-    if cell.is_killer_cell():
-        return CellType.KILLER
+    for is_type, proto_type in (
+        (cell.is_spawn_cell, CellType.SPAWN),
+        (cell.is_charging_cell, CellType.CHARGING),
+        (cell.is_killer_cell, CellType.KILLER),
+        (cell.is_wall_cell, CellType.WALL),
+        (cell.is_door_cell, CellType.DOOR),
+        (cell.is_console_cell, CellType.CONSOLE),
+    ):
+        if is_type():
+            return proto_type
     return CellType.NORMAL
 
 
@@ -28,6 +32,12 @@ def cell_type_from_proto(cell: Cell, cell_type: CellType) -> None:
         cell.set_charging_cell()
     elif cell_type == CellType.KILLER:
         cell.set_killer_cell()
+    elif cell_type == CellType.WALL:
+        cell.set_wall_cell()
+    elif cell_type == CellType.DOOR:
+        cell.set_door_cell()
+    elif cell_type == CellType.CONSOLE:
+        cell.set_console_cell()
 
 
 def cell_from_proto(proto_cell: PbCell) -> Cell:

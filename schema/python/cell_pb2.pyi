@@ -15,10 +15,16 @@ class CellType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     SPAWN: _ClassVar[CellType]
     KILLER: _ClassVar[CellType]
     CHARGING: _ClassVar[CellType]
+    WALL: _ClassVar[CellType]
+    DOOR: _ClassVar[CellType]
+    CONSOLE: _ClassVar[CellType]
 NORMAL: CellType
 SPAWN: CellType
 KILLER: CellType
 CHARGING: CellType
+WALL: CellType
+DOOR: CellType
+CONSOLE: CellType
 
 class Cell(_message.Message):
     __slots__ = ("loc", "moveCost", "type", "agents", "layers")

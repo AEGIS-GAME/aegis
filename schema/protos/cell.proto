@@ -10,6 +10,9 @@ enum CellType {
   SPAWN = 1;
   KILLER = 2;
   CHARGING = 3;
+  WALL = 4;
+  DOOR = 5;
+  CONSOLE = 6;
 }
 
 message Cell {

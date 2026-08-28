@@ -1,5 +1,6 @@
 from . import location_pb2 as _location_pb2
 from . import spawn_pb2 as _spawn_pb2
+from . import team_pb2 as _team_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -9,17 +10,19 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class Turn(_message.Message):
-    __slots__ = ("agentId", "energy_level", "steps_taken", "loc", "commands", "spawns")
+    __slots__ = ("agentId", "energy_level", "steps_taken", "loc", "commands", "spawns", "doors_opened_for_teams")
     AGENTID_FIELD_NUMBER: _ClassVar[int]
     ENERGY_LEVEL_FIELD_NUMBER: _ClassVar[int]
     STEPS_TAKEN_FIELD_NUMBER: _ClassVar[int]
     LOC_FIELD_NUMBER: _ClassVar[int]
     COMMANDS_FIELD_NUMBER: _ClassVar[int]
     SPAWNS_FIELD_NUMBER: _ClassVar[int]
+    DOORS_OPENED_FOR_TEAMS_FIELD_NUMBER: _ClassVar[int]
     agentId: int
     energy_level: int
     steps_taken: int
     loc: _location_pb2.Location
     commands: _containers.RepeatedScalarFieldContainer[str]
     spawns: _containers.RepeatedCompositeFieldContainer[_spawn_pb2.Spawn]
-    def __init__(self, agentId: _Optional[int] = ..., energy_level: _Optional[int] = ..., steps_taken: _Optional[int] = ..., loc: _Optional[_Union[_location_pb2.Location, _Mapping]] = ..., commands: _Optional[_Iterable[str]] = ..., spawns: _Optional[_Iterable[_Union[_spawn_pb2.Spawn, _Mapping]]] = ...) -> None: ...
+    doors_opened_for_teams: _containers.RepeatedScalarFieldContainer[_team_pb2.Team]
+    def __init__(self, agentId: _Optional[int] = ..., energy_level: _Optional[int] = ..., steps_taken: _Optional[int] = ..., loc: _Optional[_Union[_location_pb2.Location, _Mapping]] = ..., commands: _Optional[_Iterable[str]] = ..., spawns: _Optional[_Iterable[_Union[_spawn_pb2.Spawn, _Mapping]]] = ..., doors_opened_for_teams: _Optional[_Iterable[_Union[_team_pb2.Team, str]]] = ...) -> None: ...
