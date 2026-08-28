@@ -34,6 +34,7 @@ class GamePb:
         self.dead_ids: list[int] = []
         self.drone_scans: list[DroneScan] = []
         self.survivor_health_updates: list[SurvivorHealthUpdate] = []
+        self.doors_opened_for_teams: list[PbTeam] = []
         self.ws_server: WebSocketServer | None = None
 
     def make_games_header(self, ws_server: WebSocketServer) -> None:
@@ -129,6 +130,7 @@ class GamePb:
         pb_turn.loc.CopyFrom(pb_loc)
 
         pb_turn.spawns.extend(self.spawns)
+        pb_turn.doors_opened_for_teams.extend(self.doors_opened_for_teams)
 
         self.turns.append(pb_turn)
         self.clear_turn()
@@ -213,6 +215,9 @@ class GamePb:
         pb_update.new_state = SurvivorState.ALIVE if is_alive else SurvivorState.DEAD
         self.survivor_health_updates.append(pb_update)
 
+    def add_doors_opened_for_team(self, team: Team) -> None:
+        self.doors_opened_for_teams.append(self.team_to_schema(team))
+
     def team_to_schema(self, team: Team) -> PbTeam:
         return PbTeam.GOOBS if team == Team.GOOBS else PbTeam.VOIDSEERS
 
@@ -227,3 +232,4 @@ class GamePb:
 
     def clear_turn(self) -> None:
         self.spawns.clear()
+        self.doors_opened_for_teams.clear()

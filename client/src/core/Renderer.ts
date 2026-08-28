@@ -4,12 +4,19 @@ import { loadImage, renderCoords } from "@/utils/util"
 import { ListenerKey, notify } from "./Listeners"
 import { Runner } from "./Runner"
 
+import consoleImg from "@/assets/console.png"
+import doorClosedVersus from "@/assets/door-closed-versus.png"
+import doorClosed from "@/assets/door-closed.png"
+import doorGoobsOpen from "@/assets/door-goobs-open.png"
+import doorOpen from "@/assets/door-open.png"
+import doorVoidseersOpen from "@/assets/door-voidseers-open.png"
 import droneScanEye from "@/assets/drone-scan-eye.png"
 import goobA from "@/assets/goob-team-a.png"
 import goobB from "@/assets/goob-team-b.png"
 import rubble from "@/assets/rubble.png"
 import darkSurvivor from "@/assets/survivor-dark.png"
 import lightSurvivor from "@/assets/survivor-light.png"
+import wall from "@/assets/wall.png"
 
 class RendererClass {
   private canvases: Record<keyof typeof CanvasLayers, HTMLCanvasElement> = {} as Record<
@@ -53,6 +60,13 @@ class RendererClass {
     loadImage(darkSurvivor)
     loadImage(rubble)
     loadImage(droneScanEye)
+    loadImage(wall)
+    loadImage(consoleImg)
+    loadImage(doorClosed)
+    loadImage(doorClosedVersus)
+    loadImage(doorGoobsOpen)
+    loadImage(doorVoidseersOpen)
+    loadImage(doorOpen)
   }
 
   renderToContainer(container: HTMLDivElement | null): void {
@@ -99,6 +113,7 @@ class RendererClass {
     const full = this.fullRedraw
     this.fullRedraw = false
     round.world.drawLayers(lctx, full)
+    round.world.drawDoors(lctx)
     round.world.drawDroneScans(lctx)
   }
 

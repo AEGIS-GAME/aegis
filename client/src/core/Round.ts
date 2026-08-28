@@ -54,6 +54,7 @@ export default class Round {
       this.agents.clearDead()
     }
     this.agents.applyTurn(turn)
+    this.world.applyTurn(turn)
     this.turn += 1
   }
 

@@ -1,7 +1,14 @@
+import consoleSrc from "@/assets/console.png"
+import doorClosedVersusSrc from "@/assets/door-closed-versus.png"
+import doorClosedSrc from "@/assets/door-closed.png"
+import doorGoobsOpenSrc from "@/assets/door-goobs-open.png"
+import doorOpenSrc from "@/assets/door-open.png"
+import doorVoidseersOpenSrc from "@/assets/door-voidseers-open.png"
 import droneScanEyeSrc from "@/assets/drone-scan-eye.png"
 import rubbleSrc from "@/assets/rubble.png"
 import survivorSrcDark from "@/assets/survivor-dark.png"
 import survivorSrcLight from "@/assets/survivor-light.png"
+import wallSrc from "@/assets/wall.png"
 import { getMoveCostColor, Size, Vector } from "@/types"
 import { THICKNESS } from "@/utils/constants"
 import { getImage, renderCoords } from "@/utils/util"
@@ -28,8 +35,16 @@ export default class World {
     public readonly seed: number,
     public readonly cells: schema.Cell[],
     public readonly startEnergy: number,
-    public initSpawns: schema.InitSpawn[]
+    public initSpawns: schema.InitSpawn[],
+    public teamsPresent: Set<schema.Team> = new Set(),
+    public teamsThatSolved: Set<schema.Team> = new Set()
   ) {}
+
+  public applyTurn(turn: schema.Turn): void {
+    for (const team of turn.doorsOpenedForTeams) {
+      this.teamsThatSolved.add(team)
+    }
+  }
 
   public applyRound(round: schema.Round | null): void {
     console.log("applyRound", round)
@@ -68,14 +83,15 @@ export default class World {
    * @param worldState - Protobuf WorldState data.
    * @returns A World instance.
    */
-  public static fromSchema(world: schema.World): World {
+  public static fromSchema(world: schema.World, spawns: schema.Spawn[] = []): World {
     return new World(
       world.width,
       world.height,
       world.seed,
       world.cells,
       world.startEnergy,
-      world.initSpawns
+      world.initSpawns,
+      new Set(spawns.map((spawn) => spawn.team))
     )
   }
 
@@ -110,7 +126,9 @@ export default class World {
       this.seed,
       this.cells.map(this.copyCell),
       this.startEnergy,
-      this.initSpawns
+      this.initSpawns,
+      new Set(this.teamsPresent),
+      new Set(this.teamsThatSolved)
     )
   }
 
@@ -238,6 +256,14 @@ export default class World {
       } else if (cell.type === schema.CellType.SPAWN) {
         this.drawSpawn(ctx, coords)
         continue
+      } else if (cell.type === schema.CellType.WALL) {
+        this.drawCellImage(ctx, wallSrc, coords)
+        continue
+      } else if (cell.type === schema.CellType.CONSOLE) {
+        this.drawCellImage(ctx, consoleSrc, coords)
+        continue
+      } else if (cell.type === schema.CellType.DOOR) {
+        continue
       }
 
       ctx.fillRect(
@@ -337,6 +363,48 @@ export default class World {
         ctx.fillText(String(rubbleCount), coords.x + 0.03, coords.y + 1.01)
       }
     }
+  }
+
+  private drawCellImage(
+    ctx: CanvasRenderingContext2D,
+    src: string,
+    coords: Vector
+  ): void {
+    const image = getImage(src)
+    if (!image) {
+      return
+    }
+    ctx.drawImage(image, coords.x, coords.y, 1, 1)
+  }
+
+  public drawDoors(ctx: CanvasRenderingContext2D): void {
+    for (const cell of this.cells) {
+      if (cell.type !== schema.CellType.DOOR || !cell.loc) {
+        continue
+      }
+      const coords = renderCoords(cell.loc.x, cell.loc.y, this.size)
+      ctx.clearRect(coords.x, coords.y, 1, 1)
+      this.drawCellImage(ctx, this.doorAsset(), coords)
+    }
+  }
+
+  private doorAsset(): string {
+    const goobs = this.teamsThatSolved.has(schema.Team.GOOBS)
+    const voidseers = this.teamsThatSolved.has(schema.Team.VOIDSEERS)
+
+    if (this.teamsPresent.size < 2) {
+      return goobs || voidseers ? doorOpenSrc : doorClosedSrc
+    }
+    if (goobs && voidseers) {
+      return doorOpenSrc
+    }
+    if (goobs) {
+      return doorGoobsOpenSrc
+    }
+    if (voidseers) {
+      return doorVoidseersOpenSrc
+    }
+    return doorClosedVersusSrc
   }
 
   public drawDroneScans(ctx: CanvasRenderingContext2D): void {

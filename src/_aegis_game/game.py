@@ -365,6 +365,7 @@ class Game:
 
     def open_doors_for(self, team: Team) -> None:
         self.teams_that_solved.add(team)
+        self.game_pb.add_doors_opened_for_team(team)
 
     def start_drone_scan(self, loc: Location, team: Team) -> None:
         if loc not in self._pending_drone_scans:
