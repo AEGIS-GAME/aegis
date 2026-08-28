@@ -12,6 +12,7 @@ features:
   DEFAULT_AGENT_AMOUNT: 1 # the number of agents to spawn at the start of the game
   SURV_HEALTH_DECAY_RATE: 0 # How much health a survivor loses per round
   ADVANCED_SCORING_SYSTEM: false # Score calculated by normal score + alive agents on team
+  FORCE_MESSAGE_COOLDOWN: false # Sending a message eats up a users round action, however you can send more than one message
 
 # Settings more specific to competitions, usually only competitions will decide to enable these
 competition_specific:

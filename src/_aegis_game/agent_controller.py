@@ -246,6 +246,12 @@ class AgentController:
             dest_ids: A list of agent IDs to send the message to.
 
         """
+        force_cooldown = has_feature("FORCE_MESSAGE_COOLDOWN")
+        if force_cooldown and not self._agent.sent_message_this_turn:
+            self.assert_cooldown()
+            self._agent.add_cooldown()
+            self._agent.sent_message_this_turn = True
+
         if not dest_ids:
             dest_ids = [
                 agent.id
