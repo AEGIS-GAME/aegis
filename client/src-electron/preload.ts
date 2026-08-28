@@ -39,6 +39,7 @@ const electronAPI = {
       amount: string,
       world: string[],
       agent: string,
+      predictionData: string,
       aegisPath: string,
       debug: boolean
     ) =>
@@ -48,6 +49,7 @@ const electronAPI = {
         amount,
         world,
         agent,
+        predictionData,
         aegisPath,
         debug
       ),

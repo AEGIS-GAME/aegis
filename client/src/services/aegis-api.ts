@@ -27,6 +27,7 @@ type AegisAPI = {
       amount: string,
       world: string[],
       agent: string,
+      predictionData: string,
       aegisPath: string,
       debug: boolean
     ) => Promise<string>

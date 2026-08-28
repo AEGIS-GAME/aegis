@@ -25,6 +25,7 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
   const {
     worlds,
     agents,
+    predictionDatasets,
     startSimulation,
     killSim,
     refreshWorldsAndAgents,
@@ -35,6 +36,10 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
   // const [selectedWorlds, setSelectedWorlds] = useState<string[]>([])
   const [rounds, setRounds] = useLocalStorage<number>("aegis_rounds", 0)
   const [agent, setAgent] = useLocalStorage<string>("aegis_agent", "")
+  const [predictionData, setPredictionData] = useLocalStorage<string>(
+    "aegis_prediction_data",
+    "symbols"
+  )
   const getInitialAgentAmount = (): number => {
     const stored = localStorage.getItem("aegis_agent_amount")
     if (stored !== null) {
@@ -68,9 +73,20 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
     }
   }, [config?.defaultAgentAmount, setAgentAmount])
 
+  useEffect(() => {
+    if (predictionDatasets.length > 0 && !predictionDatasets.includes(predictionData)) {
+      setPredictionData(predictionDatasets[0])
+    }
+  }, [predictionDatasets, predictionData, setPredictionData])
+
   const isButtonDisabled = useMemo(
-    () => !world || !rounds || !agent || config === null,
-    [world, rounds, agent, config]
+    () =>
+      !world ||
+      !rounds ||
+      !agent ||
+      config === null ||
+      (config.allowAgentPredictions && !predictionDatasets.includes(predictionData)),
+    [world, rounds, agent, config, predictionDatasets, predictionData]
   )
 
   const showMultiAgentOptions = config?.variableAgentAmount ?? false
@@ -140,6 +156,36 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
         </Select>
       </div>
 
+      {config?.allowAgentPredictions && (
+        <div>
+          <Label className="text-xs text-muted-foreground">Prediction Dataset</Label>
+          {predictionDatasets.length === 0 ? (
+            <ErrorMessage
+              title="Prediction Data Error"
+              message="No prediction datasets were found in prediction_data."
+            />
+          ) : (
+            <Select
+              value={predictionData}
+              onValueChange={(value) => setPredictionData(value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Choose prediction data">
+                  {predictionData || "Select prediction data"}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {predictionDatasets.map((dataset) => (
+                  <SelectItem key={dataset} value={dataset}>
+                    {dataset}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+      )}
+
       {showMultiAgentOptions && (
         <div>
           <Label className="text-xs text-muted-foreground">Number of Agents</Label>
@@ -176,6 +222,7 @@ const Aegis = ({ scaffold }: Props): JSX.Element => {
                 agentAmount.toString(),
                 [world],
                 agent,
+                config?.allowAgentPredictions ? predictionData : "",
                 debug
               )
             }}

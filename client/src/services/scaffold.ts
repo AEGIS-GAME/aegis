@@ -15,6 +15,7 @@ export function createScaffold(): Scaffold {
   const [spawnError, setSpawnError] = useState<string>("")
   const [worlds, setWorlds] = useState<string[]>([])
   const [agents, setAgents] = useState<string[]>([])
+  const [predictionDatasets, setPredictionDatasets] = useState<string[]>([])
   const [config, setConfig] = useState<ClientConfig | null>(null)
   // const [rawConfig, setRawConfig] = useState<Record<string, unknown> | null>(null)
   const aegisPid = useRef<string | undefined>(undefined)
@@ -55,6 +56,7 @@ export function createScaffold(): Scaffold {
     amount: string,
     worlds: string[],
     agent: string,
+    predictionData: string,
     debug: boolean
   ): Promise<void> => {
     invariant(aegisPath, "Can't find AEGIS path!")
@@ -69,6 +71,7 @@ export function createScaffold(): Scaffold {
         amount,
         worlds,
         agent,
+        predictionData,
         aegisPath,
         debug
       )
@@ -105,13 +108,15 @@ export function createScaffold(): Scaffold {
   const refreshWorldsAndAgents = async (): Promise<void> => {
     invariant(aegisPath, "Can't find AEGIS path!")
 
-    const [worldsData, agentsData] = await Promise.all([
+    const [worldsData, agentsData, datasetsData] = await Promise.all([
       getWorlds(aegisPath),
       getAgents(aegisPath),
+      getPredictionDatasets(aegisPath),
     ])
 
     setWorlds(worldsData)
     setAgents(agentsData)
+    setPredictionDatasets(datasetsData)
   }
 
   const killSimulation = (): void => {
@@ -235,13 +240,15 @@ export function createScaffold(): Scaffold {
     localStorage.removeItem("aegis_rounds")
 
     const loadData = async (): Promise<void> => {
-      const [worldsData, agentsData] = await Promise.all([
+      const [worldsData, agentsData, datasetsData] = await Promise.all([
         getWorlds(aegisPath),
         getAgents(aegisPath),
+        getPredictionDatasets(aegisPath),
       ])
 
       setWorlds(worldsData)
       setAgents(agentsData)
+      setPredictionDatasets(datasetsData)
     }
 
     loadData()
@@ -253,6 +260,7 @@ export function createScaffold(): Scaffold {
     setupAegisPath,
     worlds,
     agents,
+    predictionDatasets,
     output: output.current,
     startSimulation,
     killSim: aegisPid.current ? killSimulation : undefined,
@@ -337,4 +345,41 @@ const getAgents = async (aegisPath: string): Promise<string[]> => {
     agents.push(agent)
   }
   return agents
+}
+
+const getPredictionDatasets = async (aegisPath: string): Promise<string[]> => {
+  if (!aegisAPI) {
+    return []
+  }
+
+  const fs = aegisAPI.fs
+  const path = aegisAPI.path
+  const predictionDataPath = await path.join(aegisPath, "prediction_data")
+
+  if (!(await fs.existsSync(predictionDataPath))) {
+    return []
+  }
+
+  const files = new Set(await fs.readdirSync(predictionDataPath))
+  const datasets: string[] = []
+
+  for (const file of files) {
+    const match = /^x_test_(.+)\.npy$/.exec(file)
+
+    if (!match) {
+      continue
+    }
+
+    const datasetName = match[1]
+
+    if (!/^[A-Za-z0-9_-]+$/.test(datasetName)) {
+      continue
+    }
+
+    if (files.has(`y_test_${datasetName}.npy`)) {
+      datasets.push(datasetName)
+    }
+  }
+
+  return datasets.sort((a, b) => a.localeCompare(b))
 }
