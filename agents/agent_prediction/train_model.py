@@ -12,9 +12,7 @@ if TYPE_CHECKING:
 def train_model() -> None:
     """Train and save a simple placeholder symbol prediction model."""
     # Load training data
-    data_dir: Path = (
-        Path(__file__).parent.parent.parent / "prediction_data" / "training"
-    )
+    data_dir: Path = Path(__file__).parent.parent.parent / "prediction_data"
     x_train: NDArray[np.uint8] = cast(
         "NDArray[np.uint8]", np.load(data_dir / "x_train_symbols.npy")
     )
