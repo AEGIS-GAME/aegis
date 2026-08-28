@@ -33,6 +33,7 @@ class Constants:
     MOVE_ENERGY_COST: int = 1
     DRONE_SCAN_ENERGY_COST: int = 2
     ENERGY_PENALTY_FOR_ERRORS: int = -10
+    CONSOLE_INCORRECT_ANSWER_PENALTY: int = 10
 
     # Symbol prediction constants
     NUM_OF_TESTING_IMAGES: int = 704

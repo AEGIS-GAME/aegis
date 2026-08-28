@@ -12,6 +12,7 @@ features:
   DEFAULT_AGENT_AMOUNT: 7 # the number of agents to spawn at the start of the game
   SURV_HEALTH_DECAY_RATE: 2 # How much health a survivor loses per round
   ADVANCED_SCORING_SYSTEM: true # Score calculated by normal score + alive agents on team
+  ALLOW_CONSOLE_PUZZLES: false # Allows agents to solve a console puzzle that opens every door for their team
 
 # Settings more specific to competitions, usually only competitions will decide to enable these
 competition_specific:
