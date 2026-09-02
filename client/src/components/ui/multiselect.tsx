@@ -118,7 +118,7 @@ export function MultiSelect({
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <div
-                      className={`flex-shrink-0 w-4 h-4 border-2 rounded-sm flex items-center justify-center transition-all ${
+                      className={`shrink-0 w-4 h-4 border-2 rounded-sm flex items-center justify-center transition-all ${
                         isSelected
                           ? "bg-primary border-primary scale-110"
                           : "border-muted-foreground/30 group-hover:border-muted-foreground/50 group-hover:scale-105"

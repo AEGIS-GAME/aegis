@@ -63,7 +63,7 @@ export default function Game({ scaffold }: Props): JSX.Element {
 
       {!isStatsCollapsed && (
         <div className="overflow-x-auto scrollbar">
-          <table className="min-w-full text-sm border border-gray-300 rounded overflow-hidden bg-white shadow">
+          <table className="min-w-full text-sm border border-gray-300 rounded overflow-hidden bg-white shadow-sm">
             <thead className="bg-gray-100 text-gray-700">
               <tr>
                 <th className="px-4 py-2 text-left">Metric</th>
