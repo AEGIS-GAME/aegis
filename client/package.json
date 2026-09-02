@@ -53,7 +53,9 @@
           ]
         }
       ],      
-      "x64ArchFiles": "node_modules/dprint-node/dprint-node.darwin-x64.node"
+      "x64ArchFiles": [
+        "node_modules/dprint-node/dprint-node.darwin-x64.node"
+      ]
     },
     "linux": {
       "icon": "./src/assets/goob.png",
@@ -127,7 +129,7 @@
     "@vitejs/plugin-react": "^5.2.0",
     "cross-env": "^10.1.0",
     "electron": "^44.1.1",
-    "electron-builder": "^26.15.3",
+    "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
