@@ -45,7 +45,7 @@ ignore = [ "reportMissingTypeStubs",]
 
 [tool.ruff.lint]
 select = [ "ALL",]
-ignore = [ "S311", "D203", "D212", "COM812", "FIX002", "ERA001", "E501", "TD002", "TD003", "T201", "S101",]
+ignore = [ "S311", "D203", "D212", "COM812", "FIX002", "ERA001", "E501", "TD002", "TD003", "T201", "S101", "CPY001",]
 
 [tool.hatch.build.targets.wheel]
 packages = [ "src/aegis_game", "src/_aegis_game",]
