@@ -53,9 +53,7 @@
           ]
         }
       ],      
-      "x64ArchFiles": [
-        "node_modules/dprint-node/dprint-node.darwin-x64.node"
-      ]
+      "x64ArchFiles": "node_modules/dprint-node/dprint-node.darwin-x64.node"
     },
     "linux": {
       "icon": "./src/assets/goob.png",
