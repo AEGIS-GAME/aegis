@@ -16,7 +16,7 @@ class Cell:
         self.agents: list[int] = []
         self.location: Location = Location(x, y)
 
-    def _copy(self) -> Cell: # type: ignore
+    def copier(self) -> Cell:
         cell = Cell(self.location.x, self.location.y)
         cell.type = self.type
         cell.layers = []
@@ -24,7 +24,7 @@ class Cell:
         cell.agents = []
         cell.agents.extend(self.agents)
         for world_object in self.layers:
-            cell.layers.append(world_object._copy())
+            cell.layers.append(world_object.copier())
         return cell
 
     def setup_cell(self, cell_state_type: str) -> None:

@@ -17,7 +17,8 @@ if TYPE_CHECKING:
 
 
 class Agent:
-    def __init__(  # noqa: PLR0913
+
+    def __init__(  # noqa: PLR0917, PLR0913
         self,
         game: "Game",
         agent_id: int,
@@ -25,7 +26,7 @@ class Agent:
         team: Team,
         energy_level: int,
         agent_type: AgentType,
-    ) -> None:
+    ) -> None: # ruff: noqa: PLR0917
         self.game: Game = game
         self.has_visited: list[bool] = [False] * (game.current_world.height * game.current_world.width)
         self.id: int = agent_id
