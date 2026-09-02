@@ -23,7 +23,7 @@ Additional
 
 ### Prerequisites
 
-- Python 3.13+
+- Python 3.13
 - Node.js 20+
   
 ### Package name (PyPI)
