@@ -34,7 +34,7 @@ jobs:
           echo "${{ toJSON(steps.release.outputs) }}"
 
   aegis-release:
-    #if: ${{ needs.release.outputs.aegis_release == 'true' }}
+    if: ${{ needs.release.outputs.aegis_release == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     permissions:
@@ -63,7 +63,7 @@ jobs:
           packages-dir: dist/
 
   client-release:
-    if: ${{ needs.release.outputs.client_release == 'true' }}
+    #if: ${{ needs.release.outputs.client_release == 'true' }}
     needs: release
     strategy:
       matrix:
