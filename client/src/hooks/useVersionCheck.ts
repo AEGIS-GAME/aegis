@@ -96,8 +96,8 @@ export function useVersionCheck(): VersionInfo {
 
         const isUpdateAvailable = Boolean(
           normalizedLatestVersion &&
-            normalizedLocalVersion &&
-            compareVersions(normalizedLocalVersion, normalizedLatestVersion) < 0
+          normalizedLocalVersion &&
+          compareVersions(normalizedLocalVersion, normalizedLatestVersion) < 0
         )
 
         setVersionInfo({
@@ -128,7 +128,7 @@ export function useVersionCheck(): VersionInfo {
 
     window.addEventListener("storage", handleStorageChange)
 
-    return () => {
+    return (): void => {
       window.removeEventListener("storage", handleStorageChange)
     }
   }, [])
@@ -140,7 +140,7 @@ export function useVersionCheck(): VersionInfo {
 
     window.addEventListener("aegisPathSet", handleAegisPathChange)
 
-    return () => {
+    return (): void => {
       window.removeEventListener("aegisPathSet", handleAegisPathChange)
     }
   }, [])

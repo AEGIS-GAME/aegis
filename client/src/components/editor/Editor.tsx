@@ -173,7 +173,7 @@ export default function Editor({
       }
     }
     window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
+    return (): void => window.removeEventListener("keydown", onKeyDown)
   }, [hoveredTile])
 
   const handleClose = (): void => {

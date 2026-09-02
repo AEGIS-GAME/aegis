@@ -129,6 +129,7 @@
     "electron-builder": "^26.15.3",
     "electron-vite": "^5.0.0",
     "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "postcss-loader": "^8.2.1",
     "prettier": "^3.9.6",

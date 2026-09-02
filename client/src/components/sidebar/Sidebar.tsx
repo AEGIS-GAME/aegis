@@ -76,7 +76,7 @@ export default function Sidebar(): JSX.Element {
       document.removeEventListener("mouseup", handleMouseUp)
     }
 
-    return () => {
+    return (): void => {
       document.removeEventListener("mousemove", handleMouseMove)
       document.removeEventListener("mouseup", handleMouseUp)
     }

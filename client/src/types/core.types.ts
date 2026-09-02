@@ -18,10 +18,7 @@ export type Vector = {
 }
 
 export type Arguments =
-  | "energy_level"
-  | "number_of_survivors"
-  | "energy_required"
-  | "agents_required"
+  "energy_level" | "number_of_survivors" | "energy_required" | "agents_required"
 
 export type Rubble = {
   energy_required: number
