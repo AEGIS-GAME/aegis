@@ -158,7 +158,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: client/release-assets/**/*.zip
           file_glob: true
-          tag: ${{ needs.release.outputs.client_tag }}
+          tag: "client-v2.9.11"
           #release_name: "Client ${{ needs.release.outputs.client_tag }}"
           release_name: "Client client-v2.9.11"
           overwrite: true
