@@ -63,7 +63,7 @@ jobs:
           packages-dir: dist/
 
   client-release:
-    #if: ${{ needs.release.outputs.client_release == 'true' }}
+    if: ${{ needs.release.outputs.client_release == 'true' }}
     needs: release
     strategy:
       matrix:
@@ -158,8 +158,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: client/release-assets/**/*.zip
           file_glob: true
-          tag: "client-v2.9.11"
-          #release_name: "Client ${{ needs.release.outputs.client_tag }}"
-          release_name: "Client client-v2.9.11"
+          tag: ${{ needs.release.outputs.client_tag }}
+          release_name: "Client ${{ needs.release.outputs.client_tag }}"
           overwrite: true
           make_latest: true
