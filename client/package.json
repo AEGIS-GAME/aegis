@@ -52,6 +52,9 @@
             "universal"
           ]
         }
+      ],      
+      "x64ArchFiles": [
+        "node_modules/dprint-node/dprint-node.darwin-x64.node"
       ]
     },
     "linux": {
