@@ -6,8 +6,7 @@
       "release-type": "python",
       "package-name": "aegis",
       "component": "aegis",
-      "exclude-paths": ["client"],
-      "release-as": "2.9.11"
+      "exclude-paths": ["client"]
     },
     "client": {
       "release-type": "node",
