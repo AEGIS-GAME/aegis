@@ -265,6 +265,12 @@ uv sync --group dev
 aegis launch --world example --agent agent_path
 ```
 
+6. Ruff lint before commits
+
+```bash
+ruff check src
+```
+
 ### Client
 
 For instructions on local development and setup of the client application, please see the [client README](https://github.com/AEGIS-GAME/aegis/blob/main/client/README.md)
