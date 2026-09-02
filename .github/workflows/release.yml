@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    if: ${{ !failure() && github.ref == 'refs/heads/main' }}
+    #if: ${{ !failure() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -34,7 +34,7 @@ jobs:
           echo "${{ toJSON(steps.release.outputs) }}"
 
   aegis-release:
-    if: ${{ needs.release.outputs.aegis_release == 'true' }}
+    #if: ${{ needs.release.outputs.aegis_release == 'true' }}
     needs: release
     runs-on: ubuntu-latest
     permissions:
