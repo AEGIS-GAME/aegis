@@ -6,11 +6,13 @@
       "release-type": "python",
       "package-name": "aegis",
       "component": "aegis",
-      "exclude-paths": ["client"]
+      "exclude-paths": ["client"],
+      "release-as": "2.9.11"
     },
     "client": {
       "release-type": "node",
-      "component": "client"
+      "component": "client",
+      "release-as": "2.9.11"
     }
   }
 }
