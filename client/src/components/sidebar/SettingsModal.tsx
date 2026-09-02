@@ -91,25 +91,25 @@ export default function SettingsModal({
       <div className="flex h-[40vh]">
         <div className="flex flex-col w-48 pr-2 pt-2">
           <button
-            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "aegis" ? "bg-muted shadow-sm" : "hover:bg-gray-100"}`}
+            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "aegis" ? "bg-muted shadow-xs" : "hover:bg-gray-100"}`}
             onClick={() => setActiveTab("aegis")}
           >
             <Folder size={16} /> Aegis Path
           </button>
           <button
-            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "config" ? "bg-muted shadow-sm" : "hover:bg-gray-100"}`}
+            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "config" ? "bg-muted shadow-xs" : "hover:bg-gray-100"}`}
             onClick={() => setActiveTab("config")}
           >
             <SlidersHorizontal size={16} /> Configuration
           </button>
           <button
-            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "user" ? "bg-muted shadow-sm" : "hover:bg-gray-100"}`}
+            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "user" ? "bg-muted shadow-xs" : "hover:bg-gray-100"}`}
             onClick={() => setActiveTab("user")}
           >
             <Bug size={16} /> User Settings
           </button>
           <button
-            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "about" ? "bg-muted shadow-sm" : "hover:bg-gray-100"}`}
+            className={`flex items-center gap-2 p-2 mb-1 rounded ${activeTab === "about" ? "bg-muted shadow-xs" : "hover:bg-gray-100"}`}
             onClick={() => setActiveTab("about")}
           >
             <Info size={16} /> About
@@ -124,7 +124,7 @@ export default function SettingsModal({
               <h2 className="text-lg font-semibold border-b border-zinc-300 -ml-4 pl-4 pb-2 mr-0">
                 Aegis Path
               </h2>
-              <p className="text-sm border-gray-300 border p-3 rounded break-words bg-gray-50">
+              <p className="text-sm border-gray-300 border p-3 rounded wrap-break-word bg-gray-50">
                 {aegisPath || "No path configured"}
               </p>
               <Button onClick={setupAegisPath} className="w-full">
