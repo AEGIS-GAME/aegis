@@ -39,7 +39,7 @@ class VersionChecker:
             try:
                 with version_file_path.open() as f:
                     version = f.read().strip()
-                    return version if version else None
+                    return version or None
             except Exception as e:  # noqa: BLE001
                 print(f"Error reading client-version.txt: {e}")
 

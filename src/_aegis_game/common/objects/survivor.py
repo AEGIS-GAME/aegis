@@ -20,9 +20,8 @@ class Survivor(WorldObject):
         self.id: int = survivor_id
         self.health: int = health
 
-    def _copy(self) -> Rubble: # type: ignore
-        survivor = Survivor(self.id, self.health)
-        return survivor
+    def copier(self) -> Survivor:
+        return Survivor(self.id, self.health)
 
     def is_alive(self) -> bool:
         """

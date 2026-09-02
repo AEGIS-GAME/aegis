@@ -9,7 +9,7 @@ class WorldObject(ABC):
         self.id: int = -1
 
     @abstractmethod
-    def _copy(self) -> Rubble: # type: ignore
+    def copier(self) -> WorldObject:
         pass
 
     @abstractmethod

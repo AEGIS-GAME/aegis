@@ -23,7 +23,7 @@ Additional
 
 ### Prerequisites
 
-- Python 3.13+
+- Python 3.13
 - Node.js 20+
   
 ### Package name (PyPI)
@@ -32,15 +32,28 @@ Additional
 
 ### Download for usage in assignments or competitions
 
-0. Verify Python version accessible from shell (Should be 3.13+)
+0. Verify Python version accessible from shell (Should be 3.13)
 
 ```bash
 python --version
 # OR if you have Python 2 installed (often the case on Mac/Linux)
 python3 --version
+## OR
+py --version
 ```
 
-1. Create a folder and install the `aegis-game` package 
+If you have the Python Install Manager you may be able to access other versions with 
+
+```bash
+# Listing
+py list
+# Use Python 3.13
+python3.13
+```
+
+If you do not have correct Python version you should install it. Python Install Manager is recommended.
+
+1. Create a project folder
 
 ```bash
 # Initialize project
@@ -48,11 +61,15 @@ mkdir my-new-project
 cd my-new-project
 ```
 
-2. Activate the virtual environment
+2. Create the virtual environment (python3.13 can be submitted with python, python3, py if they were correct version)
 
 ```bash
-python -m venv .venv
+python3.13 -m venv .venv
 ```
+
+This creates a virtual project environment under `.venv/`
+
+3. Activate the virtual environment
 
 On macOS/Linux:
 
@@ -62,17 +79,16 @@ source .venv/bin/activate
 
 On Windows (CMD):
 
-```cmd
+```batch
 .\.venv\Scripts\Activate
 ```
 
-On Windows (PowerShell):
+On Windows (PowerShell) [see Troubleshooting below if activation gets blocked]:
 
-```cmd
+```pwsh
 .\.venv\Scripts\Activate.ps1
 ```
 
-This creates a virtual project environment under `.venv/`
 
 3. Install `aegis-game` with:
 
@@ -84,7 +100,7 @@ The CLI entrypoint is `aegis` (e.g., `aegis launch`).
 
 ### Download for usage in assignments or competitions
 
-3. Create folder scaffold
+4. Create folder scaffold
 
 ```bash
 aegis init
@@ -104,7 +120,7 @@ Notes:
 - Client GUI code under `client/`
 - Worlds under `worlds/` 
 
-4. Configure features (Optional)
+5. Configure features (Optional)
 
 If default `aegis init` is not desired edit `config/config.yaml` to enable/disable features (e.g., messages, dynamic spawning, abilities). If you change features, regenerate stubs so the API your agent recongizes matches the config:
 
@@ -123,7 +139,7 @@ client/aegis-client.AppImage
 ```
 
 On Windows (CMD/PowerShell):
-```cmd
+```pwsh
 client\aegis-client.exe
 ```
 
@@ -163,13 +179,13 @@ source .venv/bin/activate
 
 On Windows (CMD):
 
-```cmd
+```batch
 .\.venv\Scripts\Activate
 ```
 
 On Windows (PowerShell):
 
-```cmd
+```pwsh
 .\.venv\Scripts\Activate.ps1
 ```
 
@@ -179,18 +195,43 @@ On Windows (PowerShell):
 Before you start, please read our [Contributing Guidelines](https://github.com/AEGIS-GAME/aegis/blob/main/CONTRIBUTING.md) to understand
 the full contribution process, coding standards, and PR requirements.
 
-1. Clone the repository and set up the Python environment
+0. Verify Python version accessible from shell (Should be 3.13)
 
-- `uv` (for Python env/build) — `pip install uv` or see `https://docs.astral.sh/uv/`
+```bash
+python --version
+# OR if you have Python 2 installed (often the case on Mac/Linux)
+python3 --version
+## OR
+py --version
+```
+
+If you have the Python Install Manager you may be able to access other versions with 
+
+```bash
+# Listing
+py list
+# Use Python 3.13
+python3.13
+```
+
+If you do not have correct Python version you should install it. Python Install Manager is recommended.
+
+1. Clone the repository
 
 ```bash
 git clone https://github.com/AEGIS-GAME/aegis.git
 cd aegis
-uv sync --group dev
 ```
 
+2. Create the virtual environment (python3.13 can be submitted with python, python3, py if they were correct version)
 
-2. Activate the virtual environment
+```bash
+python3.13 -m venv .venv
+```
+
+This creates a virtual project environment under `.venv/`
+
+3. Activate the virtual environment
 
 On macOS/Linux:
 
@@ -200,20 +241,34 @@ source .venv/bin/activate
 
 On Windows (CMD):
 
-```cmd
+```batch
 .\.venv\Scripts\Activate
 ```
 
-On Windows (PowerShell):
+On Windows (PowerShell) [see Troubleshooting below if activation gets blocked]:
 
-```cmd
+```pwsh
 .\.venv\Scripts\Activate.ps1
 ```
 
-3. Run locally
+4. Install the dependencies
+
+- `uv` (for Python env/build) — `pip install uv` or see `https://docs.astral.sh/uv/`
 
 ```bash
-aegis launch --world ExampleWorld --agent agent_path
+uv sync --group dev
+```
+
+5. Run locally
+
+```bash
+aegis launch --world example --agent agent_path
+```
+
+6. Ruff lint before commits
+
+```bash
+ruff check src
 ```
 
 ### Client
@@ -225,11 +280,11 @@ For instructions on local development and setup of the client application, pleas
 The documentation can be found [here](https://github.com/AEGIS-GAME/aegis-docs).
 
 ### Troubleshooting
+- Windows PowerShell execution policy may block script activation; if needed, run PowerShell as Administrator and execute:
+  - `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
 - "Config Error Failed to load config.yaml. Please check your config file and ensure it's valid."
   - Use Settings 'Gear' icon to open settings and set 'Aegis Path' to the base folder of your project
       - The folder 'config' within that base folder should have the missing 'config.yaml' in it
-- Windows PowerShell execution policy may block script activation; if needed, run PowerShell as Administrator and execute:
-  - `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
 - Ensure Node.js 20+ and Python 3.13+ are on your PATH
 - If the client cannot connect, verify the server was started with `--client` and that no firewall is blocking the port 
 - If you aren't using a virtual environment (.venv) and see "Defaulting to user installation because normal site-packages is not writeable" during pip 

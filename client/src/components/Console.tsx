@@ -75,7 +75,7 @@ export default function Console({ output }: Props): JSX.Element {
               <div
                 key={i}
                 className={cn(
-                  "whitespace-pre break-words pt-1",
+                  "whitespace-pre wrap-break-word pt-1",
                   line.has_error && "text-destructive",
                   matches && "bg-muted"
                 )}

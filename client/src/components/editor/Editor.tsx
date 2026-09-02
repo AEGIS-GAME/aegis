@@ -173,7 +173,7 @@ export default function Editor({
       }
     }
     window.addEventListener("keydown", onKeyDown)
-    return () => window.removeEventListener("keydown", onKeyDown)
+    return (): void => window.removeEventListener("keydown", onKeyDown)
   }, [hoveredTile])
 
   const handleClose = (): void => {
@@ -226,7 +226,7 @@ export default function Editor({
               <TabsTrigger
                 key={brush.name}
                 value={brush.name}
-                className="text-xs font-medium py-2 px-3 data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
+                className="text-xs font-medium py-2 px-3 data-[state=active]:bg-background data-[state=active]:shadow-xs transition-all duration-200"
               >
                 {brush.name}
               </TabsTrigger>

@@ -61,7 +61,7 @@ class Game:
         if self.args.agent2 is not None:
             self.team_agents[Team.VOIDSEERS] = self.args.agent2
         self._init_spawn()
-        self.next_world: World = None # type: ignore
+        self.next_world: World|None = None
 
     def _init_spawn(self) -> None:
         if has_feature("ALLOW_AGENT_TYPES"):
@@ -137,11 +137,11 @@ class Game:
         self.round += 1
         self.game_pb.start_round(self.round)
         self.team_info.add_lumens(Team.GOOBS, Constants.LUMENS_PER_ROUND)
-        self.team_info.add_lumens(Team.VOIDSEERS, Constants.LUMENS_PER_ROUND)        
-        self.next_world = self.current_world._copy()
+        self.team_info.add_lumens(Team.VOIDSEERS, Constants.LUMENS_PER_ROUND)
+        self.next_world = self.current_world.copier()
         self.for_each_agent(self._run_turn)
         self.current_world = self.next_world
-        self.next_world = self.current_world._copy()
+        self.next_world = self.current_world.copier()
         self.rotate_message_buffers()
         self.activate_pending_drone_scans()
         self.game_pb.send_drone_scan_update(self._drone_scans)
@@ -480,12 +480,13 @@ class Game:
         return CellInfo(
             cell.layers, cell.type, cell.location, cell.move_cost, cell.agents
         )
-    
+
     def get_cell_at_next(self, loc: Location) -> Cell:
         index = loc.x + loc.y * self.current_world.width
+        assert self.next_world is not None
         return self.next_world.cells[index]
 
-    
+
     def get_cell_info_at_next(self, location: Location) -> CellInfo:
         cell = self.get_cell_at_next(location)
         return CellInfo(
