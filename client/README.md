@@ -36,6 +36,12 @@ npm run dev
 
 ## Building
 
+npm eslint before commits
+
+```bash
+npx eslint src src-electron
+```
+
 Build the Client:
 
 ```bash
