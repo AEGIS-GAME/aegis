@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.8](https://github.com/AEGIS-GAME/aegis/compare/client-v2.9.7...client-v2.9.8) (2026-09-02)
+
+
+### Bug Fixes
+
+* **bug:** attempt to fix mac build due ot x64ArchFiles ([42bfb72](https://github.com/AEGIS-GAME/aegis/commit/42bfb72850754192265792519fb542fe5af35532))
+
 ## [2.9.7](https://github.com/AEGIS-GAME/aegis/compare/client-v2.9.6...client-v2.9.7) (2025-11-07)
 
 
